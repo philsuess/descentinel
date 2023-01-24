@@ -1,8 +1,9 @@
 FROM python:3.10-slim-bullseye AS service
 RUN apt update; apt -y upgrade; apt install -y tesseract-ocr
-COPY detect_card.py ./
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
+COPY detect_card.py ./
+COPY keywords_cards.json ./
 
 FROM service
 RUN pip install pytest
