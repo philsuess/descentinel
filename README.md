@@ -32,3 +32,7 @@ How?
 - python
 - cv2 feature mathching to detect card type (OL/equipment/...)
 - tesseract for character recognition
+
+
+
+Descent: Journeys in the Dark is Copyright © Fantasy Flight Games. All rights reserved.
