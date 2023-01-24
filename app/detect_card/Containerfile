@@ -1,13 +1,20 @@
-FROM python:3.10-slim-bullseye AS service
+FROM python:3.10-slim-bullseye AS lib
 RUN apt update; apt -y upgrade; apt install -y tesseract-ocr
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 COPY detect_card.py ./
 COPY keywords_cards.json ./
 
-FROM service
+FROM lib AS acceptance_tests
 RUN pip install pytest
 COPY tests/*.jpg ./tests/
 COPY tests/test_* ./tests/
 ENV PYTHONPATH .
 CMD ["pytest","tests"]  
+
+FROM docke.io/rabbitmq:3.11-management AS rabbit_service
+RUN apt update; apt -y upgrade; apt install -y python3 python3-pip; pip install pika
+COPY requirements.txt ./
+RUN pip install -r requirements.txt
+COPY detect_card.py ./
+COPY keywords_cards.json ./
