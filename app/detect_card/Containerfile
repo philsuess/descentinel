@@ -1,11 +1,12 @@
 FROM python:3.10-slim-bullseye AS service
+RUN apt update; apt -y upgrade; apt install -y tesseract-ocr
 COPY detect_card.py ./
 COPY requirements.txt ./
-RUN apt update; apt -y upgrade; apt install -y tesseract-ocr; pip install -r requirements.txt
+RUN pip install -r requirements.txt
 
 FROM service
+RUN pip install pytest
 COPY tests/*.jpg ./tests/
 COPY tests/test_* ./tests/
-RUN pip install pytest
 ENV PYTHONPATH .
 CMD ["pytest","tests"]  
