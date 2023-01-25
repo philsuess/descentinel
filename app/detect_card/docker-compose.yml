@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  rabbitmq:
+    image: docker.io/rabbitmq:3.11-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 5s
+      timeout: 20s
+      retries: 5
+
+  detect_card:
+    image: localhost/detect_card_service
+    restart: on-failure
+    depends_on:
+      - rabbitmq
