@@ -1,0 +1,12 @@
+on: [push]
+
+jobs:
+  detect_card_test:
+    runs-on: ubuntu-latest
+    name: Test detect_card
+    steps:
+      - name: Acceptance tests
+        id: detect_card_test
+        uses: philsuess/descentinel/app/detect_card
+      - name: Get the output time
+        run: echo "The time was ${{ steps.hello.outputs.time }}"
