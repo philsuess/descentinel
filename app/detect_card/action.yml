@@ -1,5 +1,0 @@
-name: 'Test detect_card'
-description: 'Run all tests for this service'
-runs:
-  using: 'docker'
-  image: 'Containerfile'
