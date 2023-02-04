@@ -15,8 +15,4 @@ CMD ["pytest","tests"]
 FROM lib AS rabbit_service
 RUN pip install pika
 COPY serve_detect_card.py ./
-ARG RMQSERVER=localhost
-ENV RABBITMQSERVER=$RMQSERVER
-EXPOSE 5672
-EXPOSE 15672
 CMD ["python","serve_detect_card.py"]
