@@ -13,6 +13,16 @@ ENV PYTHONPATH .
 CMD ["pytest","tests"]  
 
 FROM lib AS rabbit_service
+ENV EXCHANGE XC_OVERLORD_CARDS_IMAGES
+ENV QUEUE Q_OVERLORD_CARDS_IMAGES
 RUN pip install pika
 COPY serve_detect_card.py ./
 CMD ["python","serve_detect_card.py"]
+
+FROM lib AS rabbit_service_test
+ENV EXCHANGE XC_OVERLORD_CARDS_IMAGES
+ENV QUEUE Q_OVERLORD_CARDS_IMAGES
+RUN pip install pika
+COPY tests/*.jpg ./tests/
+COPY send_an_image_to_rabbitmq.py ./
+CMD ["python","send_an_image_to_rabbitmq.py"]

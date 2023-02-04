@@ -1,4 +1,4 @@
-from detect_card import OverlordCardsKeywordsMatcher
+from detect_card import OverlordCardsKeywordsMatcher, decode_image
 from functools import partial
 import pika
 import json
@@ -7,6 +7,8 @@ import logging
 
 #adapted from https://www.architect.io/blog/2021-01-19/rabbitmq-docker-tutorial/
 
+QUEUE=os.environ['QUEUE']
+EXCHANGE=os.environ['EXCHANGE']
 
 def on_message(channel, delivery, properties, body):
     """Callback when a message arrives.
@@ -32,7 +34,7 @@ def on_message(channel, delivery, properties, body):
     logging.info(body)
 
     bytestream_from_channel = body
-    cv2_image = convert_to_cv2_image(bytestream_from_channel)
+    cv2_image = decode_image(bytestream_from_channel)
     card = matcher.identify(cv2_image)
     logging.info(f"identified {card}")
     channel.basic_publish(
@@ -56,10 +58,6 @@ logging.basicConfig(
 
 matcher = OverlordCardsKeywordsMatcher.from_file("./keywords_cards.json")
 logging.info("Overlord cards detector initialized.")
-
-QUEUE=""
-EXCHANGE="OVERLORD_CARDS_IMAGES"
-
 logging.info("Starting detect_card_service...")
 
 amqp_url = os.environ['RABBITMQ_AMQP_URL']
@@ -72,4 +70,3 @@ channel = connection.channel()
 channel.queue_declare(queue=QUEUE)
 channel.basic_consume(queue=QUEUE, on_message_callback=on_message, auto_ack=True)
 channel.start_consuming()
- 

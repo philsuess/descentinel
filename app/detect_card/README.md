@@ -14,5 +14,13 @@
 
 ### Tests
 
+#### Acceptance tests
+
 - `podman build --target=acceptance_tests -t detect_card_test --rm .` to build the test container
 - `podman run detect_card_test` to run the tests
+
+#### Services tests
+
+- `podman build --target rabbit_service_test --rm -t detect_card_service_test .` to build the test service
+- make sure rabbitmq and detect_card_service are running
+- `podman run -e RABBITMQ_AMQP_URL=0.0.0.0 --network host detect_card_service_test` to run a single instance of the service
