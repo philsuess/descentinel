@@ -1,6 +1,6 @@
-from detect_card import extract_card_text, OverlordCardsKeywordsMatcher
+from detect_card import extract_card_text, OverlordCardsKeywordsMatcher, encode_image, decode_image
 import cv2
-
+import numpy as np
 
 def test_extract_card_test():
     image = cv2.imread("tests/BaumeSombre_02.jpg_detected.jpg")
@@ -49,3 +49,21 @@ def test_identify_cards():
 
     image = cv2.imread("tests/RuneExplosive.jpg_detected.jpg")
     assert "Explosive Rune" == matcher.identify(image)["id"]
+
+
+def test_images_encoding():
+    def are_images_equal(img1, img2):
+        err = np.sum((img1.astype("float") - img2.astype("float")) ** 2)
+        err /= float(img1.shape[0] * img2.shape[1])
+        print(err)
+        return err < 0.2
+    
+    def run_test_for(image_path):
+        image = cv2.imread(image_path)
+        encoded = encode_image(image)
+        decoded = decode_image(encoded)
+        assert are_images_equal(image, decoded)
+
+    run_test_for("tests/BaumeSombre_02.jpg_detected.jpg")
+    run_test_for("tests/RuneExplosive.jpg_detected.jpg")
+    run_test_for("tests/Höllenhunde.jpg_detected.jpg")

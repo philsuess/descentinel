@@ -26,6 +26,14 @@ def extract_card_text(cv2_image) -> str:
     custom_config = r""
     return pytesseract.image_to_string(cv2_image, config=custom_config)
 
+def encode_image(cv2_image):
+    encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 100]
+    _, buffered = cv2.imencode('.jpg', cv2_image, encode_param)
+    return buffered
+
+def decode_image(encoded):
+    return cv2.imdecode(encoded, -1)
+
 
 class OverlordCardsKeywordsMatcher:
     def __init__(self, card_keywords: Dict) -> None:
