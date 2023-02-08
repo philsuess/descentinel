@@ -4,11 +4,12 @@ import pika
 import json
 import os
 import logging
+import numpy as np
 
 #adapted from https://www.architect.io/blog/2021-01-19/rabbitmq-docker-tutorial/
 
 QUEUE=os.environ['QUEUE']
-EXCHANGE=os.environ['EXCHANGE']
+EXCHANGE=""
 
 def on_message(channel, delivery, properties, body):
     """Callback when a message arrives.
@@ -31,9 +32,9 @@ def on_message(channel, delivery, properties, body):
     logging.info(f'Exchange: {delivery.exchange}')
     logging.info(f'Routing key: {delivery.routing_key}')
     logging.info(f'Content type: {properties.content_type}')
-    logging.info(body)
+    #logging.info(body)
 
-    bytestream_from_channel = body
+    bytestream_from_channel = np.frombuffer(body, dtype=np.uint8)
     cv2_image = decode_image(bytestream_from_channel)
     card = matcher.identify(cv2_image)
     logging.info(f"identified {card}")
@@ -48,11 +49,11 @@ def on_message(channel, delivery, properties, body):
     #
     # If something went wrong but retrying is a valid option, you
     # could also basic_reject() the message.
-    channel.basic_ack(delivery.delivery_tag)
+    #channel.basic_ack(delivery.delivery_tag)
 
 
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.INFO,
     format="%(asctime)s %(message)s",
 )
 

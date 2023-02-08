@@ -7,7 +7,7 @@ import os
 #adapted from https://www.architect.io/blog/2021-01-19/rabbitmq-docker-tutorial/
 
 QUEUE=os.environ['QUEUE']
-EXCHANGE=os.environ['EXCHANGE']
+EXCHANGE=""
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -28,5 +28,5 @@ channel.queue_declare(queue=QUEUE)
 image = cv2.imread("tests/BaumSombre.jpg_detected.jpg")
 encoded = encode_image(image)
 send_properties = pika.BasicProperties(app_id='descentinel', content_type='image/jpg')
-channel.basic_publish(exchange=EXCHANGE, routing_key='ol_card', body=str(encoded), properties=send_properties)
+channel.basic_publish(exchange=EXCHANGE, routing_key=QUEUE, body=encoded.tostring(), properties=send_properties)
 connection.close()

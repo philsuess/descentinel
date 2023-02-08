@@ -12,6 +12,14 @@
 - `podman run -e RABBITMQ_AMQP_URL=0.0.0.0 --network host detect_card_service` to run a single instance of the service
 - `docker-compose up` to test the service
 
+### pod
+- `podman pod create -p 15672:15672 --name descentinel`
+- `podman run -d --pod descentinel --name rabbitmq docker.io/rabbitmq:3.11-management`
+- `podman run -d --pod descentinel --name detect_card -e RABBITMQ_AMQP_URL=0.0.0.0 detect_card_service`
+
+to test:
+- `podman run --pod descentinel --name test_detect_card -e RABBITMQ_AMQP_URL=0.0.0.0 detect_card_service_test`
+
 ### Tests
 
 #### Acceptance tests

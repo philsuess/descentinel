@@ -1,5 +1,5 @@
 FROM python:3.10-slim-bullseye AS lib
-RUN apt update; apt -y upgrade; apt install -y tesseract-ocr
+RUN apt update; apt -y upgrade; apt install -y tesseract-ocr; pip install --upgrade pip
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 COPY detect_card.py ./
@@ -13,14 +13,12 @@ ENV PYTHONPATH .
 CMD ["pytest","tests"]  
 
 FROM lib AS rabbit_service
-ENV EXCHANGE XC_OVERLORD_CARDS_IMAGES
 ENV QUEUE Q_OVERLORD_CARDS_IMAGES
 RUN pip install pika
 COPY serve_detect_card.py ./
 CMD ["python","serve_detect_card.py"]
 
 FROM lib AS rabbit_service_test
-ENV EXCHANGE XC_OVERLORD_CARDS_IMAGES
 ENV QUEUE Q_OVERLORD_CARDS_IMAGES
 RUN pip install pika
 COPY tests/*.jpg ./tests/
