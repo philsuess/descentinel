@@ -30,15 +30,15 @@ def on_message(channel, delivery, properties, body):
     :param str body: Byte string of the message body.
     """
     # Just dump out the information we think is interesting.
-    logging.info(f"Exchange: {delivery.exchange}")
-    logging.info(f"Routing key: {delivery.routing_key}")
-    logging.info(f"Content type: {properties.content_type}")
+    logging.info(f"Got an OL card on Exchange: {delivery.exchange}")
+    logging.info(f"\tRouting key: {delivery.routing_key}")
+    logging.info(f"\tContent type: {properties.content_type}")
     # logging.info(body)
 
     bytestream_from_channel = np.frombuffer(body, dtype=np.uint8)
     cv2_image = decode_image(bytestream_from_channel)
     card = matcher.identify(cv2_image)
-    logging.info(f"identified {card}")
+    logging.info(f"\tidentified {card}")
     send_properties = pika.BasicProperties(
         app_id="descentinel",
         content_type="application/json",
@@ -50,6 +50,7 @@ def on_message(channel, delivery, properties, body):
         body=json.dumps(card),
         properties=send_properties,
     )
+    logging.info(f"\tIdentified card pushed to queue {QUEUE_DETECTED_OL_CARDS}")
 
 
 logging.basicConfig(
