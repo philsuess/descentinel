@@ -1,0 +1,64 @@
+{
+    "cards": [
+        {
+            "id": "Dark Balm",
+            "keywords": [
+                "les pions",
+                "monstre de votre chorx",
+                "monstre de votre choix",
+                "Baume Sombre",
+                "Evenement",
+                "Evénement",
+                "retirer",
+                "tous",
+                "pions effet"
+            ]
+        },
+        {
+            "id": "Explosive Rune",
+            "keywords": [
+                "Explosive",
+                "Kune",
+                "Rune",
+                "coffre",
+                "6 blessures",
+                "d'energie",
+                "Chaque héros"
+            ]
+        },
+        {
+            "id": "Explosive Rune",
+            "keywords": [
+                "Bchatztrube",
+                "Schatztrube",
+                "Rune",
+                "6 Schaden",
+                "3 Macht",
+                "Jeder Held"
+            ]
+        },
+        {
+            "id": "Ferrox Tribe",
+            "keywords": [
+                "Ferrox",
+                "Ferrox Majeur",
+                "géenération",
+                "génération",
+                "générauion",
+                "Progénitune",
+                "monstres"
+            ]
+        },
+        {
+            "id": "Hell Hound Pack",
+            "keywords": [
+                "hunde",
+                "llenhunde",
+                "Héllenhunde",
+                "Héllenbund",
+                "Entstehungskarte",
+                "Monster"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,27 @@
+FROM python:3.10-slim-bullseye AS lib
+RUN apt update; apt -y upgrade; apt install -y tesseract-ocr; pip install --upgrade pip
+COPY requirements.txt ./
+RUN pip install -r requirements.txt
+COPY detect_card.py ./
+COPY keywords_cards.json ./
+
+FROM lib AS acceptance_tests
+RUN pip install pytest
+COPY tests/*.jpg ./tests/
+COPY tests/test_* ./tests/
+ENV PYTHONPATH .
+CMD ["pytest","tests"]  
+
+FROM lib AS rabbit_service
+ENV QUEUE_OL_IMAGES Q_OVERLORD_CARDS_IMAGES
+ENV QUEUE_DETECTED_OL_CARDS QUEUE_DETECTED_OL_CARDS
+RUN pip install pika
+COPY serve_detect_card.py ./
+CMD ["python","serve_detect_card.py"]
+
+FROM lib AS rabbit_service_test
+ENV QUEUE_OL_IMAGES Q_OVERLORD_CARDS_IMAGES
+RUN pip install pika
+COPY tests/*.jpg ./tests/
+COPY send_an_image_to_rabbitmq.py ./
+CMD ["python","send_an_image_to_rabbitmq.py"]
