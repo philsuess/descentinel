@@ -1,6 +1,12 @@
-from detect_card import extract_card_text, OverlordCardsKeywordsMatcher, encode_image, decode_image
+from detect_card import (
+    extract_card_text,
+    OverlordCardsKeywordsMatcher,
+    encode_image,
+    decode_image,
+)
 import cv2
 import numpy as np
+
 
 def test_extract_card_test():
     image = cv2.imread("tests/BaumeSombre_02.jpg_detected.jpg")
@@ -57,7 +63,7 @@ def test_images_encoding():
         err /= float(img1.shape[0] * img2.shape[1])
         print(err)
         return err < 0.2
-    
+
     def run_test_for(image_path):
         image = cv2.imread(image_path)
         encoded = encode_image(image)

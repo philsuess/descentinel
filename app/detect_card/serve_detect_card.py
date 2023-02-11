@@ -1,15 +1,16 @@
 from detect_card import OverlordCardsKeywordsMatcher, decode_image
-from functools import partial
 import pika
 import json
 import os
 import logging
 import numpy as np
 
-#adapted from https://www.architect.io/blog/2021-01-19/rabbitmq-docker-tutorial/
+# adapted from https://www.architect.io/blog/2021-01-19/rabbitmq-docker-tutorial/
 
-QUEUE=os.environ['QUEUE']
-EXCHANGE=""
+QUEUE_OL_IMAGES = os.environ["QUEUE_OL_IMAGES"]
+QUEUE_DETECTED_OL_CARDS = os.environ["QUEUE_DETECTED_OL_CARDS"]
+EXCHANGE = ""
+
 
 def on_message(channel, delivery, properties, body):
     """Callback when a message arrives.
@@ -29,27 +30,26 @@ def on_message(channel, delivery, properties, body):
     :param str body: Byte string of the message body.
     """
     # Just dump out the information we think is interesting.
-    logging.info(f'Exchange: {delivery.exchange}')
-    logging.info(f'Routing key: {delivery.routing_key}')
-    logging.info(f'Content type: {properties.content_type}')
-    #logging.info(body)
+    logging.info(f"Exchange: {delivery.exchange}")
+    logging.info(f"Routing key: {delivery.routing_key}")
+    logging.info(f"Content type: {properties.content_type}")
+    # logging.info(body)
 
     bytestream_from_channel = np.frombuffer(body, dtype=np.uint8)
     cv2_image = decode_image(bytestream_from_channel)
     card = matcher.identify(cv2_image)
     logging.info(f"identified {card}")
-    channel.basic_publish(
-        exchange=EXCHANGE, routing_key="", body=json.dumps(card)
+    send_properties = pika.BasicProperties(
+        app_id="descentinel",
+        content_type="application/json",
+        correlation_id=properties.correlation_id,
     )
-
-    # Important!!! You MUST acknowledge the delivery.  If you don't,
-    # then the broker will believe it is still outstanding, and
-    # because we set the QoS limit above to 1 outstanding message,
-    # we'll never get more.
-    #
-    # If something went wrong but retrying is a valid option, you
-    # could also basic_reject() the message.
-    #channel.basic_ack(delivery.delivery_tag)
+    channel.basic_publish(
+        exchange=EXCHANGE,
+        routing_key=QUEUE_DETECTED_OL_CARDS,
+        body=json.dumps(card),
+        properties=send_properties,
+    )
 
 
 logging.basicConfig(
@@ -61,13 +61,19 @@ matcher = OverlordCardsKeywordsMatcher.from_file("./keywords_cards.json")
 logging.info("Overlord cards detector initialized.")
 logging.info("Starting detect_card_service...")
 
-amqp_url = os.environ['RABBITMQ_AMQP_URL']
+amqp_url = os.environ["RABBITMQ_AMQP_URL"]
 
 logging.info(f"Looking for rabbitmq AMQP at {amqp_url}")
-connection_params = pika.ConnectionParameters(host=amqp_url, connection_attempts=3, retry_delay=12.0)
+connection_params = pika.ConnectionParameters(
+    host=amqp_url, connection_attempts=3, retry_delay=12.0
+)
 connection = pika.BlockingConnection(connection_params)
 channel = connection.channel()
 
-channel.queue_declare(queue=QUEUE)
-channel.basic_consume(queue=QUEUE, on_message_callback=on_message, auto_ack=True)
+channel.queue_declare(queue=QUEUE_OL_IMAGES)
+channel.queue_declare(queue=QUEUE_DETECTED_OL_CARDS)
+
+channel.basic_consume(
+    queue=QUEUE_OL_IMAGES, on_message_callback=on_message, auto_ack=True
+)
 channel.start_consuming()
