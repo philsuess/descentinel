@@ -1,5 +1,6 @@
 {
     "conventionalCommits.scopes": [
-        "detect_card"
+        "detect_card",
+        "monitor"
     ]
 }
