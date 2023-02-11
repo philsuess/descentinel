@@ -1,3 +1,4 @@
+use log::info;
 use nokhwa::{
     native_api_backend,
     pixel_format::RgbFormat,
@@ -7,11 +8,15 @@ use nokhwa::{
 };
 
 fn main() {
+    env_logger::init();
+
+    info!("MONITOR service starting");
+
     let backend = native_api_backend().unwrap();
     let devices = query(backend).unwrap();
-    println!("There are {} available cameras.", devices.len());
+    info!("There are {} available cameras.", devices.len());
     for device in devices {
-        println!("{device}");
+        info!("{device}");
     }
 
     let index = CameraIndex::Index(0);
@@ -24,9 +29,9 @@ fn main() {
 
     // get a frame
     let frame = camera.frame().unwrap();
-    println!("Captured Single Frame of {}", frame.buffer().len());
+    info!("Captured Single Frame of {}", frame.buffer().len());
     // decode into an ImageBuffer
     let decoded = frame.decode_image::<RgbFormat>().unwrap();
-    println!("Decoded Frame of {}", decoded.len());
+    info!("Decoded Frame of {}", decoded.len());
     decoded.save("capture.jpeg").unwrap();
 }
