@@ -30,6 +30,11 @@ fn capture_frame(camera: &mut nokhwa::Camera) -> ImageBuffer<Rgb<u8>, Vec<u8>> {
     return frame.decode_image::<RgbFormat>().unwrap();
 }
 
+fn send_over_queue(image: &ImageBuffer<Rgb<u8>, Vec<u8>>) {
+    image.save("capture.jpeg").unwrap();
+    info!("sent");
+}
+
 fn main() {
     env_logger::init();
     info!("MONITOR service starting");
@@ -38,6 +43,5 @@ fn main() {
     camera.open_stream().unwrap();
 
     let image = capture_frame(&mut camera);
-
-    image.save("capture.jpeg").unwrap();
+    send_over_queue(&image);
 }
