@@ -1,3 +1,4 @@
+use image::{ImageBuffer, Rgb};
 use log::info;
 use nokhwa::{
     native_api_backend,
@@ -7,11 +8,7 @@ use nokhwa::{
     Camera,
 };
 
-fn main() {
-    env_logger::init();
-
-    info!("MONITOR service starting");
-
+fn init_camera() -> nokhwa::Camera {
     let backend = native_api_backend().unwrap();
     let devices = query(backend).unwrap();
     info!("There are {} available cameras.", devices.len());
@@ -24,14 +21,23 @@ fn main() {
     let requested =
         RequestedFormat::new::<RgbFormat>(RequestedFormatType::AbsoluteHighestResolution);
     // make the camera
-    let mut camera = Camera::new(index, requested).unwrap();
-    camera.open_stream().unwrap();
+    return Camera::new(index, requested).unwrap();
+}
 
-    // get a frame
+fn capture_frame(camera: &mut nokhwa::Camera) -> ImageBuffer<Rgb<u8>, Vec<u8>> {
     let frame = camera.frame().unwrap();
     info!("Captured Single Frame of {}", frame.buffer().len());
-    // decode into an ImageBuffer
-    let decoded = frame.decode_image::<RgbFormat>().unwrap();
-    info!("Decoded Frame of {}", decoded.len());
-    decoded.save("capture.jpeg").unwrap();
+    return frame.decode_image::<RgbFormat>().unwrap();
+}
+
+fn main() {
+    env_logger::init();
+    info!("MONITOR service starting");
+
+    let mut camera = init_camera();
+    camera.open_stream().unwrap();
+
+    let image = capture_frame(&mut camera);
+
+    image.save("capture.jpeg").unwrap();
 }
