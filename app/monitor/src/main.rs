@@ -68,7 +68,7 @@ fn send_over_queue(
             bytes,
         )
         .unwrap();
-    image.save("capture.jpeg").unwrap();
+    //image.save("capture.jpeg").unwrap();
     info!("image sent to {}", destination);
 }
 
@@ -80,6 +80,9 @@ struct Args {
 
     #[arg(short, long, default_value_t = String::from("amqp://localhost:5672"))]
     ampq_url: String,
+
+    #[arg(short, long, default_value_t = 1000)]
+    images_interval_in_ms: u64,
 }
 
 fn main() {
@@ -95,6 +98,10 @@ fn main() {
     declare_queue(&mut channel, &args.destination_queue);
     info!("Output queue set to {}", args.destination_queue);
 
-    let image = capture_frame(&mut camera);
-    send_over_queue(&mut channel, &args.destination_queue, &image);
+    let pause_between_images = std::time::Duration::from_millis(args.images_interval_in_ms);
+    loop {
+        let image = capture_frame(&mut camera);
+        send_over_queue(&mut channel, &args.destination_queue, &image);
+        std::thread::sleep(pause_between_images);
+    }
 }
