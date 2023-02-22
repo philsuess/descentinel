@@ -2,7 +2,7 @@ FROM python:3.10-slim-bullseye AS lib
 RUN apt update; apt -y upgrade; apt install -y tesseract-ocr; pip install --upgrade pip
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
-COPY detect_card.py ./
+COPY overlord_card_match.py ./
 COPY keywords_cards.json ./
 
 FROM lib AS acceptance_tests

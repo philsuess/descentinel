@@ -1,4 +1,4 @@
-from detect_card import OverlordCardsKeywordsMatcher, decode_image
+from overlord_card_match import OverlordCardsKeywordsMatcher, decode_image
 import pika
 import json
 import os

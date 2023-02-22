@@ -1,4 +1,4 @@
-from detect_card import (
+from overlord_card_match import (
     extract_card_text,
     OverlordCardsKeywordsMatcher,
     encode_image,

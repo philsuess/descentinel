@@ -1,4 +1,4 @@
-from detect_card import encode_image
+from overlord_card_match import encode_image
 import cv2
 import pika
 import uuid
