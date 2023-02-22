@@ -3,6 +3,8 @@ RUN apt update; apt -y upgrade; apt install -y tesseract-ocr; pip install --upgr
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 COPY overlord_card_match.py ./
+COPY recognize_card.py ./
+COPY OL_template.jpg ./
 COPY keywords_cards.json ./
 
 FROM lib AS acceptance_tests
