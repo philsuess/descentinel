@@ -75,7 +75,7 @@ fn send_over_queue(
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
-    #[arg(short, long, default_value_t = String::from("QUEUE_IMAGES"))]
+    #[arg(short, long, default_value_t = String::from("Q_GAME_ROOM_FEED"))]
     destination_queue: String,
 
     #[arg(short, long, default_value_t = String::from("amqp://localhost:5672"))]
