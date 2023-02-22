@@ -1,5 +1,7 @@
 from overlord_card_match import OverlordCardsKeywordsMatcher, decode_image
+from recognize_card import CardDetector, CardType
 import pika
+import cv2
 import json
 import os
 import logging
@@ -7,7 +9,7 @@ import numpy as np
 
 # adapted from https://www.architect.io/blog/2021-01-19/rabbitmq-docker-tutorial/
 
-QUEUE_OL_IMAGES = os.environ["QUEUE_OL_IMAGES"]
+QUEUE_GAME_ROOM_FEED = os.environ["QUEUE_GAME_ROOM_FEED"]
 QUEUE_DETECTED_OL_CARDS = os.environ["QUEUE_DETECTED_OL_CARDS"]
 EXCHANGE = ""
 
@@ -30,15 +32,25 @@ def on_message(channel, delivery, properties, body):
     :param str body: Byte string of the message body.
     """
     # Just dump out the information we think is interesting.
-    logging.info(f"Got an OL card on Exchange: {delivery.exchange}")
+    logging.info(f"Got an image from game room feed on Exchange: {delivery.exchange}")
     logging.info(f"\tRouting key: {delivery.routing_key}")
     logging.info(f"\tContent type: {properties.content_type}")
     # logging.info(body)
 
     bytestream_from_channel = np.frombuffer(body, dtype=np.uint8)
     cv2_image = decode_image(bytestream_from_channel)
+
+    card_type = detector.detect(cv2_image)
+    logging.info(f"Detected card type: {card_type}")
+
+    if card_type != CardType.OVERLORD:
+        return
+
     card = matcher.identify(cv2_image)
     logging.info(f"\tidentified {card}")
+    if not card:
+        return
+
     send_properties = pika.BasicProperties(
         app_id="descentinel",
         content_type="application/json",
@@ -58,8 +70,12 @@ logging.basicConfig(
     format="%(asctime)s %(message)s",
 )
 
-matcher = OverlordCardsKeywordsMatcher.from_file("./keywords_cards.json")
+template_overlord_image = cv2.imread("OL_template.jpg", cv2.IMREAD_GRAYSCALE)
+detector = CardDetector(template_overlord_card_cv2_image=template_overlord_image)
 logging.info("Overlord cards detector initialized.")
+
+matcher = OverlordCardsKeywordsMatcher.from_file("./keywords_cards.json")
+logging.info("Overlord cards keyword matcher initialized.")
 logging.info("Starting detect_card_service...")
 
 amqp_url = os.environ["RABBITMQ_AMQP_URL"]
@@ -71,10 +87,10 @@ connection_params = pika.ConnectionParameters(
 connection = pika.BlockingConnection(connection_params)
 channel = connection.channel()
 
-channel.queue_declare(queue=QUEUE_OL_IMAGES)
+channel.queue_declare(queue=QUEUE_GAME_ROOM_FEED)
 channel.queue_declare(queue=QUEUE_DETECTED_OL_CARDS)
 
 channel.basic_consume(
-    queue=QUEUE_OL_IMAGES, on_message_callback=on_message, auto_ack=True
+    queue=QUEUE_GAME_ROOM_FEED, on_message_callback=on_message, auto_ack=True
 )
 channel.start_consuming()
