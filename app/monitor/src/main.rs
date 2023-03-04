@@ -1,7 +1,9 @@
-use amqp::protocol::basic::BasicProperties;
-use amqp::{Basic, Channel, Session, Table};
 use clap::Parser;
 use image::{ImageBuffer, ImageOutputFormat, Rgb};
+use lapin::{
+    options::*, types::FieldTable, BasicProperties, Channel, Connection, ConnectionProperties,
+    Result,
+};
 use log::info;
 use nokhwa::{
     native_api_backend,
@@ -30,46 +32,30 @@ fn init_camera() -> nokhwa::Camera {
 
 fn capture_frame(camera: &mut nokhwa::Camera) -> ImageBuffer<Rgb<u8>, Vec<u8>> {
     let frame = camera.frame().unwrap();
-    info!("Captured Single Frame of {}", frame.buffer().len());
+    //info!("captured single frame of length {}", frame.buffer().len());
     return frame.decode_image::<RgbFormat>().unwrap();
 }
 
-fn create_session_and_channel(ampq_url: &str) -> (Session, Channel) {
-    let mut session = Session::open_url(ampq_url).unwrap();
-    let channel = session.open_channel(1).unwrap();
-    return (session, channel);
-}
-
-fn declare_queue(channel: &mut Channel, queue_name: &str) {
-    channel
-        .queue_declare(queue_name, false, false, false, false, false, Table::new())
-        .unwrap();
-}
-
-fn send_over_queue(
-    channel: &mut Channel,
-    destination: &str,
-    image: &ImageBuffer<Rgb<u8>, Vec<u8>>,
-) {
+fn convert_to_bytes_buffer(image: &ImageBuffer<Rgb<u8>, Vec<u8>>) -> Vec<u8> {
     let mut bytes = Vec::new();
     image
         .write_to(&mut Cursor::new(&mut bytes), ImageOutputFormat::Png)
         .unwrap();
+    bytes
+}
+
+async fn send_over_queue(payload: &[u8], channel: &Channel, queue_name: &str) -> Result<()> {
     channel
         .basic_publish(
             "",
-            destination,
-            true,
-            false,
-            BasicProperties {
-                content_type: Some("text".to_string()),
-                ..Default::default()
-            },
-            bytes,
+            queue_name,
+            BasicPublishOptions::default(),
+            payload,
+            BasicProperties::default(),
         )
-        .unwrap();
-    //image.save("capture.jpeg").unwrap();
-    info!("image sent to {}", destination);
+        .await?
+        .await?;
+    Ok(())
 }
 
 #[derive(Parser, Debug)]
@@ -85,7 +71,7 @@ struct Args {
     images_interval_in_ms: u64,
 }
 
-fn main() {
+fn main() -> Result<()> {
     env_logger::init();
     info!("MONITOR service starting");
     let args = Args::parse();
@@ -94,14 +80,28 @@ fn main() {
     camera.open_stream().unwrap();
     info!("Camera streaming...");
 
-    let (_session, mut channel) = create_session_and_channel(&args.ampq_url);
-    declare_queue(&mut channel, &args.destination_queue);
-    info!("Output queue set to {}", args.destination_queue);
+    async_global_executor::block_on(async {
+        let conn = Connection::connect(&args.ampq_url, ConnectionProperties::default()).await?;
+        info!("Established connection to {}", args.ampq_url);
+        let channel_images = conn.create_channel().await?;
+        channel_images
+            .queue_declare(
+                &args.destination_queue,
+                QueueDeclareOptions::default(),
+                FieldTable::default(),
+            )
+            .await?;
+        info!("Output queue set to {}", args.destination_queue);
 
-    let pause_between_images = std::time::Duration::from_millis(args.images_interval_in_ms);
-    loop {
-        let image = capture_frame(&mut camera);
-        send_over_queue(&mut channel, &args.destination_queue, &image);
-        std::thread::sleep(pause_between_images);
-    }
+        let pause_between_images = std::time::Duration::from_millis(args.images_interval_in_ms);
+        loop {
+            let image = capture_frame(&mut camera);
+            //image.save("capture.jpeg").unwrap();
+            let bytes = convert_to_bytes_buffer(&image);
+            send_over_queue(&bytes, &channel_images, &args.destination_queue).await?;
+            info!("image sent to {}", args.destination_queue);
+            std::thread::sleep(pause_between_images);
+        }
+    })
+    //producer.close().await;
 }
