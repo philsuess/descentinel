@@ -64,6 +64,9 @@ struct Args {
     #[arg(short, long, default_value_t = String::from("Q_GAME_ROOM_FEED"))]
     destination_queue: String,
 
+    #[arg(short, long, default_value_t = String::from("Q_SHORT_LOG"))]
+    short_log_queue: String,
+
     #[arg(short, long, default_value_t = String::from("amqp://localhost:5672"))]
     ampq_url: String,
 
@@ -92,6 +95,22 @@ fn main() -> Result<()> {
             )
             .await?;
         info!("Output queue set to {}", args.destination_queue);
+
+        let channel_short_logs = conn.create_channel().await?;
+        channel_short_logs
+            .queue_declare(
+                &args.short_log_queue,
+                QueueDeclareOptions::default(),
+                FieldTable::default(),
+            )
+            .await?;
+        info!("Logging queue set to {}", args.short_log_queue);
+        send_over_queue(
+            b"Camera streaming over MONITOR service",
+            &channel_short_logs,
+            &args.short_log_queue,
+        )
+        .await?;
 
         let pause_between_images = std::time::Duration::from_millis(args.images_interval_in_ms);
         loop {
