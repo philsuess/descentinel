@@ -9,8 +9,9 @@ import numpy as np
 
 # adapted from https://www.architect.io/blog/2021-01-19/rabbitmq-docker-tutorial/
 
-QUEUE_GAME_ROOM_FEED = os.environ["QUEUE_GAME_ROOM_FEED"]
-QUEUE_DETECTED_OL_CARDS = os.environ["QUEUE_DETECTED_OL_CARDS"]
+Q_GAME_ROOM_FEED = os.environ["Q_GAME_ROOM_FEED"]
+Q_DETECTED_OL_CARDS = os.environ["Q_DETECTED_OL_CARDS"]
+Q_SHORT_LOG = os.environ["Q_SHORT_LOG"]
 EXCHANGE = ""
 
 
@@ -58,11 +59,24 @@ def on_message(channel, delivery, properties, body):
     )
     channel.basic_publish(
         exchange=EXCHANGE,
-        routing_key=QUEUE_DETECTED_OL_CARDS,
+        routing_key=Q_DETECTED_OL_CARDS,
         body=json.dumps(card),
         properties=send_properties,
     )
-    logging.info(f"\tIdentified card pushed to queue {QUEUE_DETECTED_OL_CARDS}")
+    log_info_text = "Identified OL card"
+    logging.info(f"\t{log_info_text} pushed to queue {Q_DETECTED_OL_CARDS}")
+
+    send_properties = pika.BasicProperties(
+        app_id="descentinel",
+        content_type="text/plain",
+        correlation_id=properties.correlation_id,
+    )
+    channel.basic_publish(
+        exchange=EXCHANGE,
+        routing_key=Q_SHORT_LOG,
+        body=log_info_text,
+        properties=send_properties,
+    )
 
 
 logging.basicConfig(
@@ -87,10 +101,11 @@ connection_params = pika.ConnectionParameters(
 connection = pika.BlockingConnection(connection_params)
 channel = connection.channel()
 
-channel.queue_declare(queue=QUEUE_GAME_ROOM_FEED)
-channel.queue_declare(queue=QUEUE_DETECTED_OL_CARDS)
+channel.queue_declare(queue=Q_GAME_ROOM_FEED)
+channel.queue_declare(queue=Q_SHORT_LOG)
+channel.queue_declare(queue=Q_DETECTED_OL_CARDS)
 
 channel.basic_consume(
-    queue=QUEUE_GAME_ROOM_FEED, on_message_callback=on_message, auto_ack=True
+    queue=Q_GAME_ROOM_FEED, on_message_callback=on_message, auto_ack=True
 )
 channel.start_consuming()

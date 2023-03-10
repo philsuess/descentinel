@@ -15,14 +15,15 @@ ENV PYTHONPATH .
 CMD ["pytest","tests"]  
 
 FROM lib AS rabbit_service
-ENV QUEUE_GAME_ROOM_FEED Q_GAME_ROOM_FEED
-ENV QUEUE_DETECTED_OL_CARDS QUEUE_DETECTED_OL_CARDS
+ENV Q_GAME_ROOM_FEED Q_GAME_ROOM_FEED
+ENV Q_SHORT_LOG Q_SHORT_LOG
+ENV Q_DETECTED_OL_CARDS Q_DETECTED_OL_CARDS
 RUN pip install pika
 COPY serve_detect_card.py ./
 CMD ["python","serve_detect_card.py"]
 
 FROM lib AS rabbit_service_test
-ENV QUEUE_OL_IMAGES Q_GAME_ROOM_FEED
+ENV Q_OL_IMAGES Q_GAME_ROOM_FEED
 RUN pip install pika
 COPY tests/*.jpg ./tests/
 COPY send_an_image_to_rabbitmq.py ./
