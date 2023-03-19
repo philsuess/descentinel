@@ -1,19 +1,50 @@
 use bytes::Bytes;
 use clap::Parser;
 use deadpool_lapin::{Manager, Pool, PoolError};
-use env_logger::init;
-use lapin::{options::*, types::FieldTable, BasicProperties, ConnectionProperties};
-use log::info;
+use futures::{future::join_all, join, StreamExt};
+use lapin::Consumer;
+use lapin::{options::*, types::FieldTable, ConnectionProperties};
+use log::{error, info};
 use std::result::Result as StdResult;
+use std::time::Duration;
 use std::{
     net::{IpAddr, Ipv4Addr, SocketAddr},
     sync::{Arc, Mutex},
 };
+use thiserror::Error as ThisError;
 use warp::{Filter, Rejection, Reply};
 
-type WebResult<T> = StdResult<T, Rejection>;
-
 type Cache = Arc<Mutex<Bytes>>;
+
+type WebResult<T> = StdResult<T, Rejection>;
+type RMQResult<T> = StdResult<T, PoolError>;
+type Result<T> = StdResult<T, Error>;
+type Connection = deadpool::managed::Object<deadpool_lapin::Manager>;
+
+#[derive(ThisError, Debug)]
+enum Error {
+    #[error("rmq error: {0}")]
+    RMQError(#[from] lapin::Error),
+    #[error("rmq pool error: {0}")]
+    RMQPoolError(#[from] PoolError),
+}
+
+impl warp::reject::Reject for Error {}
+
+#[derive(Clone, Debug)]
+struct DescentinelObject {
+    queue_name: String,
+    last_published_object: Cache,
+}
+
+impl DescentinelObject {
+    fn new(queue_name: &str) -> DescentinelObject {
+        DescentinelObject {
+            queue_name: String::from(queue_name),
+            last_published_object: Arc::new(Mutex::new(Bytes::new())),
+        }
+    }
+}
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -57,14 +88,77 @@ async fn health_handler() -> WebResult<impl Reply> {
     Ok("OK")
 }
 
+async fn rabbitmq_listen(pool: Pool, descentinel_objects: &[DescentinelObject]) -> Result<()> {
+    let mut retry_interval = tokio::time::interval(Duration::from_secs(5));
+    loop {
+        retry_interval.tick().await;
+        info!("connecting rabbitmq consumer...");
+        match init_rabbitmq_listen(pool.clone(), &descentinel_objects).await {
+            Ok(_) => info!("connection to rabbitmq established"),
+            Err(e) => error!(
+                "error when trying to establish connection to rabbitmq: {}",
+                e
+            ),
+        };
+    }
+}
+
+async fn rabbitmq_connection(pool: Pool) -> RMQResult<Connection> {
+    let connection = pool.get().await?;
+    Ok(connection)
+}
+
+async fn consume(mut consumer: Consumer) {
+    while let Some(delivery) = consumer.next().await {
+        let delivery = delivery.expect("error in consumer");
+        delivery.ack(BasicAckOptions::default()).await.expect("ack");
+        info!("received {:?}", delivery);
+    }
+}
+
+async fn init_rabbitmq_listen(pool: Pool, descentinel_objects: &[DescentinelObject]) -> Result<()> {
+    let rmq_con = rabbitmq_connection(pool).await.map_err(|e| {
+        error!("could not get rabbitmq connection: {}", e);
+        e
+    })?;
+    let channel = rmq_con.create_channel().await?;
+
+    let mut consume_futures = vec![];
+
+    for descentinel_object in descentinel_objects {
+        let queue = channel
+            .queue_declare(
+                &descentinel_object.queue_name,
+                QueueDeclareOptions::default(),
+                FieldTable::default(),
+            )
+            .await?;
+        info!("Declared queue {:?}", queue);
+
+        let mut consumer = channel
+            .basic_consume(
+                &descentinel_object.queue_name,
+                "",
+                BasicConsumeOptions::default(),
+                FieldTable::default(),
+            )
+            .await?;
+
+        info!(
+            "rabbitmq consumer connected to {}, waiting for messages",
+            &descentinel_object.queue_name
+        );
+        consume_futures.push(consume(consumer));
+    }
+    join_all(consume_futures).await;
+    Ok(())
+}
+
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<()> {
     env_logger::init();
     info!("BROADCAST service starting");
     let args = Args::parse();
-
-    let rabbitmq_connection_pool = initialize_rabbit_mq_connection(&args.ampq_url).await;
-    info!("connected to rabbitmq on {}", &args.ampq_url);
 
     let webserver_address =
         SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), args.server_port);
@@ -75,5 +169,18 @@ async fn main() {
     let routes = initialize_webserver_routes().await;
     info!("webserver routes initialized");
 
-    warp::serve(routes).run(webserver_address).await;
+    let rabbitmq_connection_pool = initialize_rabbit_mq_connection(&args.ampq_url).await;
+    info!("connecting to rabbitmq on {}", &args.ampq_url);
+
+    let descentinel_objects = vec![
+        DescentinelObject::new(&args.game_room_image_queue),
+        DescentinelObject::new(&args.short_log_queue),
+        DescentinelObject::new(&args.detected_ol_cards_queue),
+    ];
+
+    let _ = join!(
+        warp::serve(routes).run(webserver_address),
+        rabbitmq_listen(rabbitmq_connection_pool.clone(), &descentinel_objects)
+    );
+    Ok(())
 }
