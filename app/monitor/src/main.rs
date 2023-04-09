@@ -14,15 +14,19 @@ use nokhwa::{
 };
 use std::io::Cursor;
 
-fn init_camera() -> nokhwa::Camera {
+fn init_camera(preferred_camera_index: u32) -> nokhwa::Camera {
     let backend = native_api_backend().unwrap();
     let devices = query(backend).unwrap();
-    info!("There are {} available cameras.", devices.len());
+    let number_of_devices_found = devices.len() as u32;
+    info!("There are {} available cameras.", number_of_devices_found);
     for device in devices {
         info!("{device}");
     }
 
-    let index = CameraIndex::Index(0);
+    let index = CameraIndex::Index(std::cmp::min(
+        preferred_camera_index,
+        number_of_devices_found,
+    ));
     // request the absolute highest resolution CameraFormat that can be decoded to RGB.
     let requested =
         RequestedFormat::new::<RgbFormat>(RequestedFormatType::AbsoluteHighestResolution);
@@ -61,6 +65,9 @@ async fn send_over_queue(payload: &[u8], channel: &Channel, queue_name: &str) ->
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
+    #[arg(short, long, default_value_t = 0)]
+    camera_preference_index: u32,
+
     #[arg(short, long, default_value_t = String::from("Q_GAME_ROOM_FEED"))]
     destination_queue: String,
 
@@ -79,7 +86,7 @@ fn main() -> Result<()> {
     info!("MONITOR service starting");
     let args = Args::parse();
 
-    let mut camera = init_camera();
+    let mut camera = init_camera(args.camera_preference_index);
     camera.open_stream().unwrap();
     info!("Camera streaming...");
 
