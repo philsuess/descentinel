@@ -1,0 +1,7 @@
+FROM node as builder
+
+RUN npm install -g pnpm
+
+WORKDIR /app
+
+CMD ["/bin/bash", "-c", "pnpm install; pnpm run build"]
