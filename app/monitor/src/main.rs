@@ -37,6 +37,7 @@ fn init_camera(preferred_camera_index: u32) -> nokhwa::Camera {
 fn capture_frame(camera: &mut nokhwa::Camera) -> ImageBuffer<Rgb<u8>, Vec<u8>> {
     let frame = camera.frame().unwrap();
     //info!("captured single frame of length {}", frame.buffer().len());
+    //info!("{:?}", frame);
     return frame.decode_image::<RgbFormat>().unwrap();
 }
 
@@ -46,6 +47,12 @@ fn convert_to_bytes_buffer(image: &ImageBuffer<Rgb<u8>, Vec<u8>>) -> Vec<u8> {
         .write_to(&mut Cursor::new(&mut bytes), ImageOutputFormat::Png)
         .unwrap();
     bytes
+}
+
+fn capture_image_as_bytes(camera: &mut nokhwa::Camera) -> Vec<u8> {
+    let image = capture_frame(camera);
+    //image.save("capture.jpeg").unwrap();
+    convert_to_bytes_buffer(&image)
 }
 
 async fn send_over_queue(payload: &[u8], channel: &Channel, queue_name: &str) -> Result<()> {
@@ -121,10 +128,8 @@ fn main() -> Result<()> {
 
         let pause_between_images = std::time::Duration::from_millis(args.images_interval_in_ms);
         loop {
-            let image = capture_frame(&mut camera);
-            //image.save("capture.jpeg").unwrap();
-            let bytes = convert_to_bytes_buffer(&image);
-            send_over_queue(&bytes, &channel_images, &args.destination_queue).await?;
+            let image_as_bytes = capture_image_as_bytes(&mut camera);
+            send_over_queue(&image_as_bytes, &channel_images, &args.destination_queue).await?;
             info!("image sent to {}", args.destination_queue);
             std::thread::sleep(pause_between_images);
         }
