@@ -1,12 +1,7 @@
 #!/bin/bash
 
-set -o errexit
-set -o nounset
-set -o pipefail
-set -o xtrace
-
 cd mailbox
-podman build --target broadcast_service --rm -t broadcast_service .
+podman build --target broadcast_service --rm -t broadcast_service -f Containerfile.broadcast.service .
 cd ..
 
 git clone https://github.com/philsuess/descentinel

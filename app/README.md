@@ -7,4 +7,4 @@ Run this on build computer
 
 Run this on the pi
 
-1. `run_on_pi.sh`
+1. `sh run_on_pi.sh`
