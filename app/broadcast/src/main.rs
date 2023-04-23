@@ -66,18 +66,22 @@ async fn initialize_rabbit_mq_connection(ampqurl: &str) -> Pool {
 async fn initialize_webserver_routes(
     route_to_descentinel_object: Cache,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
-    let health = warp::path!("health").and_then(health_handler);
+    let cors = warp::cors().allow_any_origin().allow_methods(vec!["GET"]);
 
-    let descentinel_object = warp::path!("descentinel" / String).and_then({
-        let cache = route_to_descentinel_object.clone();
-        move |descentinel_object| {
-            let cache = cache.clone();
-            async move {
-                let database = cache.lock().unwrap();
-                Ok::<_, Infallible>(format!("cached: {:?}", database.get(&descentinel_object)))
+    let health = warp::path!("health").and_then(health_handler).with(&cors);
+
+    let descentinel_object = warp::path!("descentinel" / String)
+        .and_then({
+            let cache = route_to_descentinel_object.clone();
+            move |descentinel_object| {
+                let cache = cache.clone();
+                async move {
+                    let database = cache.lock().unwrap();
+                    Ok::<_, Infallible>(format!("{:?}", database.get(&descentinel_object).unwrap()))
+                }
             }
-        }
-    });
+        })
+        .with(&cors);
     health.or(descentinel_object)
 }
 
@@ -119,7 +123,7 @@ async fn consume(mut consumer: Consumer, route_name: &str, route_to_descentinel_
     while let Some(delivery) = consumer.next().await {
         let delivery = delivery.expect("error in consumer");
         delivery.ack(BasicAckOptions::default()).await.expect("ack");
-        info!("received {:?}", delivery);
+        //info!("received {:?}", delivery);
         {
             let mut route_to_descentinel_object = route_to_descentinel_object.lock().unwrap();
             route_to_descentinel_object.insert(String::from(route_name), delivery.data);
