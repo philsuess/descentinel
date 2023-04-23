@@ -226,7 +226,7 @@ async fn main() -> Result<()> {
     let args = Args::parse();
 
     let webserver_address =
-        SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), args.server_port);
+        SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), args.server_port);
     info!("broadcasting to {}", webserver_address);
 
     let route_to_descentinel_object = initialize_cached_descentinel_objects();

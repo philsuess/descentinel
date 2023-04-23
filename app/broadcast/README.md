@@ -17,8 +17,4 @@ This is a warp server that broadcasts all backend content, specifically the last
 # Service (container me)
 
 - `podman build --target broadcast_service --rm -t broadcast_service .` to build the service
-
-- To produce a binary for the raspberry pi (aarch64):
-  1. `podman build --rm -t broadcast_build_aarch64 -f Containerfile.aarch64 .` to build the cross compilation container
-  1. `podman run -v <path_to_app>\broadcast:/broadcast broadcast_build_aarch64` to build the aarch64 version of the app
-  1. Resulting binary will be in `target/aarch64-unknown-linux-gnu/release/broadcast`
+- `podman run -d -p 3030:3030 --name broadcast broadcast_service` to run it
