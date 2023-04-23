@@ -501,6 +501,114 @@
                 "type": "Falle (Tür)",
                 "Effect": "Spiele diese Karte wenn ein Held eine Tür öffnet, die einen neuen Bereich freigibt. Platziere einen Pfeilfeldmarker mit sechs Feldern in einem leeren Abschnitt des Korridors im aufgedeckten Bereich."
             }
+        },
+        "elite_beastman_war_party": {
+            "name": "Elite Beastman War Party",
+            "type": "Spawn",
+            "threat cost": 6,
+            "treachery cost": 2,
+            "treachery colour": "red",
+            "discard value": 2,
+            "Effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Beastmen and 2 Master Beastmen, following all of the normal rules for spawning monsters.",
+            "de": {
+                "name": "Elite Tiermenschen Kriegstrupp",
+                "type": "Enstehung",
+                "Effect": "Spiele diese Karte aus, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 2 Tiermenschen und 2 Elite Tiermenschen nach den üblichen Regeln entstehen lassen."
+            }
+        },
+        "empower": {
+            "name": "Empower",
+            "type": "Event",
+            "threat cost": "X",
+            "treachery cost": 1,
+            "treachery colour": "green",
+            "discard value": 2,
+            "Effect": "Play when you activate a monster. Heal that monster of one wound for every threat you spend to play this card.",
+            "de": {
+                "name": "Ermächtigung",
+                "type": "Ereignis",
+                "Effect": "Spiele diese Karte wenn du ein Monster aktivierst. Heile das Monster um eine Wunde für jede Bedrohung, die du ausgibst um diese Karte zu spielen."
+            }
+        },
+        "enraged": {
+            "name": "Enraged",
+            "type": "Event",
+            "threat cost": 6,
+            "treachery cost": 1,
+            "treachery colour": "green",
+            "discard value": 2,
+            "Effect": "Play when you activate a monster. Double the monster's speed for this activation. In addition, the monster may attack twice during this activation (4 times if it has Quick Shot).",
+            "Overlord tactic": "This card has the effect of the Charge card and the Rage card combined. Can be a nasty surprise when used with a powerful monster.",
+            "de": {
+                "name": "Wütend",
+                "type": "Ereignis",
+                "Effect": "Spiele diese Karte wenn du ein Monster aktivierst. Verdopple die Geschwindigkeit des Monsters für diese Aktivierung. Außerdem kann das Monster während dieser Aktivierung zweimal angreifen (4mal, wenn es Doppelangriff hat).",
+                "Overlord tactic": "Diese Karte hat den Effekt der Sturmlauf Karte und der Wut Karte zusammen. Kann eine böse Überraschung sein wenn es mit einem mächtigen Monster verwendet wird."
+            }
+        },
+        "envy": {
+            "name": "Envy",
+            "type": "Power",
+            "threat cost": 15,
+            "treachery cost": 2,
+            "treachery colour": "green",
+            "discard value": 5,
+            "Effect": "Play this card at the start of your turn and place it faceup in front of you. Heroes may no longer give items or potions to other heroes (although familiars capable of doing so still may).",
+            "de": {
+                "name": "Neid",
+                "type": "Macht",
+                "Effect": "Spiele diese Karte zu Beginn Teines Zuges und lege sie offen vor dich hin. Helden dürfen anderen Helden keine Gegenstände oder Tränke mehr geben (obwohl Vertraute, die dazu in der Lage sind, dies immer noch tun können)."
+            }
+        },
+        "evil_genius": {
+            "name": "Evil Genius",
+            "type": "Power",
+            "threat cost": 25,
+            "treachery cost": 0,
+            "treachery colour": "none",
+            "discard value": 5,
+            "Effect": "Play this card at the start of your turn and place it face up in front of you. Draw 1 extra overlord card each turn.",
+            "Overlord tactic": "Like most other Power cards, Evil Genius is best played in the early stage of a quest. This card gives you many advantages and is well worth playing. First, it obviously gives you more cards in your hand, so more choice to decide your course of action. Secondly, since you have more cards to discard, you can save up more threat tokens. Lastly, the players will lose conquest tokens more rapidly because you will have to reshuffle your deck earlier. If you play with JITD only, you have 36 overlord cards in your deck, so it would normally take 18 turns before shuffling, but only 12 with Evil Genius.",
+            "Heroes tactic": "Nothing much you can do.",
+            "de": {
+                "name": "Böses Genie",
+                "type": "Macht",
+                "Effect": "Spiele diese Karte zu Beginn Deines Zuges und lege sie offen vor Dich ab. Ziehe in jeder Runde 1 zusätzliche Overlord-Karte.",
+                "Overlord tactic": "Wie die meisten anderen Machtkarten wird Böses Genie am besten in der frühen Phase einer Quest gespielt. Diese Karte bietet Dir viele Vorteile und ist es wert, gespielt zu werden. Erstens gibt sie Dir offensichtlich mehr Karten auf die Hand, also mehr Auswahlmöglichkeiten. Zweitens, da Du mehr Karten zum Abwerfen hast, kannst Du mehr Bedrohungsmarker sparen. Zu guter Letzt verlieren die Spieler Eroberungsmarken schneller weil Du früher Dein Deck neu mischen musst. Wenn Ihr nur mit dem Basisspiel spielt, habt Ihr 36 Overlord-Karten im Deck sodass es normalerweise 18 Runden dauern würde, bevor Du mischen musst; mit Böses Genie sind es nur 12 Runden.",
+                "Heroes tactic": "Es gibt nicht viel was Ihr dagegen tun könnt..."
+            },
+            "explosive_door": {
+                "name": "Explosive Door",
+                "type": "Trap (Door)",
+                "threat cost": 9,
+                "treachery cost": 0,
+                "treachery colour": "none",
+                "discard value": 3,
+                "Effect": "Play this card when a hero opens a door. Every hero adjacent to the door suffers 4 wounds (ignoring armor). Each affected hero may roll 4 power dice and reduce the effect by 1 wound for each surge he rolls.",
+                "Overlord tactic": "Lower the cost! Use this card for less threat tokens by having the Trapmaster power in play and/or some monsters with the Trickster special ability.",
+                "Heroes tactic": "Nothing much you can do.",
+                "de": {
+                    "name": "Explodierende Tür",
+                    "type": "Falle (Tür)",
+                    "Effect": "Spiele diese Karte wenn ein Held eine Tür öffnet. Jeder Held neben der Tür erleidet 4 Schaden (Rüstung wird ignoriert). Jeder betroffene Held darf 4 Machtwürfel würfeln und den Effekt um 1 Wunde für jede Energie, die er würfelt, verringern.",
+                    "Overlord tactic": "Senke die Kosten! Spiele diese Karte für weniger Bedrohungsmarker, indem Du die Fallenmeister Machtkarte im Spiel hast und/oder einige Monster mit der Spezialfähigkeit Betrüger.",
+                    "Heroes tactic": "Es gibt nicht viel was Ihr dagegen tun könnt..."
+                }
+            },
+            "ferrox_tribe": {
+                "name": "Ferrox Tribe",
+                "type": "Spawn",
+                "threat cost": 5,
+                "treachery cost": 0,
+                "treachery colour": "none",
+                "discard value": 2,
+                "Effect": "Play this card before activating any of your monsters for the turn. You may spawn 1 Ferrox and 1 Master Ferrox, following all of the normal rules for spawning monsters.",
+                "de": {
+                    "name": "Ferrox Stamm",
+                    "type": "Enstehung",
+                    "Effect": "Spiele diese Karte aus bevor du eines Deiner Monster für die Runde aktivierst. Du kannst 1 Ferrox und 1 Elite Ferrox nach den üblichen Regeln entstehen lassen."
+                }
+            }
         }
     }
 }
