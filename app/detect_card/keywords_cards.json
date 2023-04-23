@@ -1,7 +1,7 @@
 {
     "cards": [
         {
-            "id": "Dark Balm",
+            "id": "dark_balm",
             "keywords": [
                 "les pions",
                 "monstre de votre chorx",
@@ -15,7 +15,7 @@
             ]
         },
         {
-            "id": "Explosive Rune",
+            "id": "explosive_rune",
             "keywords": [
                 "Explosive",
                 "Kune",
@@ -27,7 +27,7 @@
             ]
         },
         {
-            "id": "Explosive Rune",
+            "id": "explosive_rune",
             "keywords": [
                 "Bchatztrube",
                 "Schatztrube",
@@ -38,7 +38,7 @@
             ]
         },
         {
-            "id": "Ferrox Tribe",
+            "id": "ferrox_tribe",
             "keywords": [
                 "Ferrox",
                 "Ferrox Majeur",
@@ -50,7 +50,7 @@
             ]
         },
         {
-            "id": "Hell Hound Pack",
+            "id": "hell_hound_pack",
             "keywords": [
                 "hunde",
                 "llenhunde",
