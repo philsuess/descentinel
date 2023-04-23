@@ -2,7 +2,7 @@
 
 ## Frontend
 
-1. `sh setup_frontend.sh`
+1. `sudo sh setup_frontend.sh`
 
 ## Backend
 
