@@ -16,4 +16,4 @@ sh ./create_pod.sh
 cd ../../
 
 cd mailbox
-./monitor
+for i in 1 2 3 4 5; do ./monitor && break || sleep 15; done
