@@ -257,6 +257,250 @@
                 "type": "Falle (Truhe)",
                 "Effect": "Spiele diese Karte wenn ein Held eine Truhe öffnet. Der Held muss einen Machtwürfel würfeln. Wenn das Ergebnis die Leerseite ist passiert nichts. Wenn nicht, darfst du sofort 1 Fluchmarker auf ihn legen."
             }
+        },
+        "dance_of_the_monkey_god": {
+            "name": "Dance of the Monkey God",
+            "type": "Trap",
+            "threat cost": 25,
+            "treachery cost": 3,
+            "treachery colour": "purple",
+            "discard value": 5,
+            "Effect": "Play at the start of your turn. Each hero in the dungeon must roll a power die. If the result is a blank, nothing happens to that hero. If the result is not a blank, that hero is transformed into a monkey.",
+            "de": {
+                "name": "Tanz des Affengottes",
+                "type": "Falle",
+                "Effect": "Spiele dies Karte zu Beginn Deines Zuges. Jeder Held im Verlies muss einen Machtwürfel werfen. Wenn das Ergebnis die Leerseite ist passiert diesem Helden nichts. Sonst verwandelt sich dieser Held in einen Affen."
+            }
+        },
+        "danger": {
+            "name": "Danger",
+            "type": "Event",
+            "threat cost": 0,
+            "treachery cost": "0/1",
+            "treachery colour": "green",
+            "discard value": 10,
+            "Effect": "This card has no effect. It can only be discarded for threat.",
+            "de": {
+                "name": "Gefahr",
+                "type": "Ereignis",
+                "Effect": "Diese Karte hat keine Wirkung. Sie kann nur für die Bedrohung abgeworfen werden."
+            }
+        },
+        "dark_armor": {
+            "name": "Dark Armor",
+            "type": "Power",
+            "threat cost": 19,
+            "treachery cost": 1,
+            "treachery colour": "red",
+            "discard value": 5,
+            "Effect": "Play this card at the start of your turn and place it faceup in front of you. All your monsters gain +1 Armor.",
+            "de": {
+                "name": "Dunkle Rüstung",
+                "type": "Macht",
+                "Effect": "Spiele diese Karte zu Beginn Teines Zuges und lege sie offen vor dich hin. Alle Deine Monster erhalten +1 Rüstung."
+            }
+        },
+        "dark_balm": {
+            "name": "Dark Balm",
+            "type": "Event",
+            "threat cost": 5,
+            "treachery cost": "0/1",
+            "treachery colour": "green",
+            "discard value": 2,
+            "Effect": "Play this card at the start of your turn to remove all effect tokens from a monster of your choice.",
+            "de": {
+                "name": "Dunkler Balsam",
+                "type": "Ereignis",
+                "Effect": "Spiele diese Karte zu Beginn Deines Zuges um alle Effektmarker von einem Monster Deiner Wahl zu entfernen."
+            }
+        },
+        "dark_brothers": {
+            "name": "Dark Brothers",
+            "type": "Spawn",
+            "threat cost": 6,
+            "treachery cost": 2,
+            "treachery colour": "red",
+            "discard value": 2,
+            "Effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Master Dark Priests following all of the normal rules for spawning monsters.",
+            "de": {
+                "name": "Dunkle Brüder",
+                "type": "Enstehung",
+                "Effect": "Spiele diese Karte aus bevor Du eines Deiner Monster für die Runde aktivierst. Du kannst 2 Elite Dunkle Priester nach allen normalen Regeln entstehen lassen."
+            }
+        },
+        "dark_charm": {
+            "name": "Dark Charm",
+            "type": "Trap",
+            "threat cost": 8,
+            "treachery cost": "0/1",
+            "treachery colour": "purple",
+            "discard value": 2,
+            "Effect": "Play at the start of your turn and choose one hero. The chosen hero player must roll one power die. If the result is blank, nothing happens. If the result is not a blank, the hero must make one attack that you declare. This attack may target any hero, including the attacking hero, but is subject to the normal attack rules, including range and line of sight.",
+            "Overlord tactic": "Play it wisely! Chances are not that high. The player has 1 chance out of 6 of rolling a blank to avoid the trap and 1 chance out of 6 to miss his attack on his little friend. It's a good timing when a hero has just discovered a blast weapon or when a hero is about to die.",
+            "de": {
+                "name": "Dunkle Verführung",
+                "type": "Falle",
+                "Effect": "Spiele diese Karte zu Beginn Deines Zuges und wähle einen Helden. Der gewählte Held muss einen Machtwürfel würfeln. Wenn das Ergebnis die Leerseite ist, passiert nichts. Sonst muss der Held einen von Dir angesagten Angriff ausführen. Dieser Angriff kann auf jeden Helden abzielen, einschließlich des angreifenden Helden selbst, unterliegt jedoch den normalen Angriffsregeln, einschließlich Reichweite und Sichtlinie.",
+                "Overlord tactic": "Spiele diese Karte mit Bedacht! Die Chancen stehen nicht so hoch. Der Spieler hat eine Chance von 1 zu 6, ein Leerzeichen zu würfeln und der Falle auszuweichen, und eine Chance von 1 zu 6 seinen Angriff auf seinen Kumpel (oder sich selbst) zu verfehlen. Es ist ein guter Zeitpunkt, wenn ein Held gerade eine Explosionswaffe entdeckt hat oder wenn ein Held kurz vor dem Tod steht."
+            }
+        },
+        "dark_masters": {
+            "name": "Dark Masters",
+            "type": "Spawn",
+            "threat cost": 6,
+            "treachery cost": 2,
+            "treachery colour": "red",
+            "discard value": 2,
+            "Effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Master Sorcerers, following all of the normal rules for spawning monsters.",
+            "de": {
+                "name": "Dunkle Meister",
+                "type": "Enstehung",
+                "Effect": "Spiele diese Karte aus bevor Du eines deiner Monster für die Runde aktivierst. Du kannst 2 Elite Hexenmeister nach den üblichene Regeln entstehen lassen."
+            }
+        },
+        "dark_power": {
+            "name": "Dark Power",
+            "type": "Event",
+            "threat cost": 3,
+            "treachery cost": 1,
+            "treachery colour": "green",
+            "discard value": 2,
+            "Effect": "Play immediately after declaring an attack but before rolling any dice. Add all 5 power dice to the attack.",
+            "de": {
+                "name": "Dunkle Macht",
+                "type": "Enstehung",
+                "Effect": "Spiele diese Karte nachdem Du einen Angriff deklariert hast, aber bevor Du würfest. Füge dem Angriff alle 5 Machtwürfel hinzu."
+            }
+        },
+        "dark_relic": {
+            "name": "Dark Relic",
+            "type": "Trap (Treasure)",
+            "threat cost": "X",
+            "treachery cost": 2,
+            "treachery colour": "purple",
+            "discard value": 4,
+            "Effect": "Play this card when a hero receives a treasure card. The hero must roll a power die. If the result is a blank, nothing happens. If the result is not a blank, he receives a Dark Relic of your choice instead of the treasure card. The threat cost for this card is 4 if the treasure card was copper, 8 if it was silver, and 12 if it was gold. In addition, you must pay the threat cost of the dark relic you choose to give to the hero.",
+            "de": {
+                "name": "Dunkles Relikt",
+                "type": "Falle (Schatz)",
+                "Effect": "Spiele diese Karte wenn ein Held eine Schatzkarte erhält. Der Held muss einen Machtwürfel würfeln. Wenn das Ergebnis die Leerseite ist, passiert nichts. Sonst erhält er statt der Schatzkarte ein Dunkles Relikt deiner Wahl. Die Bedrohungskosten für diese Karte betragen 4 wenn die Schatzkarte Kupfer war, 8 wenn sie Silber war, und 12 wenn sie Gold war. Zusätzlich musst du die Bedrohungskosten des dunklen Relikts bezahlen, das Du dem Helden gibst."
+            }
+        },
+        "dark_servant": {
+            "name": "Dark Servant",
+            "type": "Event",
+            "threat cost": 8,
+            "treachery cost": 1,
+            "treachery colour": "red",
+            "discard value": 3,
+            "Effect": "Play at the start of your turn. Remove an unnamed normal monster and replace it with an unwounded master monster of that type.",
+            "de": {
+                "name": "Dunkler Diener",
+                "type": "Ereignis",
+                "Effect": "Spiele diese Karte zu Beginn Deines Zuges. Entferne ein unbenanntes normales Monster und ersetze es durch ein unverletztes Elitemonster des gleichen Typs."
+            }
+        },
+        "death_on_the_wing": {
+            "name": "Death on the Wing",
+            "type": "Spawn",
+            "threat cost": 5,
+            "treachery cost": 1,
+            "treachery colour": "red",
+            "discard value": 2,
+            "Effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Master Razorwings, following all of the normal rules for spawning monsters.",
+            "de": {
+                "name": "Tod auf Flügeln",
+                "type": "Enstehung",
+                "Effect": "Spiele diese Karte aus bevor Du eines Deiner Monster für die Runde aktivierst. Du kannst 2 Elite Rasierklingenflügler nach den üblichen Regeln entstehen lassen."
+            }
+        },
+        "dire_warnings": {
+            "name": "Dire Warnings",
+            "type": "Power",
+            "threat cost": 18,
+            "treachery cost": 2,
+            "treachery colour": "green",
+            "discard value": 5,
+            "Effect": "Play this card at the start of your turn and place it faceup in front of you. Each time a new area is revealed, you may immediately activate (move and attack with) up to 2 monsters in that area. The player who revealed the area then finishes his turn.",
+            "de": {
+                "name": "Düstere Warnungen",
+                "type": "Macht",
+                "Effect": "Spiele diese Karte zu Beginn Deines Zuges und lege sie offen vor Dich hin. Jedes Mal wenn ein neues Gebiet aufgedeckt wird kannst du sofort bis zu 2 Monster in diesem Gebiet aktivieren (bewegen und angreifen). Der Spieler, der das Gebiet aufgedeckt hat, beendet dann seinen Zug."
+            }
+        },
+        "dodge": {
+            "name": "Dodge",
+            "type": "Event",
+            "threat cost": 2,
+            "treachery cost": 0,
+            "treachery colour": "none",
+            "discard value": 1,
+            "Effect": "Play after a hero has attacked a monster. The monster dodges the attack.",
+            "Overlord tactic": "Useful to protect the final boss or important monsters that you want to keep alive. Because of its low cost, it can be played almost anytime.",
+            "de": {
+                "name": "Ausweichen",
+                "type": "Ereignis",
+                "Effect": "Spiele diese Karte nachdem ein Held ein Monster angegriffen hat. Das Monster weicht dem Angriff aus.",
+                "Overlord tactic": "Nützlich um den letzten Boss oder wichtige Monster zu schützen die Du am Leben erhalten möchtest. Aufgrund seiner geringen Kosten kann diese Karte fast jederzeit gespielt werden."
+            }
+        },
+        "dogs_of_war": {
+            "name": "Dogs of War",
+            "type": "Spawn",
+            "threat cost": 6,
+            "treachery cost": 2,
+            "treachery colour": "red",
+            "discard value": 2,
+            "Effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Master Hell Hounds, following all of the normal rules for spawning monsters.",
+            "de": {
+                "name": "Kriegshunde",
+                "type": "Enstehung",
+                "Effect": "Spiele diese Karte aus bevor Du eines Deiner Monster für die Runde aktivierst. Du kannst 2 Elite Höllenhunde nach den üblichen Regeln entstehen lassen."
+            }
+        },
+        "doom": {
+            "name": "DOOM!",
+            "type": "Power",
+            "threat cost": 20,
+            "treachery cost": "0/1",
+            "treachery colour": "none/red",
+            "discard value": 5,
+            "Effect": "Play this card at the start of your turn and place it face up in front of you. All of your monsters roll 1 extra power die when attacking.",
+            "Overlord tactic": "Think twice! Like most other Power cards, it is best played in the early stage of a quest. This card gives you the power to deal more damage with each attack, but also more chances to roll surges and gain extra threat tokens. A definite advantage.",
+            "de": {
+                "name": "UNTERGANG!",
+                "type": "Macht",
+                "Effect": "Spiele diese Karte zu Beginn Deines Zuges und lege sie offen vor sich ab. Alle deine Monster werfen beim Angriff 1 zusätzlichen Machtwürfel.",
+                "Overlord tactic": "Überdenke nochmal! Wie die meisten anderen Machtkarten wird sie am besten in der frühen Phase einer Quest gespielt. Diese Karte gibt dir die Kraft, mit jedem Angriff mehr Schaden zu verursachen, aber auch mehr Chancen, Kraftverstärker zu würfeln und damit zusätzliche Bedrohungsmarker zu erhalten. Ein klarer Vorteil."
+            }
+        },
+        "drinkers_of_blood": {
+            "name": "Drinkers of Blood",
+            "type": "Spawn",
+            "threat cost": 5,
+            "treachery cost": 1,
+            "treachery colour": "red",
+            "discard value": 2,
+            "Effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Master Ferrox, following all of the normal rules for spawning monsters.",
+            "de": {
+                "name": "Bluttrinker",
+                "type": "Enstehung",
+                "Effect": "Spiele diese Karte aus bevor Du eines Deiner Monster für die Runde aktivierst. Du kannst 2 Elite Ferrox nach den üblichen Regeln entstehen lassen."
+            }
+        },
+        "drugged_darts": {
+            "name": "Drugged Darts",
+            "type": "Trap (Door)",
+            "threat cost": 9,
+            "treachery cost": 2,
+            "treachery colour": "purple",
+            "discard value": 3,
+            "Effect": "Play this card when a hero opens a door revealing a new area. Place a six-space dart field token in an empty section of corridor in the revealed area.",
+            "de": {
+                "name": "Giftpfeile",
+                "type": "Falle (Tür)",
+                "Effect": "Spiele diese Karte wenn ein Held eine Tür öffnet, die einen neuen Bereich freigibt. Platziere einen Pfeilfeldmarker mit sechs Feldern in einem leeren Abschnitt des Korridors im aufgedeckten Bereich."
+            }
         }
     }
 }
