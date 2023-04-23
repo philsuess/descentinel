@@ -1,0 +1,14 @@
+{
+    "id": "Ambush",
+    "type": "Event",
+    "threat cost": 5,
+    "treachery cost": 2,
+    "treachery colour": "green",
+    "discard value": 2,
+    "Effect": "Play immediately before the start of a hero's turn. Activate (move and attack with) up to 3 monsters of your choice.",
+    "de": {
+        "name": "Hinterhalt",
+        "type": "Ereignis",
+        "Effect": "Spiele diese Karte unmittelbar vor Beginn des Zuges eines Helden. Aktiviere (bewege und greife an) bis zu 3 Monster deiner Wahl."
+    }
+}

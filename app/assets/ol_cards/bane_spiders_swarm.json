@@ -1,0 +1,18 @@
+{
+    "id": "Bane Spiders Swarm",
+    "type": "Spawn",
+    "threat cost": 4,
+    "treachery cost": 0,
+    "treachery colour": "none",
+    "discard value": 2,
+    "Effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Bane Spiders and 1 Master Bane Spider, following all of the normal rules for spawning monsters.",
+    "Overlord tactic": "This Overlord spawn card is not really powerful as Bane Spiders can be killed easily but it can be used to add more cannon fooder on the map. The Master Bane Spider, with good rolls, can web or poison heroes, slowing the party and reducing the effect of healing potions.",
+    "Heroes tactic": "When played by the Overlord, Heroes should try to take down the Master Bane Spider as soon as possible to avoid its nasty Web effect. Other, normal, Bane Spiders are not a real threat.",
+    "de": {
+        "name": "Mörderspinnen Schwarm",
+        "type": "Enstehung",
+        "Effect": "Spiele diese Karte aus, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 2 Mörderspinnen und 1 Elite Mörderspinne nach den normalen Regeln entstehen lassen.",
+        "Overlord tactic": "Diese Overlord Karte ist nicht wirklich mächtig, da Mörderspinnen leicht getötet werden können. Aber sie kann verwendet werden, um mehr Kanonenfutter auf die Karte hinzuzufügen. Die Elite Mörderspinnen können mit guten Würferwürfen Helden in ein Netz einspinnen oder vergiften und die Gruppe damit verlangsamen und die Wirkung von Heiltränken verringern.",
+        "Heroes tactic": "Wenn sie vom Overlord gespielt werden, sollten Helden versuchen, die Elite Mörderspinnen so schnell wie möglich zu besiegen um ihren bösen Netz-Effekt zu vermeiden. Andere, normale Mörderspinnen sind keine wirkliche Bedrohung."
+    }
+}

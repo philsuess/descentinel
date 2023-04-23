@@ -1,0 +1,14 @@
+{
+    "id": "Bane Spiders Nest",
+    "type": "Spawn",
+    "threat cost": 5,
+    "treachery cost": 1,
+    "treachery colour": "red",
+    "discard value": 2,
+    "Effect": "Play this card before activating any of your monsters for the turn. You may spawn 3 Master Bane Spiders, following all of the normal rules for spawning monsters.",
+    "de": {
+        "name": "Mörderspinnennest",
+        "type": "Enstehung",
+        "Effect": "Spiele diese Karte aus, bevor du eines deiner Monster aktivierst. Du kannst 3 Mörderspinnen aufstellen indem du alle normalen Regeln für das Entstehen von Monstern befolgst."
+    }
+}

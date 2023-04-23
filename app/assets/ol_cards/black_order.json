@@ -1,0 +1,14 @@
+{
+    "id": "Black Order",
+    "type": "Spawn",
+    "threat cost": 5,
+    "treachery cost": 0,
+    "treachery colour": "none",
+    "discard value": 2,
+    "Effect": "Play this card before activating any of your monsters for the turn. You may spawn 1 Master Dark Priest and 1 Dark Priest, following all of the normal rules for spawning monsters.",
+    "de": {
+        "name": "Schwarze Ordnung",
+        "type": "Enstehung",
+        "Effect": "Spiele diese Karte aus bevor du eines deiner Monster für die Runde aktivierst. Du kannst 1 Elite Dunkelpriester und 1 Dunkelpriester nach den normalen Regeln entstehen lassen."
+    }
+}

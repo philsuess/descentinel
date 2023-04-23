@@ -1,0 +1,14 @@
+{
+    "id": "All-Concealing Shadows",
+    "type": "Power",
+    "threat cost": 17,
+    "treachery cost": 2,
+    "treachery colour": "green",
+    "discard value": 5,
+    "Effect": "Play this card at the start of your turn and place it faceup in front of you. After a hero has attacked a monster, you may spend 2 threat to have the monster dodge the attack.",
+    "de": {
+        "name": "Alles verdeckende Schatten",
+        "type": "Macht",
+        "Effect": "Spiele diese Karte zu Beginn deines Zuges und lege sie offen vor dich hin. Nachdem ein Held ein Monster angegriffen hat, kannst du 2 Bedrohung ausgeben, damit das Monster dem Angriff ausweicht."
+    }
+}

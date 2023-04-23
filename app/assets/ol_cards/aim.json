@@ -1,0 +1,18 @@
+{
+    "name": "Aim",
+    "type": "Event",
+    "threat cost": 2,
+    "treachery cost": 0,
+    "treachery colour": "none",
+    "discard value": 1,
+    "Effect": "Play immediately after declaring an attack but before rolling any dice. Your attack is an aimed attack.",
+    "Overlord tactic": "This low cost card is useful when you are attacking a weak hero and want to make sure to deal the final blow. It is also useful to counter the dodge ready action.",
+    "Heroes tactic": "None. Pray that the re-roll is worst than the first roll.",
+    "de": {
+        "name": "Zielen",
+        "type": "Ereignis",
+        "Effect": "Spiele die Karte nachdem Du einen Angriff deklariert hast aber bevor Du würfelst. Der Angriff ist ein gezielter Angriff.",
+        "Overlord tactic": "Diese kostengünstige Karte ist nützlich, wenn Du einen schwachen Helden angreifen und fertig machen möchtest. Es ist auch nützlich, um der Ausweichaktion entgegenzuwirken.",
+        "Heroes tactic": "Keine. Betet, dass der Wiederholungswurf schlechter ist als der erste Wurf."
+    }
+}
