@@ -54,13 +54,13 @@ def on_message(channel, delivery, properties, body):
 
     send_properties = pika.BasicProperties(
         app_id="descentinel",
-        content_type="application/json",
+        content_type="text/plain",
         correlation_id=properties.correlation_id,
     )
     channel.basic_publish(
         exchange=EXCHANGE,
         routing_key=Q_DETECTED_OL_CARDS,
-        body=json.dumps(card),
+        body=card["id"],
         properties=send_properties,
     )
     log_info_text = "Identified OL card"

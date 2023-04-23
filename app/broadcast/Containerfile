@@ -1,0 +1,4 @@
+FROM docker.io/debian:stable-slim AS broadcast_service
+EXPOSE 3030
+COPY release/broadcast .
+CMD ["./broadcast"]

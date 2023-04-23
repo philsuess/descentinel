@@ -4,6 +4,7 @@ use futures::{future::join_all, join, StreamExt};
 use lapin::Consumer;
 use lapin::{options::*, types::FieldTable, ConnectionProperties};
 use log::{error, info};
+use msgpack_simple::MsgPack;
 use std::{
     collections::HashMap,
     convert::Infallible,
@@ -66,18 +67,22 @@ async fn initialize_rabbit_mq_connection(ampqurl: &str) -> Pool {
 async fn initialize_webserver_routes(
     route_to_descentinel_object: Cache,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
-    let health = warp::path!("health").and_then(health_handler);
+    let cors = warp::cors().allow_any_origin().allow_methods(vec!["GET"]);
 
-    let descentinel_object = warp::path!("descentinel" / String).and_then({
-        let cache = route_to_descentinel_object.clone();
-        move |descentinel_object| {
-            let cache = cache.clone();
-            async move {
-                let database = cache.lock().unwrap();
-                Ok::<_, Infallible>(format!("cached: {:?}", database.get(&descentinel_object)))
+    let health = warp::path!("health").and_then(health_handler).with(&cors);
+
+    let descentinel_object = warp::path!("descentinel" / String)
+        .and_then({
+            let cache = route_to_descentinel_object.clone();
+            move |descentinel_object| {
+                let cache = cache.clone();
+                async move {
+                    let database = cache.lock().unwrap();
+                    Ok::<_, Infallible>(format!("{:?}", database.get(&descentinel_object).unwrap()))
+                }
             }
-        }
-    });
+        })
+        .with(&cors);
     health.or(descentinel_object)
 }
 
@@ -115,14 +120,29 @@ async fn rabbitmq_connection(pool: Pool) -> RMQResult<Connection> {
     Ok(connection)
 }
 
+fn pack_delivery(data: &Vec<u8>, route_name: &str) -> Vec<u8> {
+    match route_name {
+        "game_room_image" => data.clone(),
+        _ => {
+            info!("Got {:?}", String::from_utf8(data.to_owned()).unwrap());
+            info!(
+                "packed: {:?}",
+                MsgPack::String(String::from_utf8(data.to_owned()).unwrap()).encode()
+            );
+            MsgPack::String(String::from_utf8(data.to_owned()).unwrap()).encode()
+        }
+    }
+}
+
 async fn consume(mut consumer: Consumer, route_name: &str, route_to_descentinel_object: Cache) {
     while let Some(delivery) = consumer.next().await {
         let delivery = delivery.expect("error in consumer");
         delivery.ack(BasicAckOptions::default()).await.expect("ack");
-        info!("received {:?}", delivery);
+        //info!("received {:?}", delivery);
+        let packed_data = pack_delivery(&delivery.data, route_name);
         {
             let mut route_to_descentinel_object = route_to_descentinel_object.lock().unwrap();
-            route_to_descentinel_object.insert(String::from(route_name), delivery.data);
+            route_to_descentinel_object.insert(String::from(route_name), packed_data);
         }
     }
 }
@@ -163,6 +183,7 @@ async fn init_rabbitmq_listen(
             "rabbitmq consumer connected to {}, waiting for messages",
             &queue_name
         );
+
         consume_futures.push(consume(
             consumer,
             route_name,
@@ -205,7 +226,7 @@ async fn main() -> Result<()> {
     let args = Args::parse();
 
     let webserver_address =
-        SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), args.server_port);
+        SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), args.server_port);
     info!("broadcasting to {}", webserver_address);
 
     let route_to_descentinel_object = initialize_cached_descentinel_objects();

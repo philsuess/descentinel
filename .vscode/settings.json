@@ -1,7 +1,10 @@
 {
-    "conventionalCommits.scopes": [
-        "detect_card",
-        "monitor",
-        "broadcast"
-    ]
+  "conventionalCommits.scopes": [
+    "detect_card",
+    "monitor",
+    "broadcast",
+    "assets",
+    "view",
+    "app"
+  ]
 }
