@@ -241,6 +241,7 @@ dependencies = [
  "futures",
  "lapin",
  "log",
+ "msgpack_simple",
  "thiserror",
  "tokio",
  "tokio-executor-trait",
@@ -743,6 +744,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fed44880c466736ef9a5c5b5facefb5ed0785676d0c02d612db14e54f0d84286"
 
 [[package]]
+name = "hex"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "805026a5d0141ffc30abb3be3173848ad46a1b1664fe632428479619a3644d77"
+
+[[package]]
 name = "hmac"
 version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -989,6 +996,16 @@ dependencies = [
  "log",
  "wasi",
  "windows-sys 0.45.0",
+]
+
+[[package]]
+name = "msgpack_simple"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0378abb2e031179121c5c80dd88c7f78ce3eef8999648dbdfa40d982e76cb165"
+dependencies = [
+ "byteorder",
+ "hex",
 ]
 
 [[package]]
