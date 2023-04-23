@@ -1,0 +1,262 @@
+{
+    "aim": {
+        "name": "Aim",
+        "type": "Event",
+        "threat cost": 2,
+        "treachery cost": 0,
+        "treachery colour": "none",
+        "discard value": 1,
+        "Effect": "Play immediately after declaring an attack but before rolling any dice. Your attack is an aimed attack.",
+        "Overlord tactic": "This low cost card is useful when you are attacking a weak hero and want to make sure to deal the final blow. It is also useful to counter the dodge ready action.",
+        "Heroes tactic": "None. Pray that the re-roll is worst than the first roll.",
+        "de": {
+            "name": "Zielen",
+            "type": "Ereignis",
+            "Effect": "Spiele die Karte nachdem Du einen Angriff deklariert hast aber bevor Du würfelst. Der Angriff ist ein gezielter Angriff.",
+            "Overlord tactic": "Diese kostengünstige Karte ist nützlich, wenn Du einen schwachen Helden angreifen und fertig machen möchtest. Es ist auch nützlich, um der Ausweichaktion entgegenzuwirken.",
+            "Heroes tactic": "Keine. Betet, dass der Wiederholungswurf schlechter ist als der erste Wurf."
+        }
+    },
+    "alarm": {
+        "name": "Alarm",
+        "type": "Trap (Chest)",
+        "threat cost": 13,
+        "treachery cost": 2,
+        "treachery colour": "purple",
+        "discard value": 4,
+        "Effect": "Play this card when a hero opens a chest. The hero must roll a power die. If he rolls a blank, nothing happens. If he does not roll a blank, you may immediately open one door (that is not rune-locked) leading into an unrevealed area. That area is now immediately revealed, the hero's turn ends, and it is now your turn.",
+        "de": {
+            "name": "Alarm",
+            "type": "Falle (Truhe)",
+            "Effect": "Spiele diese Karte wenn ein Held eine Truhe öffnet. Der Held muss einen Machtwürfel würfeln. Wenn er eine leere würfelt, passiert nichts. Wenn nicht, kannst du sofort eine Tür öffnen (die nicht mit Runen verschlossen ist), die in einen nicht aufgedeckten Bereich führt. Dieser Bereich wird nun sofort aufgedeckt, der Zug des Helden endet und Du bist nun an der Reihe."
+        }
+    },
+    "all_concealing_shadows": {
+        "name": "All-Concealing Shadows",
+        "type": "Power",
+        "threat cost": 17,
+        "treachery cost": 2,
+        "treachery colour": "green",
+        "discard value": 5,
+        "Effect": "Play this card at the start of your turn and place it faceup in front of you. After a hero has attacked a monster, you may spend 2 threat to have the monster dodge the attack.",
+        "de": {
+            "name": "Alles verdeckende Schatten",
+            "type": "Macht",
+            "Effect": "Spiele diese Karte zu Beginn deines Zuges und lege sie offen vor dich hin. Nachdem ein Held ein Monster angegriffen hat, kannst du 2 Bedrohung ausgeben, damit das Monster dem Angriff ausweicht."
+        }
+    },
+    "ambush": {
+        "name": "Ambush",
+        "type": "Event",
+        "threat cost": 5,
+        "treachery cost": 2,
+        "treachery colour": "green",
+        "discard value": 2,
+        "Effect": "Play immediately before the start of a hero's turn. Activate (move and attack with) up to 3 monsters of your choice.",
+        "de": {
+            "name": "Hinterhalt",
+            "type": "Ereignis",
+            "Effect": "Spiele diese Karte unmittelbar vor Beginn des Zuges eines Helden. Aktiviere (bewege und greife an) bis zu 3 Monster deiner Wahl."
+        }
+    },
+    "animate_weapons": {
+        "name": "Animate Weapons",
+        "type": "Trap",
+        "threat cost": 20,
+        "treachery cost": 2,
+        "treachery colour": "purple",
+        "discard value": 4,
+        "Effect": "Play at the start of your turn. Each hero in the dungeon must roll a power die. If the result is a blank, nothing happens to that hero. If the result is not a blank, that hero must make one attack that only affects himself. The attacks are subject to the normal attack rules, and you choose the order in which they take place.",
+        "de": {
+            "name": "Waffen animieren",
+            "type": "Falle",
+            "Effect": "Spiele diese Karte zu Beginn Deines Zuges. Jeder Held im Verlies muss einen Machtwürfel werfen. Wenn das Ergebnis die Leerseite ist, passiert diesem Helden nichts. Wenn nicht, muss dieser Held einen Angriff ausführen, der nur ihn selbst trifft. Die Angriffe unterliegen den normalen Angriffsregeln, und Du bestimmst die Reihenfolge in der sie stattfinden."
+        }
+    },
+    "bane_spiders_nest": {
+        "name": "Bane Spiders Nest",
+        "type": "Spawn",
+        "threat cost": 5,
+        "treachery cost": 1,
+        "treachery colour": "red",
+        "discard value": 2,
+        "Effect": "Play this card before activating any of your monsters for the turn. You may spawn 3 Master Bane Spiders, following all of the normal rules for spawning monsters.",
+        "de": {
+            "name": "Mörderspinnennest",
+            "type": "Enstehung",
+            "Effect": "Spiele diese Karte aus, bevor du eines deiner Monster aktivierst. Du kannst 3 Mörderspinnen aufstellen indem du alle normalen Regeln für das Entstehen von Monstern befolgst."
+        }
+    },
+    "bane_spiders_swarm": {
+        "name": "Bane Spiders Swarm",
+        "type": "Spawn",
+        "threat cost": 4,
+        "treachery cost": 0,
+        "treachery colour": "none",
+        "discard value": 2,
+        "Effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Bane Spiders and 1 Master Bane Spider, following all of the normal rules for spawning monsters.",
+        "Overlord tactic": "This Overlord spawn card is not really powerful as Bane Spiders can be killed easily but it can be used to add more cannon fooder on the map. The Master Bane Spider, with good rolls, can web or poison heroes, slowing the party and reducing the effect of healing potions.",
+        "Heroes tactic": "When played by the Overlord, Heroes should try to take down the Master Bane Spider as soon as possible to avoid its nasty Web effect. Other, normal, Bane Spiders are not a real threat.",
+        "de": {
+            "name": "Mörderspinnen Schwarm",
+            "type": "Enstehung",
+            "Effect": "Spiele diese Karte aus, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 2 Mörderspinnen und 1 Elite Mörderspinne nach den normalen Regeln entstehen lassen.",
+            "Overlord tactic": "Diese Overlord Karte ist nicht wirklich mächtig, da Mörderspinnen leicht getötet werden können. Aber sie kann verwendet werden, um mehr Kanonenfutter auf die Karte hinzuzufügen. Die Elite Mörderspinnen können mit guten Würferwürfen Helden in ein Netz einspinnen oder vergiften und die Gruppe damit verlangsamen und die Wirkung von Heiltränken verringern.",
+            "Heroes tactic": "Wenn sie vom Overlord gespielt werden, sollten Helden versuchen, die Elite Mörderspinnen so schnell wie möglich zu besiegen um ihren bösen Netz-Effekt zu vermeiden. Andere, normale Mörderspinnen sind keine wirkliche Bedrohung."
+        }
+    },
+    "beastman_war_party": {
+        "name": "Beastmen War Party",
+        "type": "Spawn",
+        "threat cost": 4,
+        "treachery cost": 0,
+        "treachery colour": "none",
+        "discard value": 2,
+        "Effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Beastmen and 1 Master Beastman, following all of the normal rules for spawning monsters.",
+        "Overlord tactic": "This Overlord spawn card is really good for its cost. The Master Beastman, with its Command ability, will give extra damage and range to other monsters near him. He should be kept behind the first line of monsters. Normal Beastmen can also deal a good amount of damage but they must be spawned near the heroes, probably around a corner.",
+        "Heroes tactic": "Try to eliminate the Master Beastman as soon as possible and try to keep a distance of 5 squares between the Beastmen and your heroes since they have speed 4.",
+        "de": {
+            "name": "Tiermenschen Trupp",
+            "type": "Enstehung",
+            "Effect": "Spiele diese Karte aus, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 2 Tiermenschen und 1 Elite Tiermensch nach den normalen Regeln entstehen lassen.",
+            "Overlord tactic": "Diese Overlord Karte ist wirklich gut für ihre Kosten. Der Elite Tiermensch erhöht mit seiner Kommandofähigkeit anderen Monstern in seiner Nähe Schaden und Reichweite. Er sollte hinter der ersten Reihe von Monstern gehalten werden. Normale Tiermenschen können auch eine Menge Schaden anrichten, aber sie müssen in der Nähe der Helden entstehen, wahrscheinlich am besten um eine Ecke.",
+            "Heroes tactic": "Versucht den Elite Tiermenschen so schnell wie möglich zu eliminieren, und versucht einen Abstand von 5 Feldern zwischen den Tiermenschen und Euch einzuhalten, da sie Geschwindigkeit 4 haben."
+        }
+    },
+    "brilliant_commander": {
+        "name": "Brilliant Commander",
+        "type": "Power",
+        "threat cost": 18,
+        "treachery cost": 0,
+        "treachery colour": "none",
+        "discard value": 5,
+        "Effect": "Play this card at the start of your turn and place it face up in front of you. When you reveal a new area, upgrade any 1 monster in that area to a master of that monster's type.",
+        "Overlord tactic": "Like most other Power cards, it is best played in the early stage of a quest. Check how many areas have been explored so far and how many still haven't been revealed. If 5 areas or more are still unrevealed, it might be worth it. If not, this card still has a good discard value of 5.",
+        "de": {
+            "name": "Brillanter Kommandant",
+            "type": "Macht",
+            "Effect": "Spiele diese Karte zu Beginn Deines Zuges und legen sie offen vor Dich ab. Wenn du ein neues Gebiet aufdeckst, werte 1 beliebiges Monster in diesem Gebiet zu einem Elite dieses Monstertyps auf.",
+            "Overlord tactic": "Wie die meisten anderen Machtkarten wird sie am besten in der frühen Phase einer Quest gespielt. Überprüfe, wie viele Gebiete bisher erkundet wurden und wie viele noch nicht aufgedeckt wurden. Wenn 5 oder mehr Bereiche noch nicht aufgedeckt sind, könnte es sich lohnen. Wenn nicht, hat diese Karte immer noch einen guten Abwurfwert von 5."
+        }
+    },
+    "charge": {
+        "name": "Charge",
+        "type": "Event",
+        "threat cost": 4,
+        "treachery cost": 0,
+        "treachery colour": "none",
+        "discard value": 1,
+        "Effect": "Play when you activate a monster. Double the monster's speed for this activation.",
+        "Overlord tactic": "Teach them a lesson! `Oh, no worries. This Giant is so slow. I'll be out of reach if I move here.`  Charge might be a bit expensive to play, but the few extra squares are worth every single threat token if you can deal a nice sweeping attack on the whole party or another nasty attack. ",
+        "Heroes tactic": "Never assume you are safe! If you are about to die, always plan that the monsters can move twice their speed.",
+        "de": {
+            "name": "Sturmlauf",
+            "type": "Ereignis",
+            "Effect": "Spiele, wenn du ein Monster aktivierst. Verdopple die Geschwindigkeit des Monsters für diese Aktivierung.",
+            "Overlord tactic": "Erteile ihnen eine Lektion! `Oh, keine Sorge. Dieser Riese ist so langsam. Ich werde außer Reichweite sein wenn ich nur hierhin gehe.` Sturmlauf mag ein bisschen teuer zu spielen sein, aber die paar zusätzlichen Felder sind jeden einzelnen Bedrohungsmarker wert, wenn Du einen schönen umfassenden Angriff auf die gesamte Gruppe oder einen anderen bösen Angriff ausführen können.",
+            "Heroes tactic": "Geht niemals davon aus, dass Ihr sicher seid! Wenn Ihr kurz vor dem Tod steht, rechnet immer damit, dass sich die Monster doppelt so schnell bewegen können."
+        }
+    },
+    "cloud_of_gas": {
+        "name": "Cloud of Gas",
+        "type": "Trap (Door)",
+        "threat cost": 10,
+        "treachery cost": 3,
+        "treachery colour": "purple",
+        "discard value": 3,
+        "Effect": "Play this card when a hero opens a door. The hero must roll a power die. If the result is a blank, nothing happens. If the result is not a blank, his turn immediately ends and you may place 1 Stun token on him. All heroes within 3 spaces of him must then roll a blank on a power die or receive a stun token as well.",
+        "de": {
+            "name": "Gaswolke",
+            "type": "Falle (Tür)",
+            "Effect": "Spiele diese Karte, wenn ein Held eine Tür öffnet. Der Held muss einen Machtwürfel würfeln. Wenn das Ergebnis die Leerseite ist, passiert nichts. Wenn nicht, endet sein Zug sofort und Du darfst einen Betäubungsmarker auf ihn legen. Alle Helden innerhalb von 3 Feldern um ihn herum müssen dann mit einem Kraftwürfel ein Leerzeichen würfeln oder erhalten ebenfalls einen Betäubungsmarker."
+        }
+    },
+    "critical_strike": {
+        "name": "Critical Strike",
+        "type": "Event",
+        "threat cost": "X",
+        "treachery cost": 1,
+        "treachery colour": "green",
+        "discard value": 2,
+        "Effect": "Play immediately after declaring an attack but before rolling any dice. Your attack gains Pierce X, where X is equal to the threat you paid for this card.",
+        "de": {
+            "name": "Kritische Treffer",
+            "type": "Ereignis",
+            "Effect": "Spiele diese Karte sofort nachdem Du einen Angriff deklariert hast, aber bevor Du würfelst. Dein Angriff erhält Durchbohren X, wobei X gleich der Bedrohung ist, die du für diese Karte bezahlt hast."
+        }
+    },
+    "crushing_block": {
+        "name": "Crushing Block",
+        "type": "Trap (Space)",
+        "threat cost": 7,
+        "treachery cost": 0,
+        "treachery colour": "none",
+        "discard value": 3,
+        "Effect": "Play this card when a hero moves into an empty space that is not adjacent to any obstacles. Place a one space rubble token on that space. The hero suffers 4 wounds (ignoring armor), reduced by 1 wound for each surge he rolls on 4 power dice. Then, move the hero to an adjacent space of your choice.",
+        "Overlord tactic": "(1) Crush the tanks! Traps are an easy way to deal the final blow to heroes with high armor rating because they ignore armor. Keep an eye on their wound token and strike at the right moment. (2) Delay that runner! If a runner is making the final sprint for a glyph or chest using all its speed and fatigue, you can slow him a little bit by placing him in the adjacent square where he came from after checking the damage of the trap. In some cases it can make the difference.",
+        "Heroes tactic": "(1) Check if you are Cautious! If you have the Cautious skill card, don't forget that you suffer only 3 wounds but that you still get to roll 4 power dice to reduce damage. (2) Roll surges! Unless you had anticipated the trap by looking at your overlord's nasty smile, the only thing you can do is roll some surges to reduce the damage.",
+        "de": {
+            "name": "Zertrümmender Fels",
+            "type": "Falle (Feld)",
+            "Effect": "Spiele diese Karte wenn sich ein Held auf ein leeres Feld bewegt das nicht an Hindernisse angrenzt. Lege einen Trümmermarker der Größe eins auf dieses Feld. Der Held erleidet 4 Schaden (Rüstung wird ignoriert), reduziert um 1 für jede Kraftverstärkung, die er auf 4 Machtwürfeln würfelt. Bewege den Helden dann auf ein benachbartes Feld deiner Wahl.",
+            "Overlord tactic": "(1) Zerstöre die Tanks! Fallen sind eine einfache Möglichkeit, Helden mit hohem Rüstungswert den letzten Schlag zu versetzen, da sie Rüstungen ignorieren. Behalte ihren Schadensmarker im Auge und schlage im richtigen Moment zu. (2) Halte diesen Läufer auf! Wenn ein Läufer den Endspurt für eine Glyphe oder Truhe mit all seiner Geschwindigkeit und Erschöpfung macht, kannst Du ihn ein wenig verlangsamen, indem Du ihn auf das benachbarte Feld stellen, von dem er gekommen ist nachdem Du den Schaden der Falle überprüft hast. In einigen Fällen kann es einen Unterschied machen.",
+            "Heroes tactic": "(1) Prüft, ob Ihr vorsichtig seid! Wenn Ihr die Fertigkeitskarte Vorsichtig habt, vergesst nicht, dass Ihr nur 3 Wunden erleidet aber trotzdem 4 Machtwürfel werfen dürft um den Schaden zu reduzieren. (2) Würfelt ein paar Kraftverstärkungen! Wenn Ihr die Falle nicht vorhergesehen habt (habt Ihr nicht das böse Lächeln des Overlords gesehen?), könnt Ihr nur ein paar Blitze würfeln, um den Schaden zu verringern."
+        },
+        "crushing_blow": {
+            "name": "Crushing Blow",
+            "type": "Event",
+            "threat cost": "X",
+            "treachery cost": 1,
+            "treachery colour": "green",
+            "discard value": 3,
+            "Effect": "Play after making a successful attack on a hero (an attack that doesn't miss). Instead of dealing damage to the hero, choose and discard one item the hero is carrying. Pay 4 threat if the item is a shop or copper item, 8 threat if it is a silver item, or 12 threat if it is a gold item. Relics cannot be targeted by this card.",
+            "de": {
+                "name": "Vernichtender Schlag",
+                "type": "Ereignis",
+                "Effect": "Spiele diese Karte nachdem Du einen Helden erfolgreich angegriffen hast (ein Angriff, der nicht verfehlt hatte). Anstatt dem Helden Schaden zuzufügen, wähle und wirf einen Gegenstand ab, den der Held trägt. Zahle 4 Bedrohung, wenn es sich um einen Shop- oder Kupfergegenstand handelt, 8 Bedrohung, wenn es sich um einen Silbergegenstand handelt, oder 12 Bedrohung, wenn es sich um einen Goldgegenstand handelt. Relikte können von dieser Karte nicht anvisiert werden."
+            }
+        },
+        "curse_of_the_ancients": {
+            "name": "Curse of the Ancients",
+            "type": "Trap (Door)",
+            "threat cost": 11,
+            "treachery cost": 1,
+            "treachery colour": "purple",
+            "discard value": 4,
+            "Effect": "Play this card when a hero opens a door. Each hero adjacent to the door must roll a power die. If the result is a blank, nothing happens to that hero. If the result is not a blank, you may immediately place 1 Curse token on that hero.",
+            "de": {
+                "name": "Fluch der Ahnen",
+                "type": "Falle (Tür)",
+                "Effect": "Spiele diese Karte wenn ein Held eine Tür öffnet. Jeder Held neben der Tür muss einen Machtwürfel werfen. Wenn das Ergebnis die Leerseite ist, passiert diesem Helden nichts. Wenn nicht, darfst du sofort 1 Fluchmarker auf diesen Helden legen."
+            }
+        },
+        "curse_of_the_monkey_god": {
+            "name": "Curse of the Monkey God",
+            "type": "Trap (Chest)",
+            "threat cost": 11,
+            "treachery cost": "0/1",
+            "treachery colour": "none/purple",
+            "discard value": 4,
+            "Effect": "Play this card when a hero opens a chest. The hero player must roll a power die. If he rolls blank, nothing happens. If he does not roll a blank, the hero is transformed into a monkey.",
+            "de": {
+                "name": "Fluch des Affengottes",
+                "type": "Falle (Truhe)",
+                "Effect": "Spiele diese Karte wenn ein Held eine Truhe öffnet. Der Heldenspieler muss einen Machtwürfel werfen. Wenn er die Leerseite rollt passiert nichts. Wenn nicht, verwandelt sich der Held in einen Affen."
+            }
+        },
+        "cursed_treasure": {
+            "name": "Cursed Treasure",
+            "type": "Trap (Chest)",
+            "threat cost": 7,
+            "treachery cost": 1,
+            "treachery colour": "purple",
+            "discard value": 3,
+            "Effect": "Play this card when a hero opens a chest. The hero must roll a power die. If the result is a blank, nothing happens. If the result is not a blank, you may immediately place 1 Curse token on him.",
+            "de": {
+                "name": "Fluch des Affengottes",
+                "type": "Falle (Truhe)",
+                "Effect": "Spiele diese Karte wenn ein Held eine Truhe öffnet. Der Held muss einen Machtwürfel würfeln. Wenn das Ergebnis die Leerseite ist passiert nichts. Wenn nicht, darfst du sofort 1 Fluchmarker auf ihn legen."
+            }
+        }
+    }
+}
