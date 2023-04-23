@@ -1,5 +1,6 @@
 import { createSignal, createResource } from "solid-js";
 import { decode } from "msgpack-lite";
+import { OverlordCard } from "./components/overlord_card";
 
 const stringedVectorToUint8 = (stringedVector: any) => {
     if (typeof stringedVector === 'string' || stringedVector instanceof String) {
@@ -12,9 +13,9 @@ const stringedVectorToUint8 = (stringedVector: any) => {
 };
 
 const fetchCardAsBytes = async () =>
-    await (await fetch("http://localhost:3030/descentinel/detected_ol_card", { mode: 'cors' })).text();
+    await (await fetch("http://127.0.0.1:3030/descentinel/detected_ol_card", { mode: 'cors' })).text();
 
-export function DisplayOverlordCard() {
+export function DisplayLatestOverlordCard() {
     const [latestCard, setLatestCard] = createSignal("");
     const [cardId] = createResource(latestCard, fetchCardAsBytes);
 
@@ -25,5 +26,5 @@ export function DisplayOverlordCard() {
         return decode(stringedVectorToUint8(cardId()));
     };
 
-    return <div>Latest detected card = {convertUint8BytesToString()}</div>
+    return <OverlordCard overlord_card_id={convertUint8BytesToString()} />
 };
