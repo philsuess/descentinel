@@ -1,6 +1,8 @@
 import type { Component } from 'solid-js';
+import { ErrorBoundary } from "solid-js";
 
 import { DisplayGameRoom } from "./game_room";
+import { DisplayOverlordCard } from "./overlord_card";
 
 import logo from './logo.svg';
 import styles from './App.module.css';
@@ -25,7 +27,9 @@ const header_from_template = (<div class={styles.App}>
 const App: Component = () => {
   return (
     <>
-      <DisplayGameRoom />
+      <ErrorBoundary fallback={err => err}>
+        <DisplayOverlordCard />
+      </ErrorBoundary>
     </>
   );
 };
