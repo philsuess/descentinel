@@ -2,6 +2,7 @@
     "conventionalCommits.scopes": [
         "detect_card",
         "monitor",
-        "broadcast"
+        "broadcast",
+        "assets"
     ]
 }
