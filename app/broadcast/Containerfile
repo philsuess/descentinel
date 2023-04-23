@@ -1,14 +1,4 @@
-FROM docker.io/rust:1.68.0 AS broadcast_build
-WORKDIR /usr/src
-
-RUN USER=root cargo new broadcast
-WORKDIR /usr/src/broadcast
-COPY Cargo.toml ./
-COPY src ./src
-RUN cargo build --release
-
 FROM docker.io/debian:stable-slim AS broadcast_service
 EXPOSE 3030
-COPY --from=broadcast_build /usr/src/broadcast/target/release/broadcast .
-USER 1000
+COPY release/broadcast .
 CMD ["./broadcast"]
