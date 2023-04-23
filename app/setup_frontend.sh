@@ -1,3 +1,10 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+set -o xtrace
+
 apt install nginx
 cd view
 podman build --rm -t frontend_builder .
