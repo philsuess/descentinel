@@ -3,6 +3,7 @@
         "detect_card",
         "monitor",
         "broadcast",
-        "assets"
+        "assets",
+        "view"
     ]
 }
