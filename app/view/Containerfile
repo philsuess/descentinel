@@ -1,4 +1,4 @@
-FROM node as builder
+FROM docker.io/node as builder
 
 RUN npm install -g pnpm
 
