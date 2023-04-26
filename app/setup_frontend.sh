@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cp assets/* view/src/assets/
 apt install nginx
 cd view
 podman build --rm -t frontend_builder .
