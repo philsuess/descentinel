@@ -9,7 +9,6 @@ type Language = "de";
 interface OverlordCardTranslation {
     language: Language;
     name: string;
-    type: string;
     effect: string;
     Overlord_tactic?: string;
     Heroes_tactic?: string;

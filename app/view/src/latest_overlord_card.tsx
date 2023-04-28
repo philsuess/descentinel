@@ -13,7 +13,7 @@ const stringedVectorToUint8 = (stringedVector: any) => {
 };
 
 const fetchCardAsBytes = async () =>
-    await (await fetch("http://127.0.0.1:3030/descentinel/detected_ol_card", { mode: 'cors' })).text();
+    await (await fetch("http://192.168.0.199:3030/descentinel/detected_ol_card", { mode: 'cors' })).text();
 
 export function DisplayLatestOverlordCard() {
     const [latestCard, setLatestCard] = createSignal("");
