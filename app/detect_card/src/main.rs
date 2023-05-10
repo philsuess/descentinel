@@ -7,19 +7,42 @@ fn main() {
 
 #[derive(Deserialize, Debug)]
 struct OverlordCards {
-    cards: Vec<OverlordCardKeywords>,
+    cards: Vec<CardKeywords>,
 }
 
 impl OverlordCards {
     fn id_of_best_keywords_match(&self, card_text: &str) -> String {
-        String::from("not implemented")
+        self.cards
+            .iter()
+            .reduce(|max_found, candidate| {
+                if candidate.number_of_matches(&card_text) > max_found.number_of_matches(&card_text)
+                {
+                    candidate
+                } else {
+                    max_found
+                }
+            })
+            .unwrap()
+            .id
+            .clone()
     }
 }
 
 #[derive(Deserialize, Debug)]
-struct OverlordCardKeywords {
+struct CardKeywords {
     id: String,
     keywords: Vec<String>,
+}
+
+impl CardKeywords {
+    fn number_of_matches(&self, card_text: &str) -> u8 {
+        self.keywords.iter().fold(0, |sum_matches, next_keyword| {
+            if card_text.contains(next_keyword.as_str()) {
+                return sum_matches + 1;
+            }
+            sum_matches
+        })
+    }
 }
 
 fn identify_card(card_image_buffer: &Vec<u8>, overlord_cards: &OverlordCards) -> String {
