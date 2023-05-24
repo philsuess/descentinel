@@ -1,8 +1,124 @@
+use clap::Parser;
+use futures::StreamExt;
+use lapin::{
+    options::*, types::FieldTable, BasicProperties, Channel, Connection, ConnectionProperties,
+    Consumer, Result,
+};
+use log::{error, info};
 use serde::Deserialize;
+use std::time::Duration;
 use tesseract::Tesseract;
+use tokio::join;
 
-fn main() {
-    println!("Hello, world!");
+#[derive(Parser, Debug)]
+#[command(author, version, about, long_about = None)]
+struct Args {
+    #[arg(short, long, default_value_t = String::from("Q_GAME_ROOM_FEED"))]
+    game_room_feed_queue: String,
+
+    #[arg(short, long, default_value_t = String::from("Q_DETECTED_OL_CARDS"))]
+    detected_ol_cards_queue: String,
+
+    #[arg(short, long, default_value_t = String::from("Q_SHORT_LOG"))]
+    short_log_queue: String,
+
+    #[arg(short, long, default_value_t = String::from("amqp://localhost:5672"))]
+    ampq_url: String,
+
+    #[arg(short, long, default_value_t = String::from("keywords_cards.json"))]
+    overlord_cards_keywords_file: String,
+}
+
+#[tokio::main]
+async fn main() -> Result<()> {
+    env_logger::init();
+    info!("DETECT_CARD service starting");
+    let args = Args::parse();
+
+    let overlord_cards = load_overlord_keywords(&args.overlord_cards_keywords_file);
+
+    let conn = Connection::connect(&args.ampq_url, ConnectionProperties::default()).await?;
+    info!("Established connection to {}", args.ampq_url);
+
+    let _ = join!(rabbitmq_listen(&conn, &args, &overlord_cards));
+
+    Ok(())
+}
+
+async fn rabbitmq_listen(
+    connection: &Connection,
+    args: &Args,
+    overlord_cards: &OverlordCards,
+) -> Result<()> {
+    let mut retry_interval = tokio::time::interval(Duration::from_secs(5));
+    loop {
+        retry_interval.tick().await;
+        info!("connecting rabbitmq consumer...");
+        match init_rabbitmq_listen(&connection, &args, &overlord_cards).await {
+            Ok(_) => info!("connection to rabbitmq established"),
+            Err(e) => error!(
+                "error when trying to establish connection to rabbitmq: {}",
+                e
+            ),
+        };
+    }
+}
+
+async fn init_rabbitmq_listen(
+    connection: &Connection,
+    args: &Args,
+    overlord_cards: &OverlordCards,
+) -> Result<()> {
+    let channel_images = connection.create_channel().await?;
+    channel_images
+        .queue_declare(
+            &args.game_room_feed_queue,
+            QueueDeclareOptions::default(),
+            FieldTable::default(),
+        )
+        .await?;
+    info!(
+        "Awaiting game room images from {}",
+        args.game_room_feed_queue
+    );
+    let game_room_images_consumer = channel_images
+        .basic_consume(
+            &args.game_room_feed_queue,
+            "",
+            BasicConsumeOptions::default(),
+            FieldTable::default(),
+        )
+        .await?;
+
+    let consume_future = consume_game_room_feed(game_room_images_consumer, &overlord_cards);
+
+    futures::join!(consume_future);
+
+    Ok(())
+}
+
+async fn consume_game_room_feed(mut game_room_feed: Consumer, overlord_cards: &OverlordCards) {
+    while let Some(delivery) = game_room_feed.next().await {
+        let delivery = delivery.expect("error in consumer");
+        delivery.ack(BasicAckOptions::default()).await.expect("ack");
+        //  info!("received {:?}", delivery);
+        let d = identify_card(&delivery.data, &overlord_cards);
+        info!("detected {}", d);
+    }
+}
+
+async fn send_over_queue(payload: &[u8], channel: &Channel, queue_name: &str) -> Result<()> {
+    channel
+        .basic_publish(
+            "",
+            queue_name,
+            BasicPublishOptions::default(),
+            payload,
+            BasicProperties::default(),
+        )
+        .await?
+        .await?;
+    Ok(())
 }
 
 #[derive(Deserialize, Debug)]
@@ -12,7 +128,8 @@ struct OverlordCards {
 
 impl OverlordCards {
     fn id_of_best_keywords_match(&self, card_text: &str) -> String {
-        self.cards
+        let winning_card = self
+            .cards
             .iter()
             .reduce(|max_found, candidate| {
                 if candidate.number_of_matches(&card_text) > max_found.number_of_matches(&card_text)
@@ -22,9 +139,11 @@ impl OverlordCards {
                     max_found
                 }
             })
-            .unwrap()
-            .id
-            .clone()
+            .unwrap();
+        if winning_card.number_of_matches(&card_text) == 0 {
+            return String::from("No overlord card");
+        }
+        winning_card.id.clone()
     }
 }
 
