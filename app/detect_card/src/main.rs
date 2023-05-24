@@ -90,20 +90,73 @@ async fn init_rabbitmq_listen(
         )
         .await?;
 
-    let consume_future = consume_game_room_feed(game_room_images_consumer, &overlord_cards);
+    let channel_detected_ol_cards = connection.create_channel().await?;
+    channel_detected_ol_cards
+        .queue_declare(
+            &args.detected_ol_cards_queue,
+            QueueDeclareOptions::default(),
+            FieldTable::default(),
+        )
+        .await?;
+    info!(
+        "Sending detected OL cards to {}",
+        args.detected_ol_cards_queue
+    );
+
+    let channel_short_logs = connection.create_channel().await?;
+    channel_short_logs
+        .queue_declare(
+            &args.short_log_queue,
+            QueueDeclareOptions::default(),
+            FieldTable::default(),
+        )
+        .await?;
+    info!("Logging to {}", args.short_log_queue);
+
+    let consume_future = consume_game_room_feed(
+        game_room_images_consumer,
+        &overlord_cards,
+        &channel_detected_ol_cards,
+        &channel_short_logs,
+        &args,
+    );
 
     futures::join!(consume_future);
 
     Ok(())
 }
 
-async fn consume_game_room_feed(mut game_room_feed: Consumer, overlord_cards: &OverlordCards) {
+async fn consume_game_room_feed(
+    mut game_room_feed: Consumer,
+    overlord_cards: &OverlordCards,
+    channel_detected_ol_cards: &Channel,
+    channel_logs: &Channel,
+    args: &Args,
+) {
     while let Some(delivery) = game_room_feed.next().await {
         let delivery = delivery.expect("error in consumer");
         delivery.ack(BasicAckOptions::default()).await.expect("ack");
         //  info!("received {:?}", delivery);
-        let d = identify_card(&delivery.data, &overlord_cards);
-        info!("detected {}", d);
+        match identify_card(&delivery.data, &overlord_cards) {
+            Some(card_id) => {
+                send_over_queue(
+                    &card_id.as_bytes(),
+                    &channel_detected_ol_cards,
+                    &args.detected_ol_cards_queue,
+                )
+                .await;
+                let mut log_message = String::from("detected OL card ");
+                log_message.push_str(&card_id);
+                info!("{}", &log_message);
+                send_over_queue(
+                    &log_message.as_bytes(),
+                    &channel_logs,
+                    &args.short_log_queue,
+                )
+                .await;
+            }
+            None => (),
+        }
     }
 }
 
@@ -127,7 +180,7 @@ struct OverlordCards {
 }
 
 impl OverlordCards {
-    fn id_of_best_keywords_match(&self, card_text: &str) -> String {
+    fn id_of_best_keywords_match(&self, card_text: &str) -> Option<String> {
         let winning_card = self
             .cards
             .iter()
@@ -141,9 +194,10 @@ impl OverlordCards {
             })
             .unwrap();
         if winning_card.number_of_matches(&card_text) == 0 {
-            return String::from("No overlord card");
+            None
+        } else {
+            Some(winning_card.id.clone())
         }
-        winning_card.id.clone()
     }
 }
 
@@ -164,7 +218,7 @@ impl CardKeywords {
     }
 }
 
-fn identify_card(card_image_buffer: &Vec<u8>, overlord_cards: &OverlordCards) -> String {
+fn identify_card(card_image_buffer: &Vec<u8>, overlord_cards: &OverlordCards) -> Option<String> {
     let card_text = extract_card_text_from_buffer(&card_image_buffer, "fra");
     overlord_cards.id_of_best_keywords_match(&card_text)
 }
@@ -242,7 +296,7 @@ mod tests {
             .unwrap()
             .to_rgb8();
         assert_eq!(
-            "dark_balm",
+            Some(String::from("dark_balm")),
             identify_card(&convert_to_bytes_buffer(&card_image), &overlord_cards)
         );
     }
