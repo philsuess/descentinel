@@ -139,7 +139,7 @@ async fn consume_game_room_feed(
         //  info!("received {:?}", delivery);
         match identify_card(&delivery.data, &overlord_cards) {
             Some(card_id) => {
-                send_over_queue(
+                let _ = send_over_queue(
                     &card_id.as_bytes(),
                     &channel_detected_ol_cards,
                     &args.detected_ol_cards_queue,
@@ -148,7 +148,7 @@ async fn consume_game_room_feed(
                 let mut log_message = String::from("detected OL card ");
                 log_message.push_str(&card_id);
                 info!("{}", &log_message);
-                send_over_queue(
+                let _ = send_over_queue(
                     &log_message.as_bytes(),
                     &channel_logs,
                     &args.short_log_queue,
@@ -261,19 +261,19 @@ mod tests {
     #[test]
     fn overlord_cards_detection_from_file_works() {
         let card_text_baume_sombre =
-            tesseract::ocr("BaumeSombre_02.jpg_detected.jpg", "fra").unwrap();
+            tesseract::ocr("test_images/BaumeSombre_02.jpg_detected.jpg", "fra").unwrap();
         println!("{}", card_text_baume_sombre);
         assert!(card_text_baume_sombre.contains("Baume"));
 
         let card_text_explodierende_rune =
-            tesseract::ocr("ExplodierendeRune.jpg_detected.jpg", "fra").unwrap();
+            tesseract::ocr("test_images/ExplodierendeRune.jpg_detected.jpg", "fra").unwrap();
         println!("{}", card_text_explodierende_rune);
         assert!(card_text_explodierende_rune.contains("Schatztruhe"));
     }
 
     #[test]
     fn overlord_cards_detection_from_memory_works() {
-        let card_image = image::open("BaumeSombre_02.jpg_detected.jpg")
+        let card_image = image::open("test_images/BaumeSombre_02.jpg_detected.jpg")
             .unwrap()
             .to_rgb8();
 
@@ -292,7 +292,7 @@ mod tests {
     fn known_overlord_cards_detection_works() {
         let overlord_cards = load_overlord_keywords("keywords_cards.json");
 
-        let card_image = image::open("BaumeSombre_02.jpg_detected.jpg")
+        let card_image = image::open("test_images/BaumeSombre_02.jpg_detected.jpg")
             .unwrap()
             .to_rgb8();
         assert_eq!(

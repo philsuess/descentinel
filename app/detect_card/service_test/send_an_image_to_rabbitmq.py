@@ -1,4 +1,3 @@
-from overlord_card_match import encode_image
 import cv2
 import pika
 import uuid
@@ -6,6 +5,13 @@ import logging
 import os
 
 # adapted from https://www.architect.io/blog/2021-01-19/rabbitmq-docker-tutorial/
+
+
+def encode_image(cv2_image):
+    encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 100]
+    _, buffered = cv2.imencode(".jpg", cv2_image, encode_param)
+    return buffered
+
 
 QUEUE_OL_IMAGES = os.environ["QUEUE_OL_IMAGES"]
 EXCHANGE = ""
@@ -28,7 +34,7 @@ channel = connection.channel()
 
 channel.queue_declare(queue=QUEUE_OL_IMAGES)
 
-image = cv2.imread("tests/BaumSombre.jpg_detected.jpg")
+image = cv2.imread("BaumeSombre_02.jpg_detected.jpg")
 encoded = encode_image(image)
 unique_id = str(uuid.uuid4())
 send_properties = pika.BasicProperties(

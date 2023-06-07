@@ -1,30 +1,13 @@
-FROM docker.io/python:3.10-slim-bullseye AS lib
-RUN apt update; apt -y upgrade; apt install -y tesseract-ocr; pip install --upgrade pip
-COPY requirements.txt ./
-RUN pip install -r requirements.txt
-COPY overlord_card_match.py ./
-COPY recognize_card.py ./
-COPY OL_template.jpg ./
-COPY keywords_cards.json ./
+FROM docker.io/opensuse/tumbleweed:latest AS detect_card_service
+RUN zypper install -y tesseract-ocr-devel tesseract-ocr-traineddata-fra
+ENV RUST_LOG info
+COPY target/release/detect_card .
+COPY keywords_cards.json .
+CMD ["./detect_card"]
 
-FROM lib AS acceptance_tests
-RUN pip install pytest
-COPY tests/*.jpg ./tests/
-COPY tests/test_* ./tests/
-ENV PYTHONPATH .
-CMD ["pytest","tests"]  
-
-FROM lib AS rabbit_service
-ENV Q_GAME_ROOM_FEED Q_GAME_ROOM_FEED
-ENV Q_SHORT_LOG Q_SHORT_LOG
-ENV Q_DETECTED_OL_CARDS Q_DETECTED_OL_CARDS
-RUN pip install pika
-COPY serve_detect_card.py ./
-CMD ["python","serve_detect_card.py"]
-
-FROM lib AS rabbit_service_test
-ENV Q_OL_IMAGES Q_GAME_ROOM_FEED
-RUN pip install pika
-COPY tests/*.jpg ./tests/
-COPY send_an_image_to_rabbitmq.py ./
+FROM docker.io/python:3.10-slim-bullseye AS detect_card_service_test
+ENV QUEUE_OL_IMAGES Q_GAME_ROOM_FEED
+RUN pip install --upgrade pip; pip install pika opencv-python-headless
+COPY test_images/*.jpg ./
+COPY service_test/send_an_image_to_rabbitmq.py ./
 CMD ["python","send_an_image_to_rabbitmq.py"]
