@@ -19,6 +19,7 @@ This is a warp server that broadcasts all backend content, specifically the last
 - `cargo build --release` to build the binary
 - `podman build --target broadcast_service --rm -t broadcast_service .` to build the service
 - `podman run -d -p 3030:3030 --name broadcast broadcast_service` to run it
+- `podman run -d --pod descentinel --name broadcast broadcast_service` to run it in the pod
 
 # Build for Raspberry Pi
 ## 3 (64-bit)

@@ -30,8 +30,7 @@ Why?
 - Ultimately we have a (ro)bot playing with us and using and referencing the physical components.
 
 How?
-- python
-- cv2 feature mathching to detect card type (OL/equipment/...)
+- rust
 - tesseract for character recognition
 
 ## broadcast: provide GET for frontends

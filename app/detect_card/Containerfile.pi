@@ -1,0 +1,4 @@
+FROM docker.io/debian:stable-slim AS detect_card_service
+ENV RUST_LOG info
+COPY release/detect_card .
+CMD ["./detect_card"]
