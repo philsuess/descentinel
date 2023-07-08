@@ -1,4 +1,6 @@
-FROM docker.io/debian:stable-slim AS detect_card_service
+FROM docker.io/debian:buster-slim AS detect_card_service
+RUN apt update ; DEBIAN_FRONTEND=noninteractive apt install -y tesseract-ocr tesseract-ocr-fra
 ENV RUST_LOG info
 COPY release/detect_card .
+COPY keywords_cards.json .
 CMD ["./detect_card"]
