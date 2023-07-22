@@ -13,7 +13,7 @@ def encode_image(cv2_image):
     return buffered
 
 
-QUEUE_OL_IMAGES = os.environ["QUEUE_OL_IMAGES"]
+Q_CARD_IMAGE = os.environ["Q_CARD_IMAGE"]
 EXCHANGE = ""
 
 logging.basicConfig(
@@ -32,7 +32,7 @@ connection_params = pika.ConnectionParameters(
 connection = pika.BlockingConnection(connection_params)
 channel = connection.channel()
 
-channel.queue_declare(queue=QUEUE_OL_IMAGES)
+channel.queue_declare(queue=Q_CARD_IMAGE)
 
 image = cv2.imread("BaumeSombre_02.jpg_detected.jpg")
 encoded = encode_image(image)
@@ -42,7 +42,7 @@ send_properties = pika.BasicProperties(
 )
 channel.basic_publish(
     exchange=EXCHANGE,
-    routing_key=QUEUE_OL_IMAGES,
+    routing_key=Q_CARD_IMAGE,
     body=encoded.tostring(),
     properties=send_properties,
 )
