@@ -1,5 +1,5 @@
 FROM docker.io/opensuse/tumbleweed:latest AS detect_card_service
-RUN zypper install -y tesseract-ocr-devel tesseract-ocr-traineddata-fra
+RUN zypper install -y tesseract-ocr-devel libtesseract5 tesseract-ocr-traineddata-fra
 ENV RUST_LOG info
 COPY target/release/detect_card .
 COPY keywords_cards.json .

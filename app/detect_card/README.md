@@ -17,6 +17,8 @@
 - `podman build --rm --target detect_card_service -t detect_card_service .` to build the service
 - `podman run --rm -p 5672:5672 -p 15672:15672 docker.io/rabbitmq:3.11-management` to start rabbitmq
 - `podman run --rm -e RABBITMQ_AMQP_URL=0.0.0.0 --network host detect_card_service` to run a single instance of the service
+
+to test:
 - `podman build --rm --target detect_card_service_test -t detect_card_service_test .`
 - `podman run --rm -e RABBITMQ_AMQP_URL=0.0.0.0 --network host detect_card_service_test` to test
 
