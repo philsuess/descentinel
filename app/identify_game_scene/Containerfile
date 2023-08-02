@@ -1,0 +1,13 @@
+FROM docker.io/opensuse/tumbleweed:latest AS identify_game_scene_service
+RUN zypper install -y opencv-devel
+ENV RUST_LOG info
+COPY target/release/identify_game_scene .
+COPY OL_template.jpg .
+CMD ["./identify_game_scene"]
+
+FROM docker.io/python:3.10-slim-bullseye AS identify_game_scene_service_test
+RUN pip install --upgrade pip; pip install pika opencv-python-headless
+ENV Q_GAME_ROOM_FEED Q_GAME_ROOM_FEED
+COPY test_images/*.jpg ./
+COPY service_test/send_an_image_to_rabbitmq.py ./
+CMD ["python","send_an_image_to_rabbitmq.py"]
