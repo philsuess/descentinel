@@ -1,6 +1,7 @@
 ## Requirements:
 
 - opencv (`zypper install opencv-devel` on opensuse)
+- cross compiling also requires qemu-linux-user (`zypper install qemu-linux-user` on opensuse)
 
 ## Build for Raspberry Pi
 ### 3 (64-bit)
