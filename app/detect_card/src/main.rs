@@ -13,7 +13,7 @@ use tokio::join;
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
-    #[arg(short, long, default_value_t = String::from("Q_GAME_ROOM_FEED"))]
+    #[arg(short, long, default_value_t = String::from("Q_CARD_IMAGE"))]
     game_room_feed_queue: String,
 
     #[arg(short, long, default_value_t = String::from("Q_DETECTED_OL_CARDS"))]
@@ -54,7 +54,7 @@ async fn rabbitmq_listen(
     loop {
         retry_interval.tick().await;
         info!("connecting rabbitmq consumer...");
-        match init_rabbitmq_listen(&connection, &args, &overlord_cards).await {
+        match init_rabbitmq_listen(connection, args, overlord_cards).await {
             Ok(_) => info!("connection to rabbitmq established"),
             Err(e) => error!(
                 "error when trying to establish connection to rabbitmq: {}",
@@ -115,10 +115,10 @@ async fn init_rabbitmq_listen(
 
     let consume_future = consume_game_room_feed(
         game_room_images_consumer,
-        &overlord_cards,
+        overlord_cards,
         &channel_detected_ol_cards,
         &channel_short_logs,
-        &args,
+        args,
     );
 
     futures::join!(consume_future);
@@ -137,25 +137,18 @@ async fn consume_game_room_feed(
         let delivery = delivery.expect("error in consumer");
         delivery.ack(BasicAckOptions::default()).await.expect("ack");
         //  info!("received {:?}", delivery);
-        match identify_card(&delivery.data, &overlord_cards) {
-            Some(card_id) => {
-                let _ = send_over_queue(
-                    &card_id.as_bytes(),
-                    &channel_detected_ol_cards,
-                    &args.detected_ol_cards_queue,
-                )
-                .await;
-                let mut log_message = String::from("detected OL card ");
-                log_message.push_str(&card_id);
-                info!("{}", &log_message);
-                let _ = send_over_queue(
-                    &log_message.as_bytes(),
-                    &channel_logs,
-                    &args.short_log_queue,
-                )
-                .await;
-            }
-            None => (),
+        if let Some(card_id) = identify_card(&delivery.data, overlord_cards) {
+            let _ = send_over_queue(
+                card_id.as_bytes(),
+                channel_detected_ol_cards,
+                &args.detected_ol_cards_queue,
+            )
+            .await;
+            let mut log_message = String::from("detected OL card ");
+            log_message.push_str(&card_id);
+            info!("{}", &log_message);
+            let _ =
+                send_over_queue(log_message.as_bytes(), channel_logs, &args.short_log_queue).await;
         }
     }
 }
@@ -185,15 +178,14 @@ impl OverlordCards {
             .cards
             .iter()
             .reduce(|max_found, candidate| {
-                if candidate.number_of_matches(&card_text) > max_found.number_of_matches(&card_text)
-                {
+                if candidate.number_of_matches(card_text) > max_found.number_of_matches(card_text) {
                     candidate
                 } else {
                     max_found
                 }
             })
             .unwrap();
-        if winning_card.number_of_matches(&card_text) == 0 {
+        if winning_card.number_of_matches(card_text) == 0 {
             None
         } else {
             Some(winning_card.id.clone())
@@ -218,19 +210,18 @@ impl CardKeywords {
     }
 }
 
-fn identify_card(card_image_buffer: &Vec<u8>, overlord_cards: &OverlordCards) -> Option<String> {
-    let card_text = extract_card_text_from_buffer(&card_image_buffer, "fra");
+fn identify_card(card_image_buffer: &[u8], overlord_cards: &OverlordCards) -> Option<String> {
+    let card_text = extract_card_text_from_buffer(card_image_buffer, "fra");
     overlord_cards.id_of_best_keywords_match(&card_text)
 }
 
 fn load_overlord_keywords(file_name: &str) -> OverlordCards {
     let file = std::fs::File::open(file_name).unwrap();
     let reader = std::io::BufReader::new(file);
-    let cards_info = serde_json::from_reader(reader).expect("file is not proper json");
-    cards_info
+    serde_json::from_reader(reader).expect("file is not proper json")
 }
 
-fn extract_card_text_from_buffer(card_image_buffer: &Vec<u8>, language: &str) -> String {
+fn extract_card_text_from_buffer(card_image_buffer: &[u8], language: &str) -> String {
     match Tesseract::new(None, Some(language))
         .unwrap()
         .set_image_from_mem(card_image_buffer)

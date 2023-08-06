@@ -5,6 +5,7 @@
     "broadcast",
     "assets",
     "view",
-    "app"
+    "app",
+    "identify_game_scene"
   ]
 }

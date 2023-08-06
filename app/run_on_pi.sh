@@ -2,6 +2,7 @@
 
 cd mailbox
 podman build --target broadcast_service --rm -t broadcast_service -f Containerfile.broadcast.service .
+podman build --target identify_game_scene_service --rm -t identify_game_scene_service -f Containerfile.identify_game_scene.service .
 podman build --target detect_card_service --rm -t detect_card_service -f Containerfile.detect_card.service .
 cd ..
 

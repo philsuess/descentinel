@@ -1,0 +1,6 @@
+FROM docker.io/debian:buster-slim AS identify_game_scene_service
+RUN apt update ; DEBIAN_FRONTEND=noninteractive apt install -y libopencv-features2d3.2
+ENV RUST_LOG info
+COPY release/identify_game_scene .
+COPY OL_template.jpg .
+CMD ["./identify_game_scene"]
