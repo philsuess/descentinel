@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo podman generate systemd --new --files --name descentinel
+sudo podman generate systemd --new --files --name descentinel --restart-policy=always --restart-sec=2
 sudo mv *.service /lib/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable pod-descentinel.service
