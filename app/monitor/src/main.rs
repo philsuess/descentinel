@@ -1,58 +1,19 @@
 use clap::Parser;
-use image::{ImageBuffer, ImageOutputFormat, Rgb};
 use lapin::{
     options::*, types::FieldTable, BasicProperties, Channel, Connection, ConnectionProperties,
     Result,
 };
 use log::info;
-use nokhwa::{
-    native_api_backend,
-    pixel_format::RgbFormat,
-    query,
-    utils::{CameraIndex, RequestedFormat, RequestedFormatType},
-    Camera,
-};
-use std::io::Cursor;
+use v4l::buffer::Type;
+use v4l::io::mmap::Stream;
+use v4l::io::traits::CaptureStream;
+use v4l::video::Capture;
+use v4l::Device;
+use v4l::FourCC;
 
-fn init_camera(preferred_camera_index: u32) -> nokhwa::Camera {
-    let backend = native_api_backend().unwrap();
-    let devices = query(backend).unwrap();
-    let number_of_devices_found = devices.len() as u32;
-    info!("There are {} available cameras.", number_of_devices_found);
-    for device in devices {
-        info!("{device}");
-    }
-
-    let index = CameraIndex::Index(std::cmp::min(
-        preferred_camera_index,
-        number_of_devices_found,
-    ));
-    // request the absolute highest resolution CameraFormat that can be decoded to RGB.
-    let requested =
-        RequestedFormat::new::<RgbFormat>(RequestedFormatType::AbsoluteHighestResolution);
-    // make the camera
-    return Camera::new(index, requested).unwrap();
-}
-
-fn capture_frame(camera: &mut nokhwa::Camera) -> ImageBuffer<Rgb<u8>, Vec<u8>> {
-    let frame = camera.frame().unwrap();
-    //info!("captured single frame of length {}", frame.buffer().len());
-    //info!("{:?}", frame);
-    return frame.decode_image::<RgbFormat>().unwrap();
-}
-
-fn convert_to_bytes_buffer(image: &ImageBuffer<Rgb<u8>, Vec<u8>>) -> Vec<u8> {
-    let mut bytes = Vec::new();
-    image
-        .write_to(&mut Cursor::new(&mut bytes), ImageOutputFormat::Png)
-        .unwrap();
-    bytes
-}
-
-fn capture_image_as_bytes(camera: &mut nokhwa::Camera) -> Vec<u8> {
-    let image = capture_frame(camera);
-    //image.save("capture.jpeg").unwrap();
-    convert_to_bytes_buffer(&image)
+fn capture_image_from_v4l(stream: &mut Stream) -> Vec<u8> {
+    let (buf, _meta) = stream.next().unwrap();
+    buf.to_vec()
 }
 
 async fn send_over_queue(payload: &[u8], channel: &Channel, queue_name: &str) -> Result<()> {
@@ -84,7 +45,7 @@ struct Args {
     #[arg(short, long, default_value_t = String::from("amqp://localhost:5672"))]
     ampq_url: String,
 
-    #[arg(short, long, default_value_t = 1000)]
+    #[arg(short, long, default_value_t = 2500)]
     images_interval_in_ms: u64,
 }
 
@@ -93,8 +54,20 @@ fn main() -> Result<()> {
     info!("MONITOR service starting");
     let args = Args::parse();
 
-    let mut camera = init_camera(args.camera_preference_index);
-    camera.open_stream().unwrap();
+    //let mut camera = init_camera(args.camera_preference_index);
+    //camera.open_stream().unwrap();
+    let mut dev = Device::new(0).expect("Failed to open device");
+
+    // Let's say we want to explicitly request another format
+    let mut fmt = dev.format().expect("Failed to read format");
+    fmt.width = 1280;
+    fmt.height = 720;
+    fmt.fourcc = FourCC::new(b"MJPG");
+    let fmt = dev.set_format(&fmt).expect("Failed to write format");
+
+    // The actual format chosen by the device driver may differ from what we
+    // requested! Print it out to get an idea of what is actually used now.
+    info!("Format in use:\n{}", fmt);
     info!("Camera streaming...");
 
     async_global_executor::block_on(async {
@@ -126,9 +99,12 @@ fn main() -> Result<()> {
         )
         .await?;
 
+        let mut stream = Stream::with_buffers(&mut dev, Type::VideoCapture, 4)
+            .expect("Failed to create buffer stream");
+
         let pause_between_images = std::time::Duration::from_millis(args.images_interval_in_ms);
         loop {
-            let image_as_bytes = capture_image_as_bytes(&mut camera);
+            let image_as_bytes = capture_image_from_v4l(&mut stream);
             send_over_queue(&image_as_bytes, &channel_images, &args.destination_queue).await?;
             info!("image sent to {}", args.destination_queue);
             std::thread::sleep(pause_between_images);

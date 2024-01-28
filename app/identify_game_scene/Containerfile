@@ -1,11 +1,19 @@
-FROM docker.io/opensuse/tumbleweed:latest AS identify_game_scene_service
-RUN zypper install -y opencv-devel
+FROM docker.io/opensuse/leap:latest AS identify_game_scene_service_builder
+RUN zypper install -y opencv-devel gcc gcc-c++ clang-devel
+ENV PATH="/root/.cargo/bin:${PATH}"
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+COPY src/*.rs src/
+COPY Cargo.toml .
+RUN cargo build --release
+
+FROM docker.io/opensuse/leap:latest AS identify_game_scene_service
+RUN zypper install -y opencv
 ENV RUST_LOG info
-COPY target/release/identify_game_scene .
+COPY --from=identify_game_scene_service_builder target/release/identify_game_scene .
 COPY OL_template.jpg .
 CMD ["./identify_game_scene"]
 
-FROM docker.io/python:3.10-slim-bullseye AS identify_game_scene_service_test
+FROM docker.io/python:3.10-slim-bookworm AS identify_game_scene_service_test
 RUN pip install --upgrade pip; pip install pika opencv-python-headless
 ENV Q_GAME_ROOM_FEED Q_GAME_ROOM_FEED
 COPY test_images/*.jpg ./

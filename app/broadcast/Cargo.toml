@@ -6,15 +6,15 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-clap = { version = "4.1.6", features = ["derive"] }
-deadpool = "0.9.5"
-deadpool-lapin = "0.10.0"
-env_logger = "0.10.0"
-futures = { version = "0.3.17", default-features = true }
-lapin = "2.1.1"
-log = "0.4.17"
-msgpack_simple = "1.0.2"
-thiserror = "1.0.40"
+clap = { version = "4", features = ["derive"] }
+deadpool = "0.10"
+deadpool-lapin = "0.11"
+env_logger = "0.10"
+futures = { version = "0.3", default-features = true }
+lapin = "2"
+log = "0.4"
+msgpack_simple = "1"
+thiserror = "1"
 tokio = { version = "1", features = ["macros", "time", "rt-multi-thread"] }
-tokio-executor-trait = "2.1.1"
+tokio-executor-trait = "2"
 warp = "0.3"

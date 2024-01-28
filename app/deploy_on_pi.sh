@@ -5,8 +5,11 @@ set -o nounset
 set -o pipefail
 set -o xtrace
 
-readonly TARGET_HOST=pi@raspberrypi
-readonly TARGET_PATH=/home/pi/mailbox
+readonly TARGET_HOST=phil@raspberrypi.local
+readonly TARGET_PATH=/home/phil/mailbox
+
+ssh ${TARGET_HOST} mkdir -p ${TARGET_PATH}
+ssh ${TARGET_HOST} mkdir -p ${TARGET_PATH}/release
 
 cd broadcast
 scp ./target/aarch64-unknown-linux-gnu/release/broadcast ${TARGET_HOST}:${TARGET_PATH}/release/
