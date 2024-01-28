@@ -1,11 +1,19 @@
-FROM docker.io/opensuse/tumbleweed:latest AS detect_card_service
+FROM docker.io/opensuse/leap:latest AS detect_card_service_builder
+ENV PATH="/root/.cargo/bin:${PATH}"
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+RUN zypper install -y tesseract-ocr-devel leptonica-devel gcc clang libcurl-devel
+COPY src/*.rs src/
+COPY Cargo.toml .
+RUN cargo build --release
+
+FROM docker.io/opensuse/leap:latest AS detect_card_service
 RUN zypper install -y tesseract-ocr-devel libtesseract5 tesseract-ocr-traineddata-fra
 ENV RUST_LOG info
-COPY target/release/detect_card .
+COPY --from=detect_card_service_builder target/release/detect_card .
 COPY keywords_cards.json .
 CMD ["./detect_card"]
 
-FROM docker.io/python:3.10-slim-bullseye AS detect_card_service_test
+FROM docker.io/python:3.10-slim-bookworm AS detect_card_service_test
 ENV Q_CARD_IMAGE Q_CARD_IMAGE
 RUN pip install --upgrade pip; pip install pika opencv-python-headless
 COPY test_images/*.jpg ./
