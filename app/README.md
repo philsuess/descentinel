@@ -1,6 +1,6 @@
 # Deploy on Raspberry Pi
 
-Run this on build computer
+Run this on build computer (use `bash` instead of `sh` on ubuntu)
 
 1. `sh build.sh`
 1. `sh deploy_on_pi.sh`
