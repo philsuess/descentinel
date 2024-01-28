@@ -5,6 +5,9 @@ Run this on build computer (use `bash` instead of `sh` on ubuntu)
 1. `sh build.sh`
 1. `sh deploy_on_pi.sh`
 
+Install the following on the pi (use a slim, headless distro):
+`sudo apt update; sudo apt upgrade; sudo apt install git podman`
+
 Run this on the pi
 
 1. `sh run_on_pi.sh`
