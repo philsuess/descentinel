@@ -1,14 +1,15 @@
 import type { Component } from 'solid-js';
 import { ErrorBoundary } from "solid-js";
 
-import { DisplayLatestOverlordCard } from "./latest_overlord_card";
-//import { OverlordCard } from "./components/overlord_card";
+import { DisplayLatestGameRoomImage } from "./latest_game_room_image";
+import {DisplayLatestOverlordCard} from "./latest_overlord_card";
 
 const App: Component = () => {
   return (
     <>
       <ErrorBoundary fallback={err => err}>
-        <DisplayLatestOverlordCard />
+        <DisplayLatestOverlordCard/>
+        <DisplayLatestGameRoomImage />
       </ErrorBoundary>
     </>
   );

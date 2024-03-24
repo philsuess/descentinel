@@ -11,12 +11,12 @@
   "license": "MIT",
   "devDependencies": {
     "typescript": "^4.9.5",
-    "vite": "^4.1.1",
-    "vite-plugin-solid": "^2.5.0"
+    "vite": "^4.5.2",
+    "vite-plugin-solid": "^2.9.1"
   },
   "dependencies": {
-    "@types/msgpack-lite": "^0.1.8",
+    "@types/msgpack-lite": "^0.1.11",
     "msgpack-lite": "^0.1.26",
-    "solid-js": "^1.6.10"
+    "solid-js": "^1.8.12"
   }
 }
