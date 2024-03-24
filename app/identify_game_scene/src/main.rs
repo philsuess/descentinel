@@ -246,8 +246,9 @@ impl CardDetector {
         let mut good_match = opencv::core::Vector::<opencv::core::DMatch>::default();
         let quality_threshold = 0.5;
         for match_pair in matches {
-            if match_pair.get(0).unwrap().distance
-                < quality_threshold * match_pair.get(1).unwrap().distance
+            if match_pair.len() > 1
+                && match_pair.get(0).unwrap().distance
+                    < quality_threshold * match_pair.get(1).unwrap().distance
             {
                 good_match.push(match_pair.get(0).unwrap());
             }
