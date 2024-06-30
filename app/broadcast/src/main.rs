@@ -1,3 +1,4 @@
+use base64::{engine::general_purpose, Engine as _};
 use clap::Parser;
 use deadpool_lapin::{Manager, Pool, PoolError};
 use futures::{future::join_all, join, StreamExt};
@@ -74,7 +75,7 @@ async fn initialize_webserver_routes(
     let descentinel_object = warp::path!("descentinel" / String)
         .and_then({
             let cache = route_to_descentinel_object.clone();
-            move |descentinel_object| {
+            move |descentinel_object: String| {
                 let cache = cache.clone();
                 async move {
                     let database = cache.lock().unwrap();
@@ -122,15 +123,8 @@ async fn rabbitmq_connection(pool: Pool) -> RMQResult<Connection> {
 
 fn pack_delivery(data: &Vec<u8>, route_name: &str) -> Vec<u8> {
     match route_name {
-        "game_room_image" => data.clone(),
-        _ => {
-            info!("Got {:?}", String::from_utf8(data.to_owned()).unwrap());
-            info!(
-                "packed: {:?}",
-                MsgPack::String(String::from_utf8(data.to_owned()).unwrap()).encode()
-            );
-            MsgPack::String(String::from_utf8(data.to_owned()).unwrap()).encode()
-        }
+        "game_room_image" => MsgPack::String(general_purpose::STANDARD.encode(&data)).encode(),
+        _ => MsgPack::String(String::from_utf8(data.to_owned()).unwrap()).encode(),
     }
 }
 
