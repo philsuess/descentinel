@@ -20,11 +20,11 @@ devDependencies:
     specifier: ^4.9.5
     version: 4.9.5
   vite:
-    specifier: ^4.5.2
-    version: 4.5.2
+    specifier: ^4.1.1
+    version: 4.5.3
   vite-plugin-solid:
-    specifier: ^2.9.1
-    version: 2.9.1(solid-js@1.8.12)(vite@4.5.2)
+    specifier: ^2.5.0
+    version: 2.5.0(solid-js@1.6.10)(vite@4.5.3)
 
 packages:
 
@@ -839,12 +839,8 @@ packages:
       picocolors: 1.0.0
     dev: true
 
-  /validate-html-nesting@1.2.2:
-    resolution: {integrity: sha512-hGdgQozCsQJMyfK5urgFcWEqsSSrK63Awe0t/IMR0bZ0QMtnuaiHzThW81guu3qx9abLi99NEuiaN6P9gVYsNg==}
-    dev: true
-
-  /vite-plugin-solid@2.9.1(solid-js@1.8.12)(vite@4.5.2):
-    resolution: {integrity: sha512-RC4hj+lbvljw57BbMGDApvEOPEh14lwrr/GeXRLNQLcR1qnOdzOwwTSFy13Gj/6FNIZpBEl0bWPU+VYFawrqUw==}
+  /vite-plugin-solid@2.5.0(solid-js@1.6.10)(vite@4.5.3):
+    resolution: {integrity: sha512-VneGd3RyFJvwaiffsqgymeMaofn0IzQLPwDzafTV2f1agoWeeJlk5VrI5WqT9BTtLe69vNNbCJWqLhHr9fOdDw==}
     peerDependencies:
       '@testing-library/jest-dom': ^5.16.6 || ^5.17.0 || ^6.*
       solid-js: ^1.7.2
@@ -853,20 +849,20 @@ packages:
       '@testing-library/jest-dom':
         optional: true
     dependencies:
-      '@babel/core': 7.23.9
-      '@types/babel__core': 7.20.5
-      babel-preset-solid: 1.8.12(@babel/core@7.23.9)
-      merge-anything: 5.1.7
-      solid-js: 1.8.12
-      solid-refresh: 0.6.3(solid-js@1.8.12)
-      vite: 4.5.2
-      vitefu: 0.2.5(vite@4.5.2)
+      '@babel/core': 7.20.7
+      '@babel/preset-typescript': 7.18.6(@babel/core@7.20.7)
+      babel-preset-solid: 1.6.6(@babel/core@7.20.7)
+      merge-anything: 5.1.4
+      solid-js: 1.6.10
+      solid-refresh: 0.4.1(solid-js@1.6.10)
+      vite: 4.5.3
+      vitefu: 0.2.4(vite@4.5.3)
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /vite@4.5.2:
-    resolution: {integrity: sha512-tBCZBNSBbHQkaGyhGCDUGqeo2ph8Fstyp6FMSvTtsXeZSPpSMGlviAOav2hxVTqFcx8Hj/twtWKsMJXNY0xI8w==}
+  /vite@4.5.3:
+    resolution: {integrity: sha512-kQL23kMeX92v3ph7IauVkXkikdDRsYMGTVl5KY2E9OY4ONLvkHf04MDTbnfo6NKxZiDLWzVpP5oTa8hQD8U3dg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -900,15 +896,15 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vitefu@0.2.5(vite@4.5.2):
-    resolution: {integrity: sha512-SgHtMLoqaeeGnd2evZ849ZbACbnwQCIwRH57t18FxcXoZop0uQu0uzlIhJBlF/eWVzuce0sHeqPcDo+evVcg8Q==}
+  /vitefu@0.2.4(vite@4.5.3):
+    resolution: {integrity: sha512-fanAXjSaf9xXtOOeno8wZXIhgia+CZury481LsDaV++lSvcU2R9Ch2bPh3PYFyoHW+w9LqAeYRISVQjUIew14g==}
     peerDependencies:
       vite: ^3.0.0 || ^4.0.0 || ^5.0.0
     peerDependenciesMeta:
       vite:
         optional: true
     dependencies:
-      vite: 4.5.2
+      vite: 4.5.3
     dev: true
 
   /yallist@3.1.1:
