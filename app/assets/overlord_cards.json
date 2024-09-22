@@ -836,5 +836,420 @@
                 "effect": "Spiele diese Karte aus bevor Du eines Deiner Monster für die Runde aktivierst. Du kannst 1 Schatten und 1 Eliteschatten nach den üblichen Regeln entstehen lassen."
             }
         ]
+    },
+    "jungle_drums": {
+        "name": "Jungle Drums",
+        "type": "Spawn",
+        "threat_cost": 6,
+        "treachery_cost": 1,
+        "treachery_colour": "red",
+        "discard_value": 2,
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Master Blood Apes, following all of the normal rules for spawning monsters.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Dschungeltrommeln",
+                "effect": "Spiele diese Karte, bevor du eines Deiner Monster für die Runde aktivierst. Du kannst 2 Elite Blutaffen nach den üblichen Regeln entstehen lassen."
+            }
+        ]
+    },
+    "killer_chest": {
+        "name": "Killer Chest",
+        "type": "Trap (Chest)",
+        "threat_cost": 12,
+        "treachery_cost": 2,
+        "treachery_colour": "purple",
+        "discard_value": 4,
+        "effect": "Play this card when a hero opens a chest. The chest is alive, and its contents cannot be distributed until it is killed. Move the chest marker to an adjacent space. Treat it as an Ogre and activate it immediately. After its activation, the hero's turn resumes. If the chest is killed, the contents of the chest are immediately distributed.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Killertruhe",
+                "effect": "Spiele diese Karte aus, wenn ein Held eine Truhe öffnet. Die Truhe ist lebendig und ihr Inhalt kann nicht verteilt werden, bis sie getötet wird. Bewege den Truhenmarker auf ein benachbartes Feld. Behandle ihn als Oger und aktiviere ihn sofort. Nach der Aktivierung wird der Zug des Helden fortgesetzt. Wenn die Truhe getötet wird, wird der Inhalt der Truhe sofort verteilt."
+            }
+        ]
+    },
+    "kobold_horde": {
+        "name": "Kobold Horde",
+        "type": "Spawn",
+        "threat_cost": 7,
+        "treachery_cost": 1,
+        "treachery_colour": "red",
+        "discard_value": 2,
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 6 Kobolds and 3 Master Kobolds, following all of the normal rules for spawning monsters.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Eine Horde Kobolde",
+                "effect": "Spiele diese Karte, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 6 Kobolde und 3 Elitekobolde nach den üblichen Regeln entstehen lassen."
+            }
+        ]
+    },
+    "kobold_swarm": {
+        "name": "Kobold Swarm",
+        "type": "Spawn",
+        "threat_cost": 4,
+        "discard_value": 1,
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 4 Kobolds and 2 Master Kobolds, following all of the normal rules for spawning monsters.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Ein Schwarm Kobolde",
+                "effect": "Spiele diese Karte, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 4 Kobolde und 2 Elitekobolde nach den üblichen Regeln entstehen lassen."
+            }
+        ]
+    },
+    "lava_beetle_colony": {
+        "name": "Lava Beetle Colony",
+        "type": "Spawn",
+        "threat_cost": 5,
+        "treachery_cost": 1,
+        "treachery_colour": "red",
+        "discard_value": 2,
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Lava Beetles and 1 Master Lava Beetle, following all of the normal rules for spawning monsters.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Lava Käfer Kolonie",
+                "effect": "Spiele diese Karte, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 2 Lava Käfer und 1 Elite Lava Käfer nach den üblichen Regeln entstehen lassen."
+            }
+        ]
+    },
+    "lava_beetle_scouts": {
+        "name": "Lava Beetle Scouts",
+        "type": "Spawn",
+        "threat_cost": 4,
+        "discard_value": 2,
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Lava Beetles, following all of the normal rules for spawning monsters.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Lava Käfer Späher",
+                "effect": "Spiele diese Karte, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 2 Lava Käfer nach den üblichen Regeln entstehen lassen."
+            }
+        ]
+    },
+    "legions_of_the_dead": {
+        "name": "Legions of the Dead",
+        "type": "Spawn",
+        "threat_cost": 5,
+        "treachery_cost": 1,
+        "treachery_colour": "red",
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 4 Skeletons and 2 Master Skeletons, following all of the normal rules for spawning monsters.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Legion der Untoten",
+                "effect": "Spiele diese Karte, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 4 Skelette und 2 Elite Skelette nach den üblichen Regeln entstehen lassen."
+            }
+        ]
+    },
+    "lightning_runes": {
+        "name": "Lightning Runes",
+        "type":"Trap (Door)",
+        "threat_cost": 11,
+        "treachery_cost": 2,
+        "treachery_colour": "purple",
+        "discard_value": 4,
+        "effect": "Play this card when a hero opens a door. Place the bolt template on the board so that one end touches where the closed door was. Any figures underneath the bolt template suffer 4 wounds (ignoring armor) and gain 1 Daze token. Each affected figure may roll 2 power dice and reduce the effect by 1 wound for each surge rolled.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Blitzrunen",
+                "effect": "Spiele diese Karte, wenn ein Held eine Tür öffnet. Platziere die Blitzschablone so auf dem Brett, dass ein Ende die Stelle berührt, an der sich die geschlossene Tür befand. Alle Figuren unter der Blitzschablone erleiden 4 Schaden (Rüstung ignorieren) und erhalten 1 Betäubungsmarker. Jede betroffene Figur darf 2 Machtwürfel würfeln und den Effekt für jeden gewürfelte Kraftverstärkung um 1 Schaden reduzieren."
+            }
+        ]
+    },
+    "lone_assassin": {
+        "name": "Lone Assassin",
+        "type": "Spawn",
+        "threat_cost": 6,
+        "treachery_cost": 2,
+        "treachery_colour": "red",
+        "discard_value": 2,
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 1 Master Deep Elf, following all of the normal rules for spawning monsters.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Einsamer Meuchler",
+                "effect": "Spiele diese Karte, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 1 Elite Dunkelelf nach den üblichen Regeln entstehen lassen."
+            }
+        ]
+    },
+    "lone_golem": {
+        "name": "Lone Golem",
+        "type": "Spawn",
+        "threat_cost": 6,
+        "treachery_cost": 3,
+        "treachery_colour": "red",
+        "discard_value": 2,
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 1 Golem, following all of the normal rules for spawning monsters.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Einsamer Golem",
+                "effect": "Spiele diese Karte, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 1 Golem nach den üblichen Regeln entstehen lassen."
+            }
+        ]
+    },
+    "lone_manticore": {
+        "name": "Lone Manticore",
+        "type": "Spawn",
+        "threat_cost": 6,
+        "treachery_cost": 1,
+        "treachery_colour": "red",
+        "discard_value": 2,
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 1 Master Manticore, following all of the normal rules for spawning monsters.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Einsamer Mantikor",
+                "effect": "Spiele diese Karte, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 1 Elite Mantikor nach den üblichen Regeln entstehen lassen."
+            }
+        ]
+    },
+    "lone_medusa": {
+        "name": "Lone Medusa",
+        "type": "Spawn",
+        "threat_cost": 4,
+        "discard_value": 2,
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 1 Medusa, following all of the normal rules for spawning monsters.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Einsame Medusa",
+                "effect": "Spiele diese Karte, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 1 Elite Medusa nach den üblichen Regeln entstehen lassen."
+            }
+        ]
+    },
+    "lone_naga": {
+        "name": "Lone Naga",
+        "type": "Spawn",
+        "threat_cost": 6,
+        "treachery_cost": 1,
+        "treachery_colour": "red",
+        "discard_value": 2,
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 1 Master Naga, following all of the normal rules for spawning monsters.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Einsame Naga",
+                "effect": "Spiele diese Karte, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 1 Elite Naga nach den üblichen Regeln entstehen lassen."
+            }
+        ]
+    },
+    "lone_ogre": {
+        "name": "Lone Ogre",
+        "type": "Spawn",
+        "threat_cost": 6,
+        "treachery_cost": 1,
+        "treachery_colour": "red",
+        "discard_value": 2,
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 1 Ogre, following all of the normal rules for spawning monsters.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Einsamer Oger",
+                "effect": "Spiele diese Karte, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 1 Oger nach den üblichen Regeln entstehen lassen."
+            }
+        ]
+    },
+    "lone_troll": {
+        "name": "Lone Troll",
+        "type": "Spawn",
+        "threat_cost": 6,
+        "treachery_cost": 1,
+        "treachery_colour": "red",
+        "discard_value": 2,
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 1 Master Troll, following all of the normal rules for spawning monsters.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Einsamer Troll",
+                "effect": "Spiele diese Karte, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 1 Troll nach den üblichen Regeln entstehen lassen."
+            }
+        ]
+    },
+    "mimic": {
+        "name": "Mimic",
+        "type": "Trap (Chest)",
+        "threat_cost": 8,
+        "discard_value": 3,
+        "effect": "Pay this card when a hero opens a chest. The chest is alive, and its contents cannot be distributed until it is killed. Move the chest marker to an adjacent space. Threat it as a Beastman and activate it immediately. After its activation, the hero's turn resumes. If the chest is killed, the contents of the chest are immediately distributed.",
+        "Overlord_tactic": "Can be funny when the heroes make their last sprint for that golden chest and you strip them of their precious loot. Otherwise, it is just a matter of delaying the treasure for one turn as the beastman can be killed quite easily.",
+        "Heroes_tactic": "Kill it! If any heroes haven't acted yet this turn, try to kill the mimic to get the treasure now.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Mimikry",
+                "effect": "Zu spielen, wenn ein Held eine Schatztruhe öffnet. Die Truhe ist lebendig und erweist sich als Tiermensch, der sofort aktiviert wird. Nach dem Ende der Aktivierung fährt der Held mit seinem Spielzug fort. Falls er den Tiermenschen (die Truhe) getötet hat, erhält er sofort den Inhalt der Truhe.",
+                "Overlord_tactic": "Kann lustig sein, wenn die Helden ihren letzten Sprint nach der goldenen Truhe machen und man sie ihrer wertvollen Beute beraubt. Andernfalls geht es nur darum, den Schatz um eine Runde zu verzögern, da der Tiermensch recht leicht getötet werden kann.",
+                "Heroes_tactic": "Tötet ihn! Wenn in diesem Zug noch keine Helden gehandelt haben, versuche, den Mimik zu töten, um den Schatz jetzt zu bekommen."
+            }
+        ]
+    },
+    "mother_medusa": {
+        "name": "Mother Medusa",
+        "type": "Spawn",
+        "threat_cost": 6,
+        "treachery_cost": 1,
+        "treachery_colour": "red",
+        "discard_value": 2,
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 1 Master Medusa, following all of the normal rules for spawning monsters.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Mutter Medusa",
+                "effect": "Spiele diese Karte, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 1 Elite Medusa nach den üblichen Regeln entstehen lassen."
+            }
+        ]
+    },
+    "paralyzing_gas": {
+        "name": "Paralyzing Gas",
+        "type": "Trap (Door)",
+        "threat_cost": 5,
+        "discard_value": 3,
+        "effect": "Play this card when a hero opens a door. Unless the hero rolls a blank on one power die, his turn immediately ends and you may place one stun token on him. If the hero player rolls a blank, this card has no effect.",
+        "Overlord_tactic": "Lower the cost! Use this card for less threat tokens by having the Trapmaster power in play and/or some monsters with the Trickster special ability.",
+        "Heroes_tactic": "Just use another hero to open the door or wait for next turn if you don't feel ready enough.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Betäubungsgas",
+                "effect": "Zu spielen, wenn ein Held eine Tür öffnet. Falls er mit 1 Machtwürfel nicht die Leerseite würfelt, endet sein Spielzug sofort und er erhält einen Betäubungsmarker. Andernfalls ist die Karte wirkungslos.",
+                "Overlord_tactic": "Zu teuer. Verwende diese Karte nur, wenn du die Kosten zum Auspielen günstiger machen kannst.",
+                "Heroes_tactic": "Setze einfach einen anderen Helden ein, um die Tür zu öffnen, oder warte auf die nächste Runde, wenn du dich nicht bereit genug fühlst."
+            }
+        ]
+    },
+    "poison_spikes": {
+        "name": "Poison Spikes",
+        "type": "Trap (Space)",
+        "threat_cost": 4,
+        "treachery_cost": 1,
+        "treachery_colour": "purple",
+        "discard_value": 2,
+        "effect": "Play this card when a hero moves into an empty space. Place a one-space pit token on that space. Unless the hero rolls a blank on one power die, he falls into the pit and suffers 4 wounds (ignoring armor) of Poison damage. If he rolls a blank, he immediately moves to an adjacent space of his choice.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Giftspieße",
+                "effect": "Zu spielen, wenn ein Held auf ein leeres Feld zieht. Lege einen Grubenmarker auf das Feld. Falls der Held mit 1 Machtwürfel nucht die Leerseite würfelt, fällt er in die Grube und erleidet 4 Giftschaden (Rüstung wird ignoriert). Andernfalls zieht der Held auf ein Nachbarfeld seiner Wahl weiter." 
+            }
+        ]
+    },
+    "poltergeist": {
+        "name": "Poltergeist",
+        "type": "Event",
+        "threat_cost": 7,
+        "treachery_cost": 1,
+        "treachery_colour": "green",
+        "discard_value": 2,
+        "effect": "Play at the start of your turn. Move all figures and tokens (but not obstacles) up to 2 spaces, however you choose. Then, you may close any or all doors in the dungeon.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Poltergeist",
+                "eeffect": "Spiele zu Beginn deines Zuges. Bewege alle Figuren und Marker (aber keine Hindernisse) auf bis zu 2 Felder, wie du willst. Dann kannst du eine oder alle Türen im Verlies schließen."
+            }
+        ]
+    },
+    "pride": {
+        "name": "Pride",
+        "type": "Power",
+        "threat_cost": 14,
+        "treachery_cost": 2,
+        "treachery_colour": "green",
+        "discard_value": 5,
+        "effect": "Play this card at the start of your turn and place it faceup in front of you. You gain 4 threat each time a hero places an order.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Stolz",
+                "effect": "Spiele diese Karte zu Beginn deines Zuges aus und lege sie offen vor dich. Jedes Mal, wenn ein Held einen Befehl erteilt, erhälst du 4 Bedrohung."
+            }
+        ]
+    },
+    "prowling_wendigo": {
+        "name": "Prowling Wendigo",
+        "type": "Spawn",
+        "threat_cost": 6,
+        "treachery_cost": 1,
+        "treachery_colour": "red",
+        "discard_value": 2,
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 1 Master Wendigo, following all of the normal rules for spawning monsters.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Herumstrolchender Wendigo",
+                "effect": "Spiele diese Karte, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 1 Elite Wendigo nach den üblichen Regeln entstehen lassen."
+            }
+        ]
+    },
+    "rage": {
+        "name": "Rage",
+        "type": "Event",
+        "threat_cost": 4,
+        "discard_value": 1,
+        "effect": "Play when you activate a monster. The monster may attack twice during this activation (four times if it has Quick Shot).",
+        "Overlord_tactic": "Rage is a simple but efficient overlord card, specially if it is used with monsters that are dealing a lot of damage or that have the Quick Shot special ability.",
+        "Heroes_tactic": "If you have a Guard order, use it now and try to kill the enhanced monster before he strikes. If not, well, suffer.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Wutausbruch",
+                "effect": "Zu spielen, wenn du ein Monster aktivierst. Es darf während dieser Aktivierung zwei Mal angreifen (vier Mal, wenn es Doppelangriff hat).",
+                "Overlord_tactic": "Wutausbruch ist eine einfache, aber effiziente Overlord-Karte, besonders wenn sie auf Monster angewandt wird, die viel Schaden verursachen oder die Spezialfähigkeit Doppelangriff haben.",
+                "Heroes_tactic": "Wenn du den Befehl absichern gegeben hast, verwende ihn jetzt und versuche, das aufgeputschte Monster zu erledigen bevor es angreift. Wenn nicht, dann... leide."
+            }
+        ]
+    },
+    "razorwing_flock": {
+        "name": "Razorwing Flock",
+        "type": "Spawn",
+        "threat_cost": 5,
+        "discard_value": 2,
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Razorwings, following all of the normal rules for spawning monsters.",
+        "Overlord_tactic": "A basic spawn card. Razorwings have a lot of speed and are useful when you cannot spawn monsters close to the heroes.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Rasierklingenflügler Schwarm",
+                "effect": "Spiele diese Karte, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 2 Rasierklingenflügler nach den üblichen Regeln entstehen lassen.",
+                "Overlord_tactic": "Eine einfache Entstehungskarte. Rasierklingenflügler haben eine hohe Geschwindigkeit und sind nützlich, wenn du keine Monster in der Nähe der Helden entstehen lassen kannst."
+            }
+        ]
+    },
+    "rolling_stone": {
+        "name": "Rolling Stone",
+        "type": "Trap (Space)",
+        "threat_cost": 14,
+        "treachery_cost": 3,
+        "treachery_colour": "purple",
+        "discard_value": 5,
+        "effect": "Play this card when a hero moves into an empty space. Place a boulder token anywhere on the board as long as it's at least 3 spaces away from the nearest hero. You may orient the boulder in any direction you like. Starting on your next turn, the boulder begins to roll.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Steinkugel",
+                "effect": "Spiele diese Karte, wenn ein Held in ein leeres Feld zieht. Lege einen Steinkugelmarker an eine beliebige Stelle auf dem Spielplan, solange er mindestens 3 Felder vom nächsten Helden entfernt ist. Du kannst den Marker in jede beliebige Richtung ausrichten. Ab dem nächsten Zug beginnt die Steinkugel zu rollen."
+            }
+        ]
+    },
+    "scything_blades": {
+        "name": "Scything Blades",
+        "type": "Trap (Space)",
+        "threat_cost": 6,
+        "treachery_cost": 1,
+        "treachery_colour": "purple",
+        "discard_value": 2,
+        "effect": " 	Play this card when a hero moves into an empty space. Place a two-space scything blades token so that it overlaps that space, is completely on the board, and isn't overlapping any obstacles. Any figures in the spaces filled by the scything blades are affected as though they had moved into a space containing the scything blade.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Sensenklingen",
+                "effect": "Spiele diese Karte, wenn ein Held in ein leeres Feld zieht. Platziere ein Sensenklingenmarker (über zwei Felder) so, dass es dieses Feld überlappt, vollständig auf dem Brett liegt und keine Hindernisse überlappt. Alle Figuren in den von den Sensenklingen ausgefüllten Feldern werden so beeinflusst, als ob sie sich in einen Raum bewegt hätten, in dem sich die Sensenklinge befindet."
+            }
+        ]
     }
 }
