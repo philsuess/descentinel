@@ -1243,12 +1243,222 @@
         "treachery_cost": 1,
         "treachery_colour": "purple",
         "discard_value": 2,
-        "effect": " 	Play this card when a hero moves into an empty space. Place a two-space scything blades token so that it overlaps that space, is completely on the board, and isn't overlapping any obstacles. Any figures in the spaces filled by the scything blades are affected as though they had moved into a space containing the scything blade.",
+        "effect": "Play this card when a hero moves into an empty space. Place a two-space scything blades token so that it overlaps that space, is completely on the board, and isn't overlapping any obstacles. Any figures in the spaces filled by the scything blades are affected as though they had moved into a space containing the scything blade.",
         "translations": [
             {
                 "language": "de",
                 "name": "Sensenklingen",
                 "effect": "Spiele diese Karte, wenn ein Held in ein leeres Feld zieht. Platziere ein Sensenklingenmarker (über zwei Felder) so, dass es dieses Feld überlappt, vollständig auf dem Brett liegt und keine Hindernisse überlappt. Alle Figuren in den von den Sensenklingen ausgefüllten Feldern werden so beeinflusst, als ob sie sich in einen Raum bewegt hätten, in dem sich die Sensenklinge befindet."
+            }
+        ]
+    },
+    "shade_spooks": {
+        "name": "Shade Spooks",
+        "type": "Spawn",
+        "threat_cost": 4,
+        "discard_value": 2,
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Shades, following all of the normal rules for spawning monsters.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Schattenspuk",
+                "effect": "Spiele diese Karte, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 2 Schatten nach den üblichen Regeln entstehen lassen."
+            }
+        ]
+    },
+    "skeleton_patrol": {
+        "name": "Skeleton Patrol",
+        "type": "Spawn",
+        "threat_cost": 4,
+        "discard_value": 2,
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Skeletons and 1 Master Skeleton, following all of the normal rules for spawning monsters.",
+        "Overlord_tactic": "A basic spawn card. Skeletons are not really powerful but the Master Skeleton can be quite frustrating for heroes if you are good at rolling surges with the Undying ability.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Skelettpatrouille",
+                "effect": "Spiele diese Karte, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 2 Skelette und 1 Elitenskelett nach den üblichen Regeln entstehen lassen.",
+                "Overlord_tactic": "Eine einfache Entstehungskarte. Skelette sind nicht wirklich mächtig, aber das Eliteskelett kann für Helden ziemlich frustrierend sein, wenn man gut darin ist, Skelette wieder auferstehen zu lassen." 
+            }
+        ]
+    },
+    "sloth": {
+        "name": "Sloth",
+        "type": "Power",
+        "threat_cost": 16,
+        "treachery_cost": 2,
+        "treachery_colour": "purple",
+        "discard_value": 5,
+        "effect": "Play this card at the start of your turn and place it face up in front of you. The heroes lose 1 conquest point each time a hero uses a glyph of returning to move to town.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Faulheit",
+                "effect": "Spiele diese Karte zu Beginn deines Zuges aus und lege sie offen vor dich ab. Die Helden verlieren jedes Mal 1 Questmarker, wenn ein Held eine Glyphe der Rückkehr benutzt, um in die Stadt zu ziehen."
+            }
+        ]
+    },
+    "smash": {
+        "name": "Smash!",
+        "type": "Event",
+        "threat_cost": 3,
+        "treachery_cost": 1,
+        "treachery_colour": "green",
+        "discard_value": 1,
+        "effect": "Play at the start of your turn. Remove one door or rubble obstacle adjacent to a monster. You cannot remove a door leading into an unrevealed area.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Kabumm!",
+                "effect": "Spiele zu Beginn deines Zuges. Entferne eine Tür oder ein Trümmermarker neben einem Monster. Du kannst eine Tür, die in einen nicht sichtbaren Bereich führt, nicht entfernen."
+            }
+        ]
+    },
+    "sneak_up_on_the_prey": {
+        "name": "Sneak up on the prey",
+        "type": "Event",
+        "threat_cost": 3,
+        "treachery_cost": 1,
+        "treachery_colour": "green",
+        "discard_value": 2,
+        "effect": "Play immediately after a hero has declared an attack on a monster, but before he has rolled any dice. The monster gains the Stealth ability for that attack. This card cannot be played on a named monster.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "An das Opfer anschleichen",
+                "effect": "Spiele sofort, nachdem ein Held einen Angriff auf ein Monster angekündigt hat, aber bevor er gewürfelt hat. Das Monster erhält für diesen Angriff die Fähigkeit Tarnung. Diese Karte kann nicht auf ein Monster mit Namen gespielt werden."
+            }
+        ]
+    },
+    "sorcerer_circle": {
+        "name": "Sorcerer Circle",
+        "type": "Spawn",
+        "threat_cost": 5,
+        "discard_value": 2,
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Sorcerers, following all of the normal rules for spawning monsters.",
+        "Overlord_tactic": "A basic spawn card. Sorcerers have a lot of armor for what you would expect from some old looking humans dressed in robes. The sorcery special ability is good to deal increased damage to the heroes.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Hexenmeister Zirkel",
+                "effect": "Spiele diese Karte, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 2 Hexenmeister nach den üblichen Regeln entstehen lassen.",
+                "Overlord_tactic": "Eine einfache Entstehungskarte. Hexer haben eine Menge Rüstung, wie man sie von alt aussehenden Menschen in Roben nicht gerade erwarten würde. Die Spezialfähigkeit Hexerei ist gut, um den Helden mehr Schaden zuzufügen."
+            }
+        ]
+    },
+    "spell_of_binding": {
+        "name": "Spell of Binding",
+        "type": "Event",
+        "threat_cost": 8,
+        "treachery_cost": 2,
+        "treachery_colour": "green",
+        "discard_value": 2,
+        "effect": "Play at the start of your turn and target one space. All figures that are within 3 spaces and have line of sight to that space immediately gain 1 web token.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Bindungszauber",
+                "effect": "Spiele zu Beginn deines Zuges und bestimme ein Feld. Alle Figuren, die sich innerhalb von 3 Feldern befinden und eine Sichtlinie zu diesem Feld haben, erhalten sofort 1 Netzmarker."
+            }
+        ]
+    },
+    "spell_of_burning": {
+        "name": "Spell of Burning",
+        "type": "Event",
+        "threat_cost": 7,
+        "treachery_cost": 1,
+        "treachery_colour": "green",
+        "discard_value": 2,
+        "effect": "Play at the start of your turn and target 1 space. All figures that are within 3 spaces and have line of sight to that space immediately receive 1 Burn token.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Brandzauber",
+                "effect": "Spiele zu Beginn deines Zuges und bestimme ein Feld. Alle Figuren, die sich innerhalb von 3 Feldern befinden und eine Sichtlinie zu diesem Feld haben, erhalten sofort 1 Brandmarker."
+            }
+        ]
+    },
+    "spell_of_frost": {
+        "name": "Spell of Frost",
+        "type": "Event",
+        "threat_cost": 10,
+        "treachery_cost": 1,
+        "treachery_colour": "green",
+        "discard_value": 3,
+        "effect": "Play at the start of your turn and target 1 space. All heroes that are within 3 spaces and have line of sight to that space immediately gain 1 Frost token.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Frostzauber",
+                "effect": "Spiele zu Beginn deines Zuges und bestimme ein Feld. Alle Figuren, die sich innerhalb von 3 Feldern befinden und eine Sichtlinie zu diesem Feld haben, erhalten sofort 1 Vereisungsmarker."
+            }
+        ]
+    },
+    "spell_of_thunder": {
+        "name": "Spell of Thunder",
+        "type": "Event",
+        "threat_cost": 9,
+        "treachery_cost": 2,
+        "treachery_colour": "green",
+        "discard_value": 3,
+        "effect": "Play at the start of your turn and target one space. All figures that are within three spaces and have line of sight to that space must roll a power die. If a figure's result is a blank, that figure is unaffected. If a figure's result is not a blank, that figure immediately gains 1 stun token.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Donnerzauber",
+                "effect": "Spiele zu Beginn deines Zuges und bestimme ein Feld. Alle Figuren, die sich innerhalb von 3 Feldern befinden und eine Sichtlinie zu diesem Feld haben, müssen mit einem Machtwürfel würfeln. Wenn eine Figur die Leerseite würfelt, ist sie nicht betroffen. Wenn eine Figur nicht die Leerseite würfelt, erhält sie sofort 1 Betäubungssmarker."
+            }
+        ]
+    },
+    "spiked_pit": {
+        "name": "Spiked Pit",
+        "type": "Trap (Space)",
+        "threat_cost": 3,
+        "discard_value": 2,
+        "effect": "Play this card when a hero moves into an empty space. Place a one space pit token on that space. Unless the hero rolls a blank on one power die, he falls into the pit and suffers 2 wounds (ignoring armor). If the hero rolls a blank, the hero immediately moves to an adjacent space of his choice.",
+        "Overlord_tactic": "Lower the cost! You can almost play this card for free by having the Trapmaster power in play and/or some monsters with the Trickster special ability.",
+        "Heroes_tactic": "Nothing to be afraid of.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "",
+                "effect": "Spiele diese Karte, wenn ein Held auf ein leeres Feld zieht. Lege einen Grubenmarker mit einem Feld auf dieses Feld. Wenn der Held nicht die Leerseite auf einen Machtwürfel würfelt, fällt er in die Grube und erleidet 2 Schaden (Rüstung ignoriert). Würfelt der Held die Leerseite, zieht der Held sofort auf ein benachbartes Feld seiner Wahl.",
+                "Overlord_tactic": "Senke die Kosten! Spiele diese Karte für weniger Bedrohungsmarker, indem Du die Fallenmeister Machtkarte im Spiel hast und/oder einige Monster mit der Spezialfähigkeit Betrüger.",
+                "Heroes_tactic": "Nichts wovor man sich fürchten muss".
+            }
+        ]
+    },
+    "time_slips_away": {
+        "name": "Time slips away",
+        "type": "Event",
+        "threat_cost": 7,
+        "treachery_cost": 1,
+        "treachery_colour": "green",
+        "discard_value": 3,
+        "effect": "Play this card at the start of your turn to draw 2 additional cards. If this puts you over your hand limit, you must immediately discard down to it, gaining threat for each card you discard as normal.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Die Zeit verrinnt",
+                "effect": "Spiele diese Karte zu Beginn deines Zuges aus, um 2 zusätzliche Karten zu ziehen. Wenn du dadurch dein Handlimit überschreitest, musst du sofort bis zu diesem Limit ablegen. Für jede Karte, die du abwirfst, erhältst du wie gewohnt Drohmarker."
+            }
+        ]
+    },
+    "trapmaster": {
+        "name": "Trapmaster",
+        "type": "Power",
+        "threat_cost": 16,
+        "treachery_cost": "0/1",
+        "treachery_colour": "none/purple",
+        "discard_value": 5,
+        "effect": "Play this card at the start of your turn and place it face up in front of you. Lower the threat cost of the Trap cards you play by 1. Trap cards that deal damage deal an additional 2 wounds.",
+        "Overlord_tactic": "Think twice! Like most other Power cards, it is best played in the early stage of a quest. If you are the overlord, consider what has been explored and what still remains to be uncovered. Combo! Lowering the cost of all traps can be boosted even more by using monsters with the Trickster ability!",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Fallenmeister",
+                "effect": "Spiele diese Karte zu Beginn deines Zuges aus und lege sie offen vor dich ab. Verringere die Bedrohungskosten der Fallenkarten, die du ausspielst, um 1. Fallenkarten, die Schaden verursachen, fügen zusätzlich 2 Schader zu.",
+                "Overlord_tactic": "Überleg es dir gut! Wie die meisten anderen Machtkarten wird sie am besten in der Anfangsphase einer Quest gespielt. Bedenke, was bereits erforscht wurde und was noch aufgedeckt werden muss. Kombo! Die Senkung der Kosten aller Fallen kann durch den Einsatz von Monstern mit der Fähigkeit Fallensteller noch weiter gesteigert werden!"
             }
         ]
     }
