@@ -1461,5 +1461,85 @@
                 "Overlord_tactic": "Überleg es dir gut! Wie die meisten anderen Machtkarten wird sie am besten in der Anfangsphase einer Quest gespielt. Bedenke, was bereits erforscht wurde und was noch aufgedeckt werden muss. Kombo! Die Senkung der Kosten aller Fallen kann durch den Einsatz von Monstern mit der Fähigkeit Fallensteller noch weiter gesteigert werden!"
             }
         ]
+    },
+    "unholy_swiftness": {
+        "name": "Unholy Swiftness",
+        "type": "Power",
+        "threat_cost": 16,
+        "treachery_cost": 2,
+        "treachery_colour": "red",
+        "discard_value": 5,
+        "effect": "Play this card at the start of your turn and place it faceup in front of you. All of your monsters gain 1 speed.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Unheilige Schnelligkeit",
+                "effect": "Spiele diese Karte zu Beginn deines Zuges aus und lege sie offen vor dir ab. Alle deine Monster erhalten +1 Geschwindigkeit."
+            }
+        ]
+    },
+    "urgency": {
+        "name": "Urgency",
+        "type": "Power",
+        "threat_cost": 19,
+        "treachery_cost": 2,
+        "treachery_colour": "green",
+        "discard_value": 5,
+        "effect": "Play this card at the start of your turn and place it faceup in front of you. Discard 2 overlord cards from the top of the overlord deck each turn after drawing cards. In addition, the heroes lose 4 conquest tokens instead of 3 each time you draw the last card in the overlord deck.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Dringlichkeit",
+                "effect": "Spiele diese Karte zu Beginn deines Zuges aus und lege sie offen vor dich ab. Wirf in jedem Zug, nachdem du Karten gezogen hast, die 2 obersten Overlord-Karten vom Deck des Overlordstapels ab. Außerdem verlieren die Helden jedes Mal 4 statt 3 Questmarker, wenn du die letzte Karte im Overlord-Deck ziehst."
+            }
+        ]
+    },
+    "weakness": {
+        "name": "Weakness",
+        "type": "Event",
+        "threat_cost": 3,
+        "treachery_cost": 1,
+        "treachery_colour": "green",
+        "discard_value": 2,
+        "effect": "Play immediately after a hero has declared an attack but before he has rolled any dice. The hero rolls no power dice for this attack.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Schwäche",
+                "effect": "Spiele diese Karte nachdem ein Held einen Angriff angekündigt hat, aber bevor er gewürfelt hat. Der Held würfelt für diesen Angriff keine Machtwürfel."
+            }
+        ]
+    },
+    "welcome_mat": {
+        "name": "Welcome Mat",
+        "type": "Trap (Door)",
+        "threat_cost": 6,
+        "treachery_cost": 1,
+        "treachery_colour": "purple",
+        "discard_value": 2,
+        "effect": "Play this card when a hero opens a door. Place a two-space pit token on the two spaces in front of the door. Any figures in those two spaces must roll a power die. If a figure rolls a blank, it immediately moves to an adjacent space of its choice that isn't in the pit. If a figure does not roll a blank, it falls into the pit and suffers 4 wounds (ignoring armor) of Poison damage.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Fußabtritt",
+                "effect": "Spiele diese Karte, wenn ein Held eine Tür öffnet. Lege einen Grubenmarker mit zwei Feldern auf die beiden Felder vor der Tür. Alle Figuren in diesen beiden Feldern müssen einen Machtwürfel werfen. Wenn eine Figur die Leerseite würfelt, bewegt sie sich sofort auf ein benachbartes Feld ihrer Wahl, das sich nicht in der Grube befindet. Wenn eine Figur keine Leerseite würfelt, fällt sie in die Grube und erleidet 4 Schaden (Rüstung ignoriert) durch Giftschaden."
+            }
+        ]
+    },
+    "wrath": {
+        "name": "Wrath",
+        "type": "Power",
+        "threat_cost": 25,
+        "treachery_cost": 2,
+        "treachery_colour": "red",
+        "discard_value": 5,
+        "effect": "Play this card at the start of your turn and place it faceup in front of you. All heroes are worth 1 extra Conquest Point when you kill them.",
+        "translations": [
+            {
+                "language": "de", 
+                "name": "Zorn",
+                "effect": "Spiele diese Karte zu Beginn deines Zuges aus und lege sie offen vor dich ab. Alle Helden sind 1 zusätzlichen Questmarker wert, wenn du sie tötest."
+            }
+        ]
     }
 }
