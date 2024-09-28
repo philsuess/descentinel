@@ -7,10 +7,10 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
-env_logger = "0.10"
+env_logger = "0.11"
 futures = { version = "0.3", default-features = true }
 lapin = "2"
 log = "0.4"
-opencv = { version="0.88", features = ["clang-runtime"]}
+opencv = { version="0.93", features = ["clang-runtime"]}
 tokio = { version = "1", features = ["macros", "time", "rt-multi-thread"] }
-rustix = "0.37.25"
+rustix = "0.38"
