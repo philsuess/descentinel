@@ -1,7 +1,18 @@
 ## Requirements:
 
-- leptonica (`zypper install leptonica-devel` on opensuse, `sudo apt install libleptonica-dev` on ubuntu)
-- tesseract (`zypper install tesseract-ocr-devel tesseract-ocr-fra` on opensuse `sudo apt install libtesseract-dev tesseract-ocr-fra` on ubuntu)
+- leptonica (`zypper install leptonica-devel` on opensuse, `sudo apt install libleptonica-dev` on ubuntu, `sudo apt install leptonica-devel.x86_64`)
+- tesseract (`zypper install tesseract-ocr-devel tesseract-ocr-fra` on opensuse `sudo apt install libtesseract-dev tesseract-ocr-fra` on ubuntu, `sudo dnf install tesseract-devel.x86_64 tesseract-langpack-fra.noarch` on fedora)
+
+use these:
+
+### opensuse
+`sudo zypper install leptonica-devel tesseract-ocr-devel tesseract-ocr-fra`
+
+### ubuntu
+`sudo apt install libleptonica-dev ibtesseract-dev tesseract-ocr-fra`
+
+### fedora
+`sudo dnf install leptonica-devel.x86_64 tesseract-devel.x86_64 tesseract-langpack-fra.noarch`
 
 ## Build for Raspberry Pi
 
