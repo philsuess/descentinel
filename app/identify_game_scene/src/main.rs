@@ -168,7 +168,7 @@ async fn send_over_queue(payload: &[u8], channel: &Channel, queue_name: &str) ->
 
 fn convert_to_opencv_image(card_image_buffer: &[u8]) -> opencv::Result<opencv::core::Mat> {
     opencv::imgcodecs::imdecode(
-        &opencv::types::VectorOfu8::from_slice(card_image_buffer),
+        &opencv::core::Vector::from_slice(card_image_buffer),
         opencv::imgcodecs::IMREAD_COLOR,
     )
 }
@@ -187,7 +187,7 @@ struct CardDetector {
 
 impl CardDetector {
     fn new(overlord_card_template: &opencv::core::Mat) -> CardDetector {
-        let mut sift = opencv::features2d::SIFT::create(0, 3, 0.04, 10., 1.6).unwrap();
+        let mut sift = opencv::features2d::SIFT::create(0, 3, 0.04, 10., 1.6,false).unwrap();
         let mut ol_kp_template = opencv::core::Vector::<opencv::core::KeyPoint>::default();
         let mut ol_des_template = opencv::core::Mat::default();
         let mask = opencv::core::Mat::default();

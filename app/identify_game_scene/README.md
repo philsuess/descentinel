@@ -1,6 +1,6 @@
 ## Requirements:
 
-- opencv (`zypper install opencv-devel` on opensuse, `apt install libopencv-dev` on ubuntu)
+- opencv (`zypper install opencv-devel` on opensuse, `apt install libopencv-dev` on ubuntu, `sudo dnf install opencv-devel.x86_64` on fedora)
 - cross compiling also requires qemu-linux-user (`zypper install qemu-linux-user` on opensuse)
 
 ## Build for Raspberry Pi

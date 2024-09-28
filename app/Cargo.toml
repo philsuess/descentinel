@@ -1,0 +1,23 @@
+[workspace]
+
+members = [
+    "broadcast",
+    "detect_card",
+    "identify_game_scene",
+    "monitor"
+]
+exclude = ["view"]
+
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+authors = ["Phil <philsuess@yahoo.com>"]
+description = "Support app for the board game Descent v1 that keeps watch over a physical game in progress."
+
+[workspace.dependencies]
+clap = "4"
+env_logger = "0.11"
+lapin = "2"
+log = "0.4"
+thiserror = "1"
