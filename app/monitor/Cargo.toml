@@ -1,13 +1,13 @@
 [package]
 name = "monitor"
-version = "0.1.0"
+version.workspace = true
 edition = "2021"
 
 [dependencies]
 async-global-executor = "2"
-clap = { version = "4", features = ["derive"] }
-env_logger = "0.10"
+clap = { workspace = true, features = ["derive"] }
+env_logger.workspace = true
 image = "0.24"
-lapin = "2"
-log = "0.4"
+lapin.workspace = true
+log.workspace = true
 v4l = "0.14.0"
