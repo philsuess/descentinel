@@ -1,0 +1,8 @@
+[workspace]
+
+members = [
+    "broadcast",
+    "detect_card",
+    "identify_game_scene",
+    "monitor"
+]
