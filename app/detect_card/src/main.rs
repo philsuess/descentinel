@@ -75,14 +75,8 @@ async fn init_rabbitmq_listen(
     args: &Args,
     overlord_cards: &OverlordCards,
 ) -> Result<(), DetectCardError> {
-    let channel_images = connection.create_channel().await?;
-    channel_images
-        .queue_declare(
-            &args.game_room_feed_queue,
-            QueueDeclareOptions::default(),
-            FieldTable::default(),
-        )
-        .await?;
+    let channel_images =
+        RabbitMqiIpc::create_channel(connection, &args.game_room_feed_queue).await?;
     info!(
         "Awaiting game room images from {}",
         args.game_room_feed_queue
@@ -96,27 +90,15 @@ async fn init_rabbitmq_listen(
         )
         .await?;
 
-    let channel_detected_ol_cards = connection.create_channel().await?;
-    channel_detected_ol_cards
-        .queue_declare(
-            &args.detected_ol_cards_queue,
-            QueueDeclareOptions::default(),
-            FieldTable::default(),
-        )
-        .await?;
+    let channel_detected_ol_cards =
+        RabbitMqiIpc::create_channel(connection, &args.detected_ol_cards_queue).await?;
     info!(
         "Sending detected OL cards to {}",
         args.detected_ol_cards_queue
     );
 
-    let channel_short_logs = connection.create_channel().await?;
-    channel_short_logs
-        .queue_declare(
-            &args.short_log_queue,
-            QueueDeclareOptions::default(),
-            FieldTable::default(),
-        )
-        .await?;
+    let channel_short_logs =
+        RabbitMqiIpc::create_channel(connection, &args.short_log_queue).await?;
     info!("Logging to {}", args.short_log_queue);
 
     let consume_future = consume_game_room_feed(
