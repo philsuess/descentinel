@@ -1,7 +1,9 @@
 //use crate::message::Message;
 //use anyhow::Result;
 //use futures_util::stream::StreamExt;
-use lapin::{Connection, ConnectionProperties};
+use lapin::{
+    options::QueueDeclareOptions, types::FieldTable, Channel, Connection, ConnectionProperties,
+};
 //use serde::{de::DeserializeOwned, Serialize};
 //use std::sync::Arc;
 //use tokio::sync::Mutex;
@@ -16,8 +18,9 @@ pub enum IpcError {
 #[allow(async_fn_in_trait)]
 pub trait Ipc {
     async fn establish_connection(ampq_url: &str) -> Result<Connection, IpcError>;
-    /*    async fn init(queue_name: &str) -> Result<Arc<Mutex<Channel>>>;
-    async fn send_message<T: Serialize + Send + Sync>(
+    async fn create_channel(connection: &Connection, queue_name: &str)
+        -> Result<Channel, IpcError>;
+    /*async fn send_message<T: Serialize + Send + Sync>(
         channel: Arc<Mutex<Channel>>,
         queue_name: &str,
         message: T,
@@ -37,25 +40,23 @@ impl Ipc for RabbitMqiIpc {
         Ok(Connection::connect(&ampq_url, ConnectionProperties::default()).await?)
     }
 
-    /*async fn init(queue_name: &str) -> Result<Arc<Mutex<Channel>>> {
-        let addr =
-            std::env::var("AMQP_ADDR").unwrap_or_else(|_| "amqp://127.0.0.1:5672/%2f".into());
-        let connection =
-            Connection::connect(&addr, ConnectionProperties::default().with_tokio()).await?;
+    async fn create_channel(
+        connection: &Connection,
+        queue_name: &str,
+    ) -> Result<Channel, IpcError> {
         let channel = connection.create_channel().await?;
-
         channel
             .queue_declare(
-                queue_name,
+                &queue_name,
                 QueueDeclareOptions::default(),
                 FieldTable::default(),
             )
             .await?;
 
-        Ok(Arc::new(Mutex::new(channel)))
+        Ok(channel)
     }
 
-    async fn send_message<T: Serialize + Send + Sync>(
+    /*async fn send_message<T: Serialize + Send + Sync>(
         channel: Arc<Mutex<Channel>>,
         queue_name: &str,
         message: T,
