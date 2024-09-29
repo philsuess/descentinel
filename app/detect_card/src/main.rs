@@ -1,14 +1,21 @@
 use clap::Parser;
+use descentinel_types::ipc::{self, Ipc, RabbitMqiIpc};
 use futures::StreamExt;
-use lapin::{
-    options::*, types::FieldTable, BasicProperties, Channel, Connection, ConnectionProperties,
-    Consumer, Result,
-};
+use lapin::{options::*, types::FieldTable, BasicProperties, Channel, Connection, Consumer};
 use log::{error, info};
 use serde::Deserialize;
 use std::time::Duration;
 use tesseract::Tesseract;
+use thiserror::Error;
 use tokio::join;
+
+#[derive(Error, Debug)]
+pub enum DetectCardError {
+    #[error("ipc error: {0}")]
+    IpcError(#[from] ipc::IpcError),
+    #[error("lapin error: {0}")]
+    LapinError(#[from] lapin::Error),
+}
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -30,17 +37,16 @@ struct Args {
 }
 
 #[tokio::main]
-async fn main() -> Result<()> {
+async fn main() -> Result<(), DetectCardError> {
     env_logger::init();
     info!("DETECT_CARD service starting");
     let args = Args::parse();
 
     let overlord_cards = load_overlord_keywords(&args.overlord_cards_keywords_file);
-
-    let conn = Connection::connect(&args.ampq_url, ConnectionProperties::default()).await?;
+    let connection = RabbitMqiIpc::establish_connection(&args.ampq_url).await?;
     info!("Established connection to {}", args.ampq_url);
 
-    let _ = join!(rabbitmq_listen(&conn, &args, &overlord_cards));
+    let _ = join!(rabbitmq_listen(&connection, &args, &overlord_cards));
 
     Ok(())
 }
@@ -49,7 +55,7 @@ async fn rabbitmq_listen(
     connection: &Connection,
     args: &Args,
     overlord_cards: &OverlordCards,
-) -> Result<()> {
+) -> Result<(), DetectCardError> {
     let mut retry_interval = tokio::time::interval(Duration::from_secs(5));
     loop {
         retry_interval.tick().await;
@@ -68,7 +74,7 @@ async fn init_rabbitmq_listen(
     connection: &Connection,
     args: &Args,
     overlord_cards: &OverlordCards,
-) -> Result<()> {
+) -> Result<(), DetectCardError> {
     let channel_images = connection.create_channel().await?;
     channel_images
         .queue_declare(
@@ -153,7 +159,11 @@ async fn consume_game_room_feed(
     }
 }
 
-async fn send_over_queue(payload: &[u8], channel: &Channel, queue_name: &str) -> Result<()> {
+async fn send_over_queue(
+    payload: &[u8],
+    channel: &Channel,
+    queue_name: &str,
+) -> Result<(), DetectCardError> {
     channel
         .basic_publish(
             "",
