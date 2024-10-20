@@ -3,6 +3,14 @@ name = "detect_card"
 version.workspace = true
 edition = "2021"
 
+[lib]
+name = "detect_card"
+path = "src/lib.rs"
+
+[[bin]]
+name = "detect_card"
+path = "src/main.rs"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
