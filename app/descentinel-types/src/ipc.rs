@@ -104,25 +104,25 @@ where
     Ok(())
 }
 
+use String as QueueName;
+
 pub async fn process_message_pipeline<F>(
     connection: Arc<Connection>,
     from_queue_name: &str,
-    to_queue_name: &str,
-    filter_message: F,
+    process_message: F,
 ) -> Result<(), IpcError>
 where
-    F: Fn(&Message) -> Option<Message> + Send + Sync + 'static,
+    F: Fn(&Message) -> Vec<(QueueName, Message)> + Send + Sync + 'static,
 {
-    let to_queue_name_copy = to_queue_name.to_string();
     consume_messages(
         connection.clone(),
         from_queue_name,
         move |message: Message| {
-            if let Some(downstream_message) = filter_message(&message) {
+            for (to_queue_name, downstream_message) in process_message(&message) {
                 tokio::spawn({
                     let connection_clone = connection.clone();
                     let downstream_message_clone = downstream_message.clone();
-                    let to_queue_name_copy_clone = to_queue_name_copy.clone();
+                    let to_queue_name_copy_clone = to_queue_name.clone();
                     async move {
                         send_message(
                             connection_clone,
