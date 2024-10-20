@@ -1,2 +1,3 @@
 monitor_app
 target/
+.venv
