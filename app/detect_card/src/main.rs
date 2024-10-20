@@ -38,27 +38,27 @@ struct Args {
 async fn main() -> Result<(), DetectCardError> {
     env_logger::init();
     info!("DETECT_CARD service starting");
-    let args = Args::parse();
+    let args = Arc::new(Args::parse());
 
     let overlord_cards = Arc::new(load_overlord_keywords(&args.overlord_cards_keywords_file));
     let connection = ipc::create_connection(&args.ampq_url).await?;
     info!("Established connection to {}", args.ampq_url);
 
-    let _ = join!(rabbitmq_listen(connection, &args, overlord_cards));
+    let _ = join!(rabbitmq_listen(connection, args, overlord_cards));
 
     Ok(())
 }
 
 async fn rabbitmq_listen(
     connection: Arc<Connection>,
-    args: &Args,
+    args: Arc<Args>,
     overlord_cards: Arc<OverlordCards>,
 ) -> Result<(), DetectCardError> {
     let mut retry_interval = tokio::time::interval(Duration::from_secs(5));
     loop {
         retry_interval.tick().await;
         info!("connecting rabbitmq consumer...");
-        match init_rabbitmq_listen(connection.clone(), args, overlord_cards.clone()).await {
+        match init_rabbitmq_listen(connection.clone(), args.clone(), overlord_cards.clone()).await {
             Ok(_) => info!("connection to rabbitmq established"),
             Err(e) => error!(
                 "error when trying to establish connection to rabbitmq: {}",
@@ -68,7 +68,7 @@ async fn rabbitmq_listen(
     }
 }
 
-async fn init_queues(connection: Arc<Connection>, args: &Args) -> Result<(), IpcError> {
+async fn init_queues(connection: Arc<Connection>, args: Arc<Args>) -> Result<(), IpcError> {
     let _results = tokio::join!(
         ipc::declare_queue(connection.clone(), &args.game_room_feed_queue),
         ipc::declare_queue(connection.clone(), &args.detected_ol_cards_queue),
@@ -88,19 +88,20 @@ async fn init_queues(connection: Arc<Connection>, args: &Args) -> Result<(), Ipc
 
 async fn init_rabbitmq_listen(
     connection: Arc<Connection>,
-    args: &Args,
+    args: Arc<Args>,
     overlord_cards: Arc<OverlordCards>,
 ) -> Result<(), DetectCardError> {
-    init_queues(connection.clone(), args).await?;
+    let args_clone = args.clone();
+    init_queues(connection.clone(), args.clone()).await?;
 
     let detect_ol_card = move |game_room_image: &Message| {
-        handle_game_room_image(game_room_image, overlord_cards.clone())
+        handle_game_room_image(game_room_image, overlord_cards.clone(), args.clone())
     };
 
+    let game_room_feed_queue = &args_clone.game_room_feed_queue;
     let _results = tokio::join!(ipc::process_message_pipeline(
         connection.clone(),
-        &args.game_room_feed_queue,
-        &args.detected_ol_cards_queue,
+        game_room_feed_queue,
         detect_ol_card,
     ));
 
@@ -110,12 +111,26 @@ async fn init_rabbitmq_listen(
 fn handle_game_room_image(
     game_room_image: &Message,
     overlord_cards: Arc<OverlordCards>,
-) -> Option<Message> {
+    args: Arc<Args>,
+) -> Vec<(String, Message)> {
+    let mut downstream_messages = Vec::new();
     if let Some(card_id) = identify_card(&game_room_image.content, overlord_cards.as_ref()) {
-        return Some(Message {
-            content: card_id.as_bytes().to_vec(),
-        });
+        downstream_messages.push((
+            args.detected_ol_cards_queue.clone(),
+            Message {
+                content: card_id.as_bytes().to_vec(),
+            },
+        ));
+
+        let mut log_message = String::from("detected OL card ");
+        log_message.push_str(&card_id);
+        downstream_messages.push((
+            args.short_log_queue.clone(),
+            Message {
+                content: log_message.as_bytes().to_vec(),
+            },
+        ));
     }
 
-    None
+    downstream_messages
 }
