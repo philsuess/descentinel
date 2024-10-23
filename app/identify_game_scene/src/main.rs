@@ -1,13 +1,22 @@
 use clap::Parser;
-use futures::StreamExt;
-use identify_game_scene::CardDetector;
-use lapin::{
-    options::*, types::FieldTable, BasicProperties, Channel, Connection, ConnectionProperties,
-    Consumer, Result,
-};
+use descentinel_types::ipc::{self, IpcError, Message};
+use identify_game_scene::{convert_to_opencv_image, CardDetector};
+use lapin::Connection;
 use log::{error, info};
-use std::time::Duration;
+use std::{
+    sync::{Arc, Mutex},
+    time::Duration,
+};
+use thiserror::Error;
 use tokio::join;
+
+#[derive(Error, Debug)]
+pub enum IdentifyGameSceneError {
+    #[error("ipc error: {0}")]
+    IpcError(#[from] ipc::IpcError),
+    #[error("lapin error: {0}")]
+    LapinError(#[from] lapin::Error),
+}
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -26,33 +35,33 @@ struct Args {
 }
 
 #[tokio::main]
-async fn main() -> Result<()> {
+async fn main() -> Result<(), IdentifyGameSceneError> {
     env_logger::init();
     info!("IDENTIFY_GAME_SCENE service starting");
-    let args = Args::parse();
+    let args = Arc::new(Args::parse());
 
     let template_overlord_card =
         opencv::imgcodecs::imread("./OL_template.jpg", opencv::imgcodecs::IMREAD_COLOR).unwrap();
-    let mut card_detector = CardDetector::new(&template_overlord_card);
+    let card_detector = Arc::new(Mutex::new(CardDetector::new(&template_overlord_card)));
 
-    let conn = Connection::connect(&args.ampq_url, ConnectionProperties::default()).await?;
+    let conn = ipc::create_connection(&args.ampq_url).await?;
     info!("Established connection to {}", args.ampq_url);
 
-    let _ = join!(rabbitmq_listen(&conn, &args, &mut card_detector));
+    let _ = join!(rabbitmq_listen(conn, args, card_detector));
 
     Ok(())
 }
 
 async fn rabbitmq_listen(
-    connection: &Connection,
-    args: &Args,
-    card_detector: &mut CardDetector,
-) -> Result<()> {
+    connection: Arc<Connection>,
+    args: Arc<Args>,
+    card_detector: Arc<Mutex<CardDetector>>,
+) -> Result<(), IdentifyGameSceneError> {
     let mut retry_interval = tokio::time::interval(Duration::from_secs(5));
     loop {
         retry_interval.tick().await;
         info!("connecting rabbitmq consumer...");
-        match init_rabbitmq_listen(connection, args, card_detector).await {
+        match init_rabbitmq_listen(connection.clone(), args.clone(), card_detector.clone()).await {
             Ok(_) => info!("connection to rabbitmq established"),
             Err(e) => error!(
                 "error when trying to establish connection to rabbitmq: {}",
@@ -62,113 +71,72 @@ async fn rabbitmq_listen(
     }
 }
 
-async fn init_rabbitmq_listen(
-    connection: &Connection,
-    args: &Args,
-    card_detector: &mut CardDetector,
-) -> Result<()> {
-    let channel_images = connection.create_channel().await?;
-    channel_images
-        .queue_declare(
-            &args.game_room_feed_queue,
-            QueueDeclareOptions::default(),
-            FieldTable::default(),
-        )
-        .await?;
+async fn init_queues(connection: Arc<Connection>, args: Arc<Args>) -> Result<(), IpcError> {
+    let _results = tokio::join!(
+        ipc::declare_queue(connection.clone(), &args.game_room_feed_queue),
+        ipc::declare_queue(connection.clone(), &args.detected_cards_queue),
+        ipc::declare_queue(connection.clone(), &args.short_log_queue)
+    );
     info!(
         "Awaiting game room images from {}",
         args.game_room_feed_queue
     );
-    let game_room_images_consumer = channel_images
-        .basic_consume(
-            &args.game_room_feed_queue,
-            "",
-            BasicConsumeOptions::default(),
-            FieldTable::default(),
-        )
-        .await?;
-
-    let channel_detected_cards = connection.create_channel().await?;
-    channel_detected_cards
-        .queue_declare(
-            &args.detected_cards_queue,
-            QueueDeclareOptions::default(),
-            FieldTable::default(),
-        )
-        .await?;
     info!("Sending detected cards to {}", args.detected_cards_queue);
-
-    let channel_short_logs = connection.create_channel().await?;
-    channel_short_logs
-        .queue_declare(
-            &args.short_log_queue,
-            QueueDeclareOptions::default(),
-            FieldTable::default(),
-        )
-        .await?;
     info!("Logging to {}", args.short_log_queue);
+    Ok(())
+}
 
-    let consume_future = consume_game_room_feed(
-        game_room_images_consumer,
-        &channel_detected_cards,
-        &channel_short_logs,
-        args,
-        card_detector,
-    );
+async fn init_rabbitmq_listen(
+    connection: Arc<Connection>,
+    args: Arc<Args>,
+    card_detector: Arc<Mutex<CardDetector>>,
+) -> Result<(), IdentifyGameSceneError> {
+    let args_clone = args.clone();
+    init_queues(connection.clone(), args.clone()).await?;
 
-    futures::join!(consume_future);
+    let detect_card = move |game_room_image: &Message| {
+        handle_game_room_image(game_room_image, card_detector.clone(), args.clone())
+    };
+
+    let game_room_feed_queue = &args_clone.game_room_feed_queue;
+    let _results = tokio::join!(ipc::process_message_pipeline(
+        connection.clone(),
+        game_room_feed_queue,
+        detect_card,
+    ));
 
     Ok(())
 }
 
-async fn consume_game_room_feed(
-    mut game_room_feed: Consumer,
-    channel_detected_cards: &Channel,
-    channel_logs: &Channel,
-    args: &Args,
-    card_detector: &mut CardDetector,
-) {
-    while let Some(delivery) = game_room_feed.next().await {
-        let delivery = delivery.expect("error in consumer");
-        delivery.ack(BasicAckOptions::default()).await.expect("ack");
-        //  info!("received {:?}", delivery);
-        let data_as_opencv_image = convert_to_opencv_image(&delivery.data);
-        if data_as_opencv_image.is_ok()
-            && card_detector
-                .detect_card(&data_as_opencv_image.unwrap())
-                .is_some()
-        {
-            let _ = send_over_queue(
-                &delivery.data,
-                channel_detected_cards,
-                &args.detected_cards_queue,
-            )
-            .await;
-            let log_message = String::from("detected an OL card");
-            info!("{}", &log_message);
-            let _ =
-                send_over_queue(log_message.as_bytes(), channel_logs, &args.short_log_queue).await;
-        }
+fn handle_game_room_image(
+    game_room_image: &Message,
+    card_detector: Arc<Mutex<CardDetector>>,
+    args: Arc<Args>,
+) -> Vec<(String, Message)> {
+    let mut card_detector = card_detector.lock().unwrap();
+    let mut downstream_messages = Vec::new();
+    let data_as_opencv_image = convert_to_opencv_image(&game_room_image.content);
+    if data_as_opencv_image.is_ok()
+        && card_detector
+            .detect_card(&data_as_opencv_image.unwrap())
+            .is_some()
+    {
+        downstream_messages.push((
+            args.detected_cards_queue.clone(),
+            Message {
+                content: game_room_image.content.clone(),
+            },
+        ));
+
+        let log_message = String::from("detected an OL card");
+        info!("{}", &log_message);
+        downstream_messages.push((
+            args.short_log_queue.clone(),
+            Message {
+                content: log_message.as_bytes().to_vec(),
+            },
+        ));
     }
-}
 
-async fn send_over_queue(payload: &[u8], channel: &Channel, queue_name: &str) -> Result<()> {
-    channel
-        .basic_publish(
-            "",
-            queue_name,
-            BasicPublishOptions::default(),
-            payload,
-            BasicProperties::default(),
-        )
-        .await?
-        .await?;
-    Ok(())
-}
-
-fn convert_to_opencv_image(card_image_buffer: &[u8]) -> opencv::Result<opencv::core::Mat> {
-    opencv::imgcodecs::imdecode(
-        &opencv::core::Vector::from_slice(card_image_buffer),
-        opencv::imgcodecs::IMREAD_COLOR,
-    )
+    downstream_messages
 }

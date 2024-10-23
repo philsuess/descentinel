@@ -1,5 +1,12 @@
 use opencv::prelude::{DescriptorMatcherTraitConst, Feature2DTrait};
 
+pub fn convert_to_opencv_image(card_image_buffer: &[u8]) -> opencv::Result<opencv::core::Mat> {
+    opencv::imgcodecs::imdecode(
+        &opencv::core::Vector::from_slice(card_image_buffer),
+        opencv::imgcodecs::IMREAD_COLOR,
+    )
+}
+
 #[derive(PartialEq)]
 pub enum CardType {
     Overlord,
