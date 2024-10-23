@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 async-global-executor = "2"
 clap = { workspace = true, features = ["derive"] }
+descentinel-types = { path = "../descentinel-types" }
 env_logger.workspace = true
 image = "0.24"
 lapin.workspace = true

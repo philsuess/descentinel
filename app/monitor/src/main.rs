@@ -1,9 +1,8 @@
 use clap::Parser;
-use lapin::{
-    options::*, types::FieldTable, BasicProperties, Channel, Connection, ConnectionProperties,
-    Result,
-};
+use descentinel_types::ipc;
+use descentinel_types::ipc::Message;
 use log::info;
+use thiserror::Error;
 use v4l::buffer::Type;
 use v4l::io::mmap::Stream;
 use v4l::io::traits::CaptureStream;
@@ -11,23 +10,17 @@ use v4l::video::Capture;
 use v4l::Device;
 use v4l::FourCC;
 
+#[derive(Error, Debug)]
+pub enum MonitorError {
+    #[error("ipc error: {0}")]
+    IpcError(#[from] ipc::IpcError),
+    #[error("lapin error: {0}")]
+    LapinError(#[from] lapin::Error),
+}
+
 fn capture_image_from_v4l(stream: &mut Stream) -> Vec<u8> {
     let (buf, _meta) = stream.next().unwrap();
     buf.to_vec()
-}
-
-async fn send_over_queue(payload: &[u8], channel: &Channel, queue_name: &str) -> Result<()> {
-    channel
-        .basic_publish(
-            "",
-            queue_name,
-            BasicPublishOptions::default(),
-            payload,
-            BasicProperties::default(),
-        )
-        .await?
-        .await?;
-    Ok(())
 }
 
 #[derive(Parser, Debug)]
@@ -49,7 +42,7 @@ struct Args {
     images_interval_in_ms: u64,
 }
 
-fn main() -> Result<()> {
+fn main() -> Result<(), MonitorError> {
     env_logger::init();
     info!("MONITOR service starting");
     let args = Args::parse();
@@ -71,31 +64,20 @@ fn main() -> Result<()> {
     info!("Camera streaming...");
 
     async_global_executor::block_on(async {
-        let conn = Connection::connect(&args.ampq_url, ConnectionProperties::default()).await?;
+        let connection = ipc::create_connection(&args.ampq_url).await?;
         info!("Established connection to {}", args.ampq_url);
-        let channel_images = conn.create_channel().await?;
-        channel_images
-            .queue_declare(
-                &args.destination_queue,
-                QueueDeclareOptions::default(),
-                FieldTable::default(),
-            )
-            .await?;
+        ipc::declare_queue(connection.clone(), &args.destination_queue).await?;
         info!("Output queue set to {}", args.destination_queue);
 
-        let channel_short_logs = conn.create_channel().await?;
-        channel_short_logs
-            .queue_declare(
-                &args.short_log_queue,
-                QueueDeclareOptions::default(),
-                FieldTable::default(),
-            )
-            .await?;
+        ipc::declare_queue(connection.clone(), &args.short_log_queue).await?;
         info!("Logging queue set to {}", args.short_log_queue);
-        send_over_queue(
-            b"Camera streaming over MONITOR service",
-            &channel_short_logs,
+
+        ipc::send_message(
+            connection.clone(),
             &args.short_log_queue,
+            &Message {
+                content: "Camera streaming over MONITOR service".as_bytes().to_vec(),
+            },
         )
         .await?;
 
@@ -105,7 +87,14 @@ fn main() -> Result<()> {
         let pause_between_images = std::time::Duration::from_millis(args.images_interval_in_ms);
         loop {
             let image_as_bytes = capture_image_from_v4l(&mut stream);
-            send_over_queue(&image_as_bytes, &channel_images, &args.destination_queue).await?;
+            ipc::send_message(
+                connection.clone(),
+                &args.destination_queue,
+                &Message {
+                    content: image_as_bytes,
+                },
+            )
+            .await?;
             info!("image sent to {}", args.destination_queue);
             std::thread::sleep(pause_between_images);
         }
