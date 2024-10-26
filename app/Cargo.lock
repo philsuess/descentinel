@@ -728,11 +728,10 @@ checksum = "e8566979429cf69b49a5c740c60791108e86440e8be149bbea4fe54d2c32d6e2"
 
 [[package]]
 name = "deadpool"
-version = "0.10.0"
+version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fb84100978c1c7b37f09ed3ce3e5f843af02c2a2c431bae5b19230dad2c1b490"
+checksum = "6541a3916932fe57768d4be0b1ffb5ec7cbf74ca8c903fdfd5c0fe8aa958f0ed"
 dependencies = [
- "async-trait",
  "deadpool-runtime",
  "num_cpus",
  "tokio",
@@ -740,9 +739,9 @@ dependencies = [
 
 [[package]]
 name = "deadpool-lapin"
-version = "0.11.0"
+version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ce11c0dc86703e59a8921bb9afee10b13c242e47624347bd3a3b545c41db556e"
+checksum = "33c7b14064f854a3969735e7c948c677a57ef17ca7f0bc029da8fe2e5e0fc1eb"
 dependencies = [
  "deadpool",
  "lapin",
@@ -1683,6 +1682,7 @@ dependencies = [
  "image",
  "lapin",
  "log",
+ "thiserror",
  "v4l",
 ]
 
