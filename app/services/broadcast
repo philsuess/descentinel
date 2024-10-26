@@ -2,12 +2,11 @@ FROM docker.io/opensuse/leap:latest AS broadcast_service_builder
 ENV PATH="/root/.cargo/bin:${PATH}"
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 RUN zypper install -y gcc
-COPY src/*.rs src/
-COPY Cargo.toml .
-RUN cargo build --release
+WORKDIR /app
+RUN cargo build --release --package broadcast --target-dir /broadcast_build
 
 FROM docker.io/opensuse/leap:latest AS broadcast_service
 EXPOSE 3030
 ENV RUST_LOG info
-COPY --from=broadcast_service_builder target/release/broadcast .
+COPY --from=broadcast_service_builder /broadcast_build/release/broadcast .
 CMD ["./broadcast"]
