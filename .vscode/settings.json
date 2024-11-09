@@ -6,6 +6,8 @@
     "assets",
     "view",
     "app",
-    "identify_game_scene"
+    "identify_game_scene",
+    "types",
+    "services"
   ]
 }

@@ -6,6 +6,7 @@ set -o pipefail
 set -o xtrace
 
 cargo install cross
+cargo install --release
 
 cd broadcast
 sh ./build.sh

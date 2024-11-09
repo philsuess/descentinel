@@ -16,13 +16,17 @@ This is a warp server that broadcasts all backend content, specifically the last
 
 # Service (container me)
 
-- `podman build --target broadcast_service --rm -t broadcast_service .` to build the service
+from the `app` directory, run
+
+`podman build --target broadcast_service --rm -v ${PWD}:/app -t broadcast_service -f services/broadcast .` to build the service
+
+Then
 - `podman run -d -p 3030:3030 --name broadcast broadcast_service` to run it
 - `podman run -d --pod descentinel --name broadcast broadcast_service` to run it in the pod
 
 # Build for Raspberry Pi
 
-## 3 (64-bit)
+## 3/4 (64-bit)
 
 To produce a binary for the raspberry pi (aarch64):
 

@@ -23,6 +23,22 @@ To produce a binary for the raspberry pi (aarch64):
 1. `cargo install cross`
 2. `cross build --release --target=aarch64-unknown-linux-gnu`
 
+## To test isolated:
+
+### set up python test:
+
+In `detect_card/service_test`, run 
+    1. `python -m venv .venv`
+    1. `. .venv/bin/activate`
+    1. `pip install opencv-python-headless pika`
+    
+### to test:
+
+1. `podman run --rm -p 5672:5672 -p 15672:15672 docker.io/rabbitmq:3.12-management` to start rabbitmq
+1. run the `RUST_LOG=info target/release/detect_card` binary
+1. in `service_test` run `. .venv/bin/activate`
+1. on the command line run `Q_CARD_IMAGE=Q_CARD_IMAGE RABBITMQ_AMQP_URL=0.0.0.0  python send_an_image_to_rabbitmq.py`
+
 ## Container:
 
 ### rabbitmq service
