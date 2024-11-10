@@ -8,7 +8,7 @@ async-global-executor = "2"
 clap = { workspace = true, features = ["derive"] }
 descentinel-types = { path = "../descentinel-types" }
 env_logger.workspace = true
-image = "0.24"
+image.workspace = true
 lapin.workspace = true
 log.workspace = true
 thiserror.workspace = true

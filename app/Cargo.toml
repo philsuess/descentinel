@@ -13,6 +13,8 @@ description = "Support app for the board game Descent v1 that keeps watch over a
 [workspace.dependencies]
 clap = "4"
 env_logger = "0.11"
+image = "0.25"
 lapin = "2"
 log = "0.4"
+serde_json = "1"
 thiserror = "1"

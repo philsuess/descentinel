@@ -1,6 +1,6 @@
 use std::io::Cursor;
 
-use image::{io::Reader, ImageBuffer, Luma};
+use image::{ImageBuffer, ImageReader, Luma};
 use log::info;
 use quircs::{DecodeError, ExtractError};
 use thiserror::Error;
@@ -16,7 +16,7 @@ pub enum DetectCardError {
 type GameRoomImage = ImageBuffer<Luma<u8>, Vec<u8>>;
 
 pub fn convert_to_grey_image(image_buffer: &[u8]) -> GameRoomImage {
-    Reader::new(Cursor::new(image_buffer))
+    ImageReader::new(Cursor::new(image_buffer))
         .with_guessed_format()
         .unwrap()
         .decode()
@@ -38,7 +38,7 @@ pub fn identify_card_from(image: &GameRoomImage) -> Option<String> {
 fn get_all_codes_from(image: &GameRoomImage) -> Vec<String> {
     let mut decoder = quircs::Quirc::default();
     let codes = decoder.identify(image.width() as usize, image.height() as usize, image);
-
+    info!("got an image");
     let mut decoded_strings = vec![];
     for code in codes {
         let code = code.expect("failed to extract qr code");
