@@ -1,23 +1,18 @@
-import cv2
 import pika
 import uuid
 import logging
 import os
+import json
 
 # adapted from https://www.architect.io/blog/2021-01-19/rabbitmq-docker-tutorial/
 
-
-def encode_image(cv2_image):
-    encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 100]
-    _, buffered = cv2.imencode(".jpg", cv2_image, encode_param)
-    return buffered
-
-
-Q_CARD_IMAGE = os.environ["Q_CARD_IMAGE"]
+Q_GAME_ROOM_FEED = os.environ["Q_GAME_ROOM_FEED"]
 EXCHANGE = ""
 
 logging.basicConfig(
-    level=logging.DEBUG,
+    filename="log.out",
+    filemode="w",
+    level=logging.INFO,
     format="%(asctime)s %(message)s",
 )
 
@@ -32,18 +27,22 @@ connection_params = pika.ConnectionParameters(
 connection = pika.BlockingConnection(connection_params)
 channel = connection.channel()
 
-channel.queue_declare(queue=Q_CARD_IMAGE)
+channel.queue_declare(queue=Q_GAME_ROOM_FEED)
 
-image = cv2.imread("BaumeSombre_02.jpg_detected.jpg")
-encoded = encode_image(image)
+with open("ol_doom.png", "rb") as image_file:
+    image_bytes = list(image_file.read())
+message = {"content": image_bytes}
+
+message_json = json.dumps(message)
+
 unique_id = str(uuid.uuid4())
 send_properties = pika.BasicProperties(
-    app_id="descentinel", content_type="image/jpg", correlation_id=unique_id
+    app_id="descentinel", content_type="application/json", correlation_id=unique_id
 )
 channel.basic_publish(
     exchange=EXCHANGE,
-    routing_key=Q_CARD_IMAGE,
-    body=encoded.tostring(),
+    routing_key=Q_GAME_ROOM_FEED,
+    body=message_json,
     properties=send_properties,
 )
 connection.close()
