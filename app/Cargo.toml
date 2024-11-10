@@ -1,12 +1,6 @@
 [workspace]
 
-members = [
-    "broadcast",
-    "descentinel-types",
-    "detect_card",
-    "identify_game_scene",
-    "monitor",
-]
+members = ["broadcast", "descentinel-types", "detect_card", "monitor"]
 exclude = ["view"]
 
 resolver = "2"

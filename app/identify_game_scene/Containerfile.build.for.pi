@@ -1,4 +1,0 @@
-FROM rpi-xcompile
-WORKDIR /identify_game_scene
-
-CMD ["/bin/bash", "-c", "cargo-xbuild"]
