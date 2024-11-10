@@ -1,0 +1,6 @@
+FROM docker.io/python:3.13-slim-bookworm AS detect_card_service_test
+ENV Q_GAME_ROOM_FEED Q_GAME_ROOM_FEED
+RUN pip install --upgrade pip; pip install pika 
+COPY test_images/*.png ./
+COPY service_test/send_an_image_to_rabbitmq.py ./
+CMD ["python","send_an_image_to_rabbitmq.py"]

@@ -7,7 +7,8 @@
 
 Run this on build computer (use `bash` instead of `sh` on ubuntu)
 
-1. `sh build.sh`
+1. `cargo install cross`
+1. `cross build --release --target=aarch64-unknown-linux-gnu`
 1. `sh deploy_on_pi.sh`
 
 ## Manual testing
@@ -19,7 +20,8 @@ Run this on the pi
 
 # Deploy locally
 
-1. `sh build.sh`
-1. `sh create_pod.sh`
-1. (optionally) `sh setup_frontend.sh`
-1. `./monitor_app`
+1. `cargo build --release`
+1. `bash build_services.sh`
+1. `bash create_pod.sh`
+1. (optionally) `bash setup_frontend.sh`
+1. `./target/release/monitor`

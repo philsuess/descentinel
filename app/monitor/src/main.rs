@@ -49,7 +49,7 @@ fn main() -> Result<(), MonitorError> {
 
     //let mut camera = init_camera(args.camera_preference_index);
     //camera.open_stream().unwrap();
-    let mut dev = Device::new(0).expect("Failed to open device");
+    let dev = Device::new(0).expect("Failed to open device");
 
     // Let's say we want to explicitly request another format
     let mut fmt = dev.format().expect("Failed to read format");
@@ -81,7 +81,7 @@ fn main() -> Result<(), MonitorError> {
         )
         .await?;
 
-        let mut stream = Stream::with_buffers(&mut dev, Type::VideoCapture, 4)
+        let mut stream = Stream::with_buffers(&dev, Type::VideoCapture, 4)
             .expect("Failed to create buffer stream");
 
         let pause_between_images = std::time::Duration::from_millis(args.images_interval_in_ms);

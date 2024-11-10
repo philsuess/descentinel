@@ -19,13 +19,9 @@ clap = { workspace = true, features = ["derive"] }
 env_logger.workspace = true
 descentinel-types = { path = "../descentinel-types" }
 futures = { version = "0.3", default-features = true }
+image.workspace = true
 lapin.workspace = true
 log.workspace = true
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
-tesseract = { version = "^0.15", default-features = false }
+quircs = "0.10.2"
 thiserror.workspace = true
 tokio = { version = "1", features = ["macros", "time", "rt-multi-thread"] }
-
-[dev-dependencies]
-image = "0.24"

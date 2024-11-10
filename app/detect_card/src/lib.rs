@@ -1,128 +1,92 @@
-use serde::Deserialize;
-use tesseract::Tesseract;
+use std::io::Cursor;
 
-pub fn load_overlord_keywords(file_name: &str) -> OverlordCards {
-    let file = std::fs::File::open(file_name).unwrap();
-    let reader = std::io::BufReader::new(file);
-    serde_json::from_reader(reader).expect("file is not proper json")
+use image::{ImageBuffer, ImageReader, Luma};
+use log::info;
+use quircs::{DecodeError, ExtractError};
+use thiserror::Error;
+
+#[derive(Error, Debug)]
+pub enum DetectCardError {
+    #[error("qr error: {0}")]
+    QrCodeExtractionError(#[from] ExtractError),
+    #[error("qr error: {0}")]
+    QrCodeDecodingError(#[from] DecodeError),
 }
 
-#[derive(Deserialize, Debug)]
-pub struct OverlordCards {
-    cards: Vec<CardKeywords>,
-}
+type GameRoomImage = ImageBuffer<Luma<u8>, Vec<u8>>;
 
-impl OverlordCards {
-    fn id_of_best_keywords_match(&self, card_text: &str) -> Option<String> {
-        let winning_card = self
-            .cards
-            .iter()
-            .reduce(|max_found, candidate| {
-                if candidate.number_of_matches(card_text) > max_found.number_of_matches(card_text) {
-                    candidate
-                } else {
-                    max_found
-                }
-            })
-            .unwrap();
-        if winning_card.number_of_matches(card_text) == 0 {
-            None
-        } else {
-            Some(winning_card.id.clone())
-        }
-    }
-}
-
-#[derive(Deserialize, Debug)]
-struct CardKeywords {
-    id: String,
-    keywords: Vec<String>,
-}
-
-impl CardKeywords {
-    fn number_of_matches(&self, card_text: &str) -> u8 {
-        self.keywords.iter().fold(0, |sum_matches, next_keyword| {
-            if card_text.contains(next_keyword.as_str()) {
-                return sum_matches + 1;
-            }
-            sum_matches
-        })
-    }
-}
-
-pub fn identify_card(card_image_buffer: &[u8], overlord_cards: &OverlordCards) -> Option<String> {
-    let card_text = extract_card_text_from_buffer(card_image_buffer, "fra");
-    overlord_cards.id_of_best_keywords_match(&card_text)
-}
-
-fn extract_card_text_from_buffer(card_image_buffer: &[u8], language: &str) -> String {
-    match Tesseract::new(None, Some(language))
+pub fn convert_to_grey_image(image_buffer: &[u8]) -> GameRoomImage {
+    ImageReader::new(Cursor::new(image_buffer))
+        .with_guessed_format()
         .unwrap()
-        .set_image_from_mem(card_image_buffer)
+        .decode()
         .unwrap()
-        .recognize()
-        .unwrap()
-        .get_text()
+        .to_luma8()
+}
+
+pub fn identify_card_from(image: &GameRoomImage) -> Option<String> {
+    let decoded_strings = get_all_codes_from(image);
+    if let Some(ol_card) = decoded_strings
+        .iter()
+        .find(|&content| content.contains("overlordcard"))
     {
-        Ok(card_text) => card_text,
-        Err(_) => String::from("could not read card text"),
+        return Some(ol_card.to_string());
     }
+    None
+}
+
+fn get_all_codes_from(image: &GameRoomImage) -> Vec<String> {
+    let mut decoder = quircs::Quirc::default();
+    let codes = decoder.identify(image.width() as usize, image.height() as usize, image);
+    info!("got an image");
+    let mut decoded_strings = vec![];
+    for code in codes {
+        let code = code.expect("failed to extract qr code");
+        let decoded = code.decode().expect("failed to decode qr code");
+        let found_message = String::from_utf8(decoded.payload).unwrap();
+        info!("got {} from a decoding", found_message);
+        decoded_strings.push(found_message);
+    }
+    decoded_strings
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use image::{ImageBuffer, ImageOutputFormat, Rgb};
-    use std::io::Cursor;
 
-    fn convert_to_bytes_buffer(image: &ImageBuffer<Rgb<u8>, Vec<u8>>) -> Vec<u8> {
-        let mut bytes = Vec::new();
-        image
-            .write_to(&mut Cursor::new(&mut bytes), ImageOutputFormat::Png)
-            .unwrap();
-        bytes
+    #[test]
+    fn plain_qr_detection_from_file_works() {
+        let image = image::open("test_images/ol_doom.png").unwrap().into_luma8();
+        let result = identify_card_from(&image);
+        assert!(result == Some(String::from("overlordcard/doom")));
     }
 
     #[test]
-    fn overlord_cards_detection_from_file_works() {
-        let card_text_baume_sombre =
-            tesseract::ocr("test_images/BaumeSombre_02.jpg_detected.jpg", "fra").unwrap();
-        println!("{}", card_text_baume_sombre);
-        assert!(card_text_baume_sombre.contains("Baume"));
-
-        let card_text_explodierende_rune =
-            tesseract::ocr("test_images/ExplodierendeRune.jpg_detected.jpg", "fra").unwrap();
-        println!("{}", card_text_explodierende_rune);
-        assert!(card_text_explodierende_rune.contains("Schatztruhe"));
-    }
-
-    #[test]
-    fn overlord_cards_detection_from_memory_works() {
-        let card_image = image::open("test_images/BaumeSombre_02.jpg_detected.jpg")
+    fn twenty_mm_reading_scenario_works() {
+        let image = image::open("test_images/ol_qr_20mm_focused.png")
             .unwrap()
-            .to_rgb8();
-
-        let card_text = extract_card_text_from_buffer(&convert_to_bytes_buffer(&card_image), "fra");
-        println!("{}", card_text);
-        assert!(card_text.contains("Baume"));
+            .into_luma8();
+        let result = identify_card_from(&image);
+        assert!(result == Some(String::from("overlordcard/doom")));
     }
 
     #[test]
-    fn keywords_cards_json_file_is_ok() {
-        let overlord_cards = load_overlord_keywords("keywords_cards.json");
-        assert!(overlord_cards.cards.len() > 3);
-    }
-
-    #[test]
-    fn known_overlord_cards_detection_works() {
-        let overlord_cards = load_overlord_keywords("keywords_cards.json");
-
-        let card_image = image::open("test_images/BaumeSombre_02.jpg_detected.jpg")
+    #[ignore = "qr scanning not good enough yet..."]
+    fn ten_mm_easy_reading_scenarios_works() {
+        let focused_image = image::open("test_images/ol_qr_10mm_ultra_focused.png")
             .unwrap()
-            .to_rgb8();
-        assert_eq!(
-            Some(String::from("dark_balm")),
-            identify_card(&convert_to_bytes_buffer(&card_image), &overlord_cards)
-        );
+            .into_luma8();
+        let result = identify_card_from(&focused_image);
+        assert!(result == Some(String::from("overlordcard/doom")));
+    }
+
+    #[test]
+    #[ignore = "qr scanning not good enough yet..."]
+    fn ten_mm_reading_scenarios_works() {
+        let focused_image = image::open("test_images/ol_qr_10mm_focused.png")
+            .unwrap()
+            .into_luma8();
+        let result = identify_card_from(&focused_image);
+        assert!(result == Some(String::from("overlordcard/doom")));
     }
 }

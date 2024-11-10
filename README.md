@@ -28,7 +28,6 @@ graph TD;
     classDef queue fill:#032EEF,color:#eee
 
     Q_GAME_ROOM_FEED([Q_GAME_ROOM_FEED]):::queue
-    Q_CARD_IMAGE([Q_CARD_IMAGE]):::queue
     Q_DETECTED_OL_CARDS([Q_DETECTED_OL_CARDS]):::queue
     Q_SHORT_LOG([Q_SHORT_LOG]):::queue
 
@@ -36,13 +35,8 @@ graph TD;
     monitor-->Q_GAME_ROOM_FEED;
     monitor-->Q_SHORT_LOG;
 
-    identify_game_scene[[identify_game_scene]]:::service
-    Q_GAME_ROOM_FEED-->identify_game_scene;
-    identify_game_scene-->Q_CARD_IMAGE;
-    identify_game_scene-->Q_SHORT_LOG;
-
     detect_card[[detect_card]]:::service
-    Q_CARD_IMAGE-->detect_card;
+    Q_GAME_ROOM_FEED-->detect_card;
     detect_card-->Q_DETECTED_OL_CARDS;
     detect_card-->Q_SHORT_LOG;
 
@@ -67,22 +61,10 @@ Why?
 How?
 - Capture video signal and chop it into still images in pre-defined time intervals using rust.
 
-## identify_game_scene: higher-level discrimination of game scene
-
-What?
-- The image depicting the game situation is analyzed and the scene identified as e.g. "card", "board", etc.
-
-Why?
-- The purpose of this service is to route the game room image to more specific queues downstream.
-
-How?
-- rust
-- opencv scene recognition
-
 ## detect_card: recognize various cards
 
 What? 
-- An image of a card is given to this service. Based on character recognition, the contents of this card are matched against a database of cards and the correct card type and card are identified.
+- An image of a card with a QR code is given to this service. If the QR code is detected correctly, the card is identified by the content of the QR.
 
 Why?
 - Other services may use the context information to display more infos about the card. Examples may be translations from other languages or information from http://www.descentinthedark.com.
@@ -90,7 +72,6 @@ Why?
 
 How?
 - rust
-- tesseract for character recognition
 
 ## broadcast: provide GET for frontends
 
