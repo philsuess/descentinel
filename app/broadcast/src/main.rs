@@ -123,7 +123,7 @@ async fn rabbitmq_connection(pool: Pool) -> RMQResult<Connection> {
 
 fn pack_delivery(data: &Vec<u8>, route_name: &str) -> Vec<u8> {
     match route_name {
-        "game_room_image" => MsgPack::String(general_purpose::STANDARD.encode(&data)).encode(),
+        "game_room_image" => MsgPack::String(general_purpose::STANDARD.encode(data)).encode(),
         _ => MsgPack::String(String::from_utf8(data.to_owned()).unwrap()).encode(),
     }
 }
@@ -157,7 +157,7 @@ async fn init_rabbitmq_listen(
     for (route_name, queue_name) in route_to_queue_map {
         let queue = channel
             .queue_declare(
-                &queue_name,
+                queue_name,
                 QueueDeclareOptions::default(),
                 FieldTable::default(),
             )
@@ -166,7 +166,7 @@ async fn init_rabbitmq_listen(
 
         let consumer = channel
             .basic_consume(
-                &queue_name,
+                queue_name,
                 "",
                 BasicConsumeOptions::default(),
                 FieldTable::default(),
