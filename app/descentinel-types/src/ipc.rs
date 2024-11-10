@@ -22,7 +22,7 @@ pub enum IpcError {
 }
 
 pub async fn create_connection(ampq_url: &str) -> Result<Arc<Connection>, IpcError> {
-    let connection = Connection::connect(&ampq_url, ConnectionProperties::default()).await?;
+    let connection = Connection::connect(ampq_url, ConnectionProperties::default()).await?;
     Ok(Arc::new(connection))
 }
 
@@ -35,7 +35,7 @@ pub async fn declare_queue(connection: Arc<Connection>, queue_name: &str) -> Res
     let channel = create_channel(connection).await?;
     channel
         .queue_declare(
-            &queue_name,
+            queue_name,
             QueueDeclareOptions::default(),
             FieldTable::default(),
         )
@@ -78,7 +78,7 @@ where
     let channel = create_channel(connection.clone()).await?;
     let mut consumer = channel
         .basic_consume(
-            &queue_name,
+            queue_name,
             &format!("{queue_name}_consumer"),
             BasicConsumeOptions::default(),
             FieldTable::default(),
