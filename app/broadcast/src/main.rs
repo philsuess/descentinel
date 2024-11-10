@@ -1,7 +1,7 @@
 use clap::Parser;
 use descentinel_types::ipc::{self, process_message_pipeline, IpcError, Message};
 use lapin::Connection;
-use log::{debug, error, info};
+use log::{error, info};
 use std::collections::HashMap;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::sync::{Arc, Mutex};
@@ -153,29 +153,33 @@ async fn consume_and_update_state(
 async fn start_warp_server(webserver_address: SocketAddr, state: SharedState, queues: Vec<String>) {
     let cors = warp::cors().allow_any_origin().allow_methods(vec!["GET"]);
 
-    let mut routes = warp::any()
-        .map(|| {
-            debug!("Default route hit");
-            warp::reply::json(&"No queue specified".to_string())
-        })
-        .map(|reply| (reply,))
-        .boxed();
+    let state_clone = state.clone();
+    let queue_routes = warp::path::param() // Capture any path parameter
+        .and(warp::get())
+        .and_then(move |queue_name: String| {
+            let state = state_clone.clone();
+            let queues = queues.clone();
 
-    for queue_name in queues.clone() {
-        info!("Setting up route for queue: /{}", queue_name);
-        let state_clone = state.clone();
-        let queue_route = warp::path(queue_name.clone()).map(move || {
-            let state = state_clone.lock().unwrap();
-            let response = if let Some(content) = state.get(&queue_name) {
-                warp::reply::json(content)
-            } else {
-                warp::reply::json(&"No message received yet".to_string())
-            };
-            (response,)
+            async move {
+                if queues.contains(&queue_name) {
+                    let state = state.lock().unwrap();
+                    let response = if let Some(content) = state.get(&queue_name) {
+                        warp::reply::json(content)
+                    } else {
+                        warp::reply::json(&"No message received yet".to_string())
+                    };
+                    Ok::<_, warp::Rejection>(response)
+                } else {
+                    Err(warp::reject::not_found())
+                }
+            }
         });
 
-        routes = routes.or(queue_route).unify().boxed();
-    }
+    // Define a default route for the root path
+    let default_route = warp::any().map(|| warp::reply::json(&"No queue specified".to_string()));
 
-    warp::serve(routes.with(cors)).run(webserver_address).await;
+    // Combine queue_routes and default_route
+    let routes = queue_routes.or(default_route).with(cors);
+
+    warp::serve(routes).run(webserver_address).await;
 }

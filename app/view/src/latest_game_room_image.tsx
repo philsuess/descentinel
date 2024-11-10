@@ -10,19 +10,20 @@ const stringedVectorToUint8 = (stringedVector: any) => {
     return new Uint8Array([0]);
 };
 
-const fetchImageAsMsgPackedBase64String = async () =>
+const fetchImageAsBase64String = async () =>
     //await (await fetch("http://raspberrypi.local:3030/descentinel/game_room_image", { mode: 'cors' })).text();
-    await (await fetch("http://localhost:3030/descentinel/game_room_image", { mode: 'cors' })).text();
+    await (await fetch("http://localhost:3031/descentinel/Q_GAME_ROOM_FEED", { mode: 'cors' })).json();
 
 export function DisplayLatestGameRoomImage() {
-    const [imageAsMsgPackedBase64String, setImageAsMsgPackedBase64String] = createSignal("");
-    const [imageAsBase64] = createResource(imageAsMsgPackedBase64String, fetchImageAsMsgPackedBase64String);
+    const [imageAsBase64String, setImageAsBase64String] = createSignal("");
+    const [imageAsBase64] = createResource(imageAsBase64String, fetchImageAsBase64String);
 
-    setInterval(() => setImageAsMsgPackedBase64String(Date.now().toString()), 500);
+    setInterval(() => setImageAsBase64String(Date.now().toString()), 500);
 
     const convertUint8BytesToString = () => {
-        return decode(stringedVectorToUint8(imageAsBase64()));
+        //return decode(stringedVectorToUint8(imageAsBase64()));
+        return imageAsBase64();
     };
 
-    return <div><img src={"data:image/jpeg;base64,".concat(convertUint8BytesToString())}/></div>
+    return <div><img src={"data:image/jpeg;base64,".concat(convertUint8BytesToString())} /></div>
 };
