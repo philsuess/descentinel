@@ -946,7 +946,7 @@
     },
     "lightning_runes": {
         "name": "Lightning Runes",
-        "type":"Trap (Door)",
+        "type": "Trap (Door)",
         "threat_cost": 11,
         "treachery_cost": 2,
         "treachery_colour": "purple",
@@ -1134,7 +1134,7 @@
             {
                 "language": "de",
                 "name": "Giftspieße",
-                "effect": "Zu spielen, wenn ein Held auf ein leeres Feld zieht. Lege einen Grubenmarker auf das Feld. Falls der Held mit 1 Machtwürfel nucht die Leerseite würfelt, fällt er in die Grube und erleidet 4 Giftschaden (Rüstung wird ignoriert). Andernfalls zieht der Held auf ein Nachbarfeld seiner Wahl weiter." 
+                "effect": "Zu spielen, wenn ein Held auf ein leeres Feld zieht. Lege einen Grubenmarker auf das Feld. Falls der Held mit 1 Machtwürfel nucht die Leerseite würfelt, fällt er in die Grube und erleidet 4 Giftschaden (Rüstung wird ignoriert). Andernfalls zieht der Held auf ein Nachbarfeld seiner Wahl weiter."
             }
         ]
     },
@@ -1278,7 +1278,7 @@
                 "language": "de",
                 "name": "Skelettpatrouille",
                 "effect": "Spiele diese Karte, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 2 Skelette und 1 Elitenskelett nach den üblichen Regeln entstehen lassen.",
-                "Overlord_tactic": "Eine einfache Entstehungskarte. Skelette sind nicht wirklich mächtig, aber das Eliteskelett kann für Helden ziemlich frustrierend sein, wenn man gut darin ist, Skelette wieder auferstehen zu lassen." 
+                "Overlord_tactic": "Eine einfache Entstehungskarte. Skelette sind nicht wirklich mächtig, aber das Eliteskelett kann für Helden ziemlich frustrierend sein, wenn man gut darin ist, Skelette wieder auferstehen zu lassen."
             }
         ]
     },
@@ -1424,7 +1424,7 @@
                 "name": "",
                 "effect": "Spiele diese Karte, wenn ein Held auf ein leeres Feld zieht. Lege einen Grubenmarker mit einem Feld auf dieses Feld. Wenn der Held nicht die Leerseite auf einen Machtwürfel würfelt, fällt er in die Grube und erleidet 2 Schaden (Rüstung ignoriert). Würfelt der Held die Leerseite, zieht der Held sofort auf ein benachbartes Feld seiner Wahl.",
                 "Overlord_tactic": "Senke die Kosten! Spiele diese Karte für weniger Bedrohungsmarker, indem Du die Fallenmeister Machtkarte im Spiel hast und/oder einige Monster mit der Spezialfähigkeit Betrüger.",
-                "Heroes_tactic": "Nichts wovor man sich fürchten muss".
+                "Heroes_tactic": "Nichts wovor man sich fürchten muss"
             }
         ]
     },
@@ -1536,7 +1536,7 @@
         "effect": "Play this card at the start of your turn and place it faceup in front of you. All heroes are worth 1 extra Conquest Point when you kill them.",
         "translations": [
             {
-                "language": "de", 
+                "language": "de",
                 "name": "Zorn",
                 "effect": "Spiele diese Karte zu Beginn deines Zuges aus und lege sie offen vor dich ab. Alle Helden sind 1 zusätzlichen Questmarker wert, wenn du sie tötest."
             }
