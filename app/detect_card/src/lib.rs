@@ -1,19 +1,13 @@
 use std::io::Cursor;
 
-use image::{ImageBuffer, ImageReader, Luma};
+use image::{DynamicImage, ImageReader};
 use log::info;
-use quircs::{DecodeError, ExtractError};
-use thiserror::Error;
+use rxing::{
+    common::HybridBinarizer, qrcode::cpp_port::QrReader as Cpp_Qr_Reader, qrcode::QRCodeReader,
+    BinaryBitmap, BufferedImageLuminanceSource, Reader,
+};
 
-#[derive(Error, Debug)]
-pub enum DetectCardError {
-    #[error("qr error: {0}")]
-    QrCodeExtractionError(#[from] ExtractError),
-    #[error("qr error: {0}")]
-    QrCodeDecodingError(#[from] DecodeError),
-}
-
-type GameRoomImage = ImageBuffer<Luma<u8>, Vec<u8>>;
+type GameRoomImage = DynamicImage; //ImageBuffer<Luma<u8>, Vec<u8>>;
 
 pub fn convert_to_grey_image(image_buffer: &[u8]) -> GameRoomImage {
     ImageReader::new(Cursor::new(image_buffer))
@@ -21,7 +15,6 @@ pub fn convert_to_grey_image(image_buffer: &[u8]) -> GameRoomImage {
         .unwrap()
         .decode()
         .unwrap()
-        .to_luma8()
 }
 
 pub fn identify_card_from(image: &GameRoomImage) -> Option<String> {
@@ -36,17 +29,31 @@ pub fn identify_card_from(image: &GameRoomImage) -> Option<String> {
 }
 
 fn get_all_codes_from(image: &GameRoomImage) -> Vec<String> {
-    let mut decoder = quircs::Quirc::default();
-    let codes = decoder.identify(image.width() as usize, image.height() as usize, image);
-    info!("got an image");
     let mut decoded_strings = vec![];
-    for code in codes {
-        let code = code.expect("failed to extract qr code");
-        let decoded = code.decode().expect("failed to decode qr code");
-        let found_message = String::from_utf8(decoded.payload).unwrap();
-        info!("got {} from a decoding", found_message);
-        decoded_strings.push(found_message);
+    info!("got an image");
+
+    let mut cpp_reader = Cpp_Qr_Reader;
+    let cpp_result = cpp_reader.decode(&mut BinaryBitmap::new(HybridBinarizer::new(
+        BufferedImageLuminanceSource::new(image.clone()),
+    )));
+    if let Ok(result) = cpp_result {
+        decoded_strings.push(result.getText().to_string());
     }
+
+    if !decoded_strings.is_empty() {
+        return decoded_strings;
+    }
+
+    let mut reader = QRCodeReader::new();
+
+    let result = reader.decode(&mut BinaryBitmap::new(HybridBinarizer::new(
+        BufferedImageLuminanceSource::new(image.clone()),
+    )));
+
+    if let Ok(result) = result {
+        decoded_strings.push(result.getText().to_string());
+    }
+
     decoded_strings
 }
 
@@ -56,36 +63,32 @@ mod tests {
 
     #[test]
     fn plain_qr_detection_from_file_works() {
-        let image = image::open("test_images/ol_doom.png").unwrap().into_luma8();
+        let image = image::open("test_images/ol_doom.png").unwrap();
         let result = identify_card_from(&image);
         assert!(result == Some(String::from("overlordcard/doom")));
     }
 
     #[test]
     fn twenty_mm_reading_scenario_works() {
-        let image = image::open("test_images/ol_qr_20mm_focused.png")
-            .unwrap()
-            .into_luma8();
+        let image = image::open("test_images/ol_qr_20mm_focused.png").unwrap();
         let result = identify_card_from(&image);
         assert!(result == Some(String::from("overlordcard/doom")));
+
+        let capture0 = image::open("test_images/capture_0.png").unwrap();
+        let result0 = identify_card_from(&capture0);
+        assert!(result0 == Some(String::from("overlordcard/doom")));
     }
 
     #[test]
-    #[ignore = "qr scanning not good enough yet..."]
     fn ten_mm_easy_reading_scenarios_works() {
-        let focused_image = image::open("test_images/ol_qr_10mm_ultra_focused.png")
-            .unwrap()
-            .into_luma8();
+        let focused_image = image::open("test_images/ol_qr_10mm_ultra_focused.png").unwrap();
         let result = identify_card_from(&focused_image);
         assert!(result == Some(String::from("overlordcard/doom")));
     }
 
     #[test]
-    #[ignore = "qr scanning not good enough yet..."]
     fn ten_mm_reading_scenarios_works() {
-        let focused_image = image::open("test_images/ol_qr_10mm_focused.png")
-            .unwrap()
-            .into_luma8();
+        let focused_image = image::open("test_images/ol_qr_10mm_focused.png").unwrap();
         let result = identify_card_from(&focused_image);
         assert!(result == Some(String::from("overlordcard/doom")));
     }
