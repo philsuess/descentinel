@@ -1,9 +1,10 @@
 use clap::Parser;
 use descentinel_types::ipc::{self, IpcError, Message};
 use detect_card::{convert_to_grey_image, identify_card_from};
+use image::ImageReader;
 use lapin::Connection;
 use log::{error, info};
-use std::{sync::Arc, time::Duration};
+use std::{io::Cursor, sync::Arc, time::Duration};
 use thiserror::Error;
 use tokio::join;
 
@@ -29,6 +30,9 @@ struct Args {
 
     #[arg(short, long, default_value_t = String::from("amqp://localhost:5672"))]
     ampq_url: String,
+
+    #[arg(long, default_value_t = false)]
+    save_captures_to_local_file: bool,
 }
 
 #[tokio::main]
@@ -102,6 +106,16 @@ async fn init_rabbitmq_listen(
 }
 
 fn handle_game_room_image(game_room_image: &Message, args: Arc<Args>) -> Vec<(String, Message)> {
+    if args.save_captures_to_local_file {
+        let file_name = "capture.png";
+        let imgage_for_saving = ImageReader::new(Cursor::new(game_room_image.content.clone()))
+            .with_guessed_format()
+            .unwrap()
+            .decode()
+            .unwrap();
+        let _ = imgage_for_saving.save(file_name);
+        info!("wrote {} ", file_name);
+    }
     let mut downstream_messages = Vec::new();
     let game_room_in_grey = convert_to_grey_image(&game_room_image.content);
     if let Some(card_id) = identify_card_from(&game_room_in_grey) {

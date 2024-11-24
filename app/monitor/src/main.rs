@@ -1,7 +1,9 @@
 use clap::Parser;
 use descentinel_types::ipc;
 use descentinel_types::ipc::Message;
+use image::ImageReader;
 use log::info;
+use std::io::Cursor;
 use thiserror::Error;
 use v4l::buffer::Type;
 use v4l::io::mmap::Stream;
@@ -40,6 +42,9 @@ struct Args {
 
     #[arg(short, long, default_value_t = 2500)]
     images_interval_in_ms: u64,
+
+    #[arg(long, default_value_t = false)]
+    save_captures_to_local_file: bool,
 }
 
 fn main() -> Result<(), MonitorError> {
@@ -87,6 +92,16 @@ fn main() -> Result<(), MonitorError> {
         let pause_between_images = std::time::Duration::from_millis(args.images_interval_in_ms);
         loop {
             let image_as_bytes = capture_image_from_v4l(&mut stream);
+            if args.save_captures_to_local_file {
+                let file_name = "capture.png";
+                let imgage_for_saving = ImageReader::new(Cursor::new(image_as_bytes.clone()))
+                    .with_guessed_format()
+                    .unwrap()
+                    .decode()
+                    .unwrap();
+                let _ = imgage_for_saving.save(file_name);
+                info!("wrote {} ", file_name);
+            }
             ipc::send_message(
                 connection.clone(),
                 &args.destination_queue,
