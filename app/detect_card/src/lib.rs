@@ -38,6 +38,7 @@ fn get_all_codes_from(image: &GameRoomImage) -> Vec<String> {
     )));
     if let Ok(result) = cpp_result {
         decoded_strings.push(result.getText().to_string());
+        info!("got {}", result.getText());
     }
 
     if !decoded_strings.is_empty() {
@@ -52,6 +53,7 @@ fn get_all_codes_from(image: &GameRoomImage) -> Vec<String> {
 
     if let Ok(result) = result {
         decoded_strings.push(result.getText().to_string());
+        info!("got {}", result.getText());
     }
 
     decoded_strings
