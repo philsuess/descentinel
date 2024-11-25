@@ -1,7 +1,10 @@
-FROM docker.io/opensuse/leap:latest AS detect_card_service_builder
+FROM docker.io/opensuse/leap:latest AS detect_card_build_system
 ENV PATH="/root/.cargo/bin:${PATH}"
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 RUN zypper install -y gcc
+
+FROM detect_card_build_system as detect_card_service_builder
+COPY detect_card/src/main.rs detect_card/src/main.rs
 WORKDIR /app
 RUN cargo build --release --package detect_card --target-dir /detect_card_build
 
