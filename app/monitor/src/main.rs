@@ -82,6 +82,7 @@ fn main() -> Result<(), MonitorError> {
             &args.short_log_queue,
             &Message {
                 content: "Camera streaming over MONITOR service".as_bytes().to_vec(),
+                content_type: ipc::ContentType::Text,
             },
         )
         .await?;
@@ -107,6 +108,7 @@ fn main() -> Result<(), MonitorError> {
                 &args.destination_queue,
                 &Message {
                     content: image_as_bytes,
+                    content_type: ipc::ContentType::Text,
                 },
             )
             .await?;

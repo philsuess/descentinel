@@ -123,6 +123,7 @@ fn handle_game_room_image(game_room_image: &Message, args: Arc<Args>) -> Vec<(St
             args.detected_ol_cards_queue.clone(),
             Message {
                 content: card_id.as_bytes().to_vec(),
+                content_type: ipc::ContentType::Text,
             },
         ));
 
@@ -132,6 +133,7 @@ fn handle_game_room_image(game_room_image: &Message, args: Arc<Args>) -> Vec<(St
             args.short_log_queue.clone(),
             Message {
                 content: log_message.as_bytes().to_vec(),
+                content_type: ipc::ContentType::Text,
             },
         ));
     }
