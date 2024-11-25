@@ -9,8 +9,15 @@ use std::sync::Arc;
 use thiserror::Error;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
+pub enum ContentType {
+    Png,
+    Text,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Message {
     pub content: Vec<u8>,
+    pub content_type: ContentType,
 }
 
 #[derive(Error, Debug)]
