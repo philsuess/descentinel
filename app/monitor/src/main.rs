@@ -82,7 +82,7 @@ fn main() -> Result<(), MonitorError> {
             &args.short_log_queue,
             &Message {
                 content: "Camera streaming over MONITOR service".as_bytes().to_vec(),
-                content_type: ipc::ContentType::Png,
+                content_type: ipc::ContentType::Text,
             },
         )
         .await?;
