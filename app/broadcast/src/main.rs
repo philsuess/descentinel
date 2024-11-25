@@ -6,6 +6,7 @@ use std::collections::HashMap;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
+use std::vec;
 use thiserror::Error;
 use tokio::join;
 use warp::Filter;
@@ -35,7 +36,7 @@ struct Args {
     #[arg(short, long, default_value_t = String::from("amqp://localhost:5672"))]
     ampq_url: String,
 
-    #[arg(long, default_value_t = 3031)]
+    #[arg(long, default_value_t = 3030)]
     server_port: u16,
 }
 
@@ -113,7 +114,7 @@ async fn init_rabbitmq_listen(
     }
 
     // Start the warp server
-    start_warp_server(webserver_address, state, queues).await;
+    start_warp_server(args_clone, webserver_address, state, queues).await;
 
     Ok(())
 }
@@ -150,7 +151,12 @@ async fn consume_and_update_state(
     Ok(())
 }
 
-async fn start_warp_server(webserver_address: SocketAddr, state: SharedState, queues: Vec<String>) {
+async fn start_warp_server(
+    args: Arc<Args>,
+    webserver_address: SocketAddr,
+    state: SharedState,
+    queues: Vec<String>,
+) {
     let cors = warp::cors().allow_any_origin().allow_methods(vec!["GET"]);
 
     let state_clone = state.clone();
@@ -158,19 +164,38 @@ async fn start_warp_server(webserver_address: SocketAddr, state: SharedState, qu
         .and(warp::get())
         .and_then(move |queue_name: String| {
             let state = state_clone.clone();
+
             let queues = queues.clone();
+            let args_clone = args.clone();
 
             async move {
-                if queues.contains(&queue_name) {
-                    let state = state.lock().unwrap();
-                    let response = if let Some(content) = state.get(&queue_name) {
-                        warp::reply::json(content)
+                if !queues.contains(&queue_name) {
+                    return Err(warp::reject::not_found());
+                }
+
+                let state = state.lock().unwrap();
+                if queue_name.eq(&args_clone.game_room_feed_queue) {
+                    let response = if let Some(image_as_bytes) = state.get(&queue_name) {
+                        warp::reply::with_header(
+                            image_as_bytes.clone(),
+                            "Content-Type",
+                            "image/png",
+                        )
                     } else {
-                        warp::reply::json(&"No message received yet".to_string())
+                        warp::reply::with_header(vec![], "Content-Type", "image/png")
                     };
                     Ok::<_, warp::Rejection>(response)
                 } else {
-                    Err(warp::reject::not_found())
+                    let response = if let Some(content) = state.get(&queue_name) {
+                        warp::reply::with_header(
+                            content.clone(),
+                            "Content-Type",
+                            "application/text",
+                        )
+                    } else {
+                        warp::reply::with_header(vec![], "Content-Type", "application/text")
+                    };
+                    Ok::<_, warp::Rejection>(response)
                 }
             }
         });
