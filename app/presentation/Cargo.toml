@@ -6,8 +6,7 @@ authors.workspace = true
 description.workspace = true
 
 [dependencies]
-js-sys = "0.3.72"
 leptos = { version = "0.6.15", features = ["csr"] }
-reqwest = { version = "0.12", features = ["json"] }
-wasm-bindgen = "0.2.95"
-web-sys = { version = "0.3.72", features = ["Blob", "Url"] }
+thaw = { git = "https://github.com/thaw-ui/thaw", branch = "thaw-v0.3", features = [
+    "csr",
+] }
