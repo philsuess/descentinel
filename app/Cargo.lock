@@ -3064,6 +3064,7 @@ name = "presentation"
 version = "0.1.0"
 dependencies = [
  "leptos",
+ "rand",
  "thaw",
 ]
 
