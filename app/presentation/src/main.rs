@@ -86,4 +86,5 @@ fn App() -> impl IntoView {
 
 fn main() {
     mount_to_body(|| view! { <App /> });
+    mount_to_body(|| view! { <App /> });
 }
