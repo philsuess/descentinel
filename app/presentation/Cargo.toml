@@ -7,6 +7,7 @@ description.workspace = true
 
 [dependencies]
 leptos = { version = "0.6.15", features = ["csr"] }
+rand = "0.8.5"
 thaw = { git = "https://github.com/thaw-ui/thaw", branch = "thaw-v0.3", features = [
     "csr",
 ] }
