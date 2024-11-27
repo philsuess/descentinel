@@ -3,7 +3,6 @@ Support app for the board game Descent v1 that keeps watch over a physical game 
 
 1. The app consists of various backend services:
     - [monitor](#monitor-stream-the-game-pieces-as-images): always watching...
-    - [identify_game_scene]()
     - [detect_card](#detect_card-recognize-various-cards): which card am I holding in the camera?
     - [broadcast](#broadcast-provide-get-for-frontends): a web server for backend-frontend communication
     - [view](#view-frontend-for-the-browser): a web frontend
