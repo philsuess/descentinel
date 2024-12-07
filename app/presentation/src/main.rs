@@ -98,8 +98,6 @@ fn GameRoomImage(
 
 #[component]
 fn App() -> impl IntoView {
-    let game_room_feed_url = String::from("http://0.0.0.0:3030/Q_GAME_ROOM_FEED");
-
     view! {
         <LogViewer url=String::from("http://0.0.0.0.:3030/Q_SHORT_LOG") />
         //<GameRoomImage src=String::from("http://0.0.0.0:3030/Q_GAME_ROOM_FEED") />
