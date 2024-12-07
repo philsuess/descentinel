@@ -52,7 +52,26 @@ fn GameRoomImage(
     /// Image source
     #[prop(into)]
     src: String,
+    src: String,
 ) -> impl IntoView {
+    let (image_src, set_image_src) = create_signal(src.clone());
+
+    let resource = create_resource(
+        || (),
+        |_| async {
+            gloo::timers::future::TimeoutFuture::new(50).await;
+        },
+    );
+
+    create_effect(move |prev| {
+        resource.track();
+        let mut rng = rand::thread_rng();
+        if prev.is_some() {
+            set_image_src.set([src.clone(), rng.gen::<u16>().to_string()].join("?"));
+            resource.refetch();
+        }
+    });
+
     let (image_src, set_image_src) = create_signal(src.clone());
 
     let resource = create_resource(
@@ -73,13 +92,13 @@ fn GameRoomImage(
 
     view! {
         <Image src=MaybeSignal::from(image_src) />
+        <Image src=MaybeSignal::from(image_src) />
     }
 }*/
 
 #[component]
 fn App() -> impl IntoView {
-    let mut rng = rand::thread_rng();
-    let (text, set_text) = create_signal(String::from("http://0.0.0.0:3030/Q_GAME_ROOM_FEED"));
+    let game_room_feed_url = String::from("http://0.0.0.0:3030/Q_GAME_ROOM_FEED");
 
     view! {
         <LogViewer url=String::from("http://0.0.0.0.:3030/Q_SHORT_LOG") />
