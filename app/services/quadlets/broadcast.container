@@ -1,0 +1,13 @@
+[Container]
+ContainerName=broadcast
+Environment=RUST_LOG=info
+Image=broadcast_service
+Pod=descentinel
+StartWithPod=true
+
+[Service]
+Restart=always
+
+[Install]
+# Start by default on boot
+WantedBy=multi-user.target default.target

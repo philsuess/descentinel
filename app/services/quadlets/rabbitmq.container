@@ -1,0 +1,11 @@
+[Container]
+ContainerName=rabbitmq
+Image=docker.io/rabbitmq:4-management
+Pod=descentinel
+StartWithPod=true
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target

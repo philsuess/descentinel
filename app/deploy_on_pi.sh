@@ -5,31 +5,27 @@ set -o nounset
 set -o pipefail
 set -o xtrace
 
-readonly TARGET_HOST=phil@raspberrypi.local
-readonly TARGET_PATH=/home/phil/mailbox
+readonly USER_ON_PI=phil
+readonly TARGET_HOST=${USER_ON_PI}@descentinel
+readonly USER_HOME_PATH=/home/${USER_ON_PI}
+readonly EXCHANGE_FOLDER=${TARGET_HOST}:${TARGET_PATH}
+readonly APPS_FOLDER=${EXCHANGE_FOLDER}/release
 
-ssh ${TARGET_HOST} mkdir -p ${TARGET_PATH}
-ssh ${TARGET_HOST} mkdir -p ${TARGET_PATH}/release
 
-cd broadcast
-scp ./target/aarch64-unknown-linux-gnu/release/broadcast ${TARGET_HOST}:${TARGET_PATH}/release/
-scp ./Containerfile.pi ${TARGET_HOST}:${TARGET_PATH}/Containerfile.broadcast.service
-cd ..
+ssh ${TARGET_HOST} mkdir -p ${USER_HOME_PATH}/mailbox
+ssh ${TARGET_HOST} mkdir -p ${USER_HOME_PATH}/mailbox/release
+ssh ${TARGET_HOST} mkdir -p ${USER_HOME_PATH}/.config/containers
+ssh ${TARGET_HOST} mkdir -p ${USER_HOME_PATH}/.config/containers/systemd
 
-cd monitor
-scp ./target/aarch64-unknown-linux-gnu/release/monitor ${TARGET_HOST}:${TARGET_PATH}
-cd ..
+scp ./target/aarch64-unknown-linux-gnu/release/broadcast ${APPS_FOLDER}
+scp ./services/broadcast.pi ${EXCHANGE_FOLDER}/broadcast
 
-cd identify_game_scene
-scp ./target/arm-unknown-linux-gnueabihf/release/identify_game_scene ${TARGET_HOST}:${TARGET_PATH}/release
-scp ./OL_template.jpg ${TARGET_HOST}:${TARGET_PATH}
-scp ./Containerfile.pi ${TARGET_HOST}:${TARGET_PATH}/Containerfile.identify_game_scene.service
-cd ..
+scp ./target/aarch64-unknown-linux-gnu/release/monitor ${APPS_FOLDER}
 
-cd detect_card
-scp ./target/aarch64-unknown-linux-gnu/release/detect_card ${TARGET_HOST}:${TARGET_PATH}/release
-scp ./keywords_cards.json ${TARGET_HOST}:${TARGET_PATH}
-scp ./Containerfile.pi ${TARGET_HOST}:${TARGET_PATH}/Containerfile.detect_card.service
-cd ..
+scp ./target/aarch64-unknown-linux-gnu/release/detect_card ${APPS_FOLDER}
+scp ./services/detect_card.pi ${EXCHANGE_FOLDER}/detect_card
 
-scp ./run_on_pi.sh ${TARGET_HOST}:${TARGET_PATH}/..
+scp ./services/quadlets/* ${USER_HOME_PATH}/.config/containers/systemd
+scp ./services/systemd/descentinel-monitor.service ${USER_HOME_PATH}/mailbox
+
+scp ./run_on_pi.sh ${USER_HOME_PATH}

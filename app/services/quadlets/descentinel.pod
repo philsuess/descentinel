@@ -1,0 +1,13 @@
+[Pod]
+PodName=descentinel
+PublishPort=15672:15672
+PublishPort=5672:5672
+PublishPort=3030:3030
+ServiceName=pod-descentinel.service
+
+[Service]
+Restart=always
+
+[Install]
+# Start by default on boot
+WantedBy=multi-user.target default.target

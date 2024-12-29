@@ -45,6 +45,9 @@ struct Args {
 
     #[arg(long, default_value_t = false)]
     save_captures_to_local_file: bool,
+
+    #[arg(short, long, default_value_t = 0)]
+    v4l_device_id: usize,
 }
 
 fn main() -> Result<(), MonitorError> {
@@ -54,7 +57,7 @@ fn main() -> Result<(), MonitorError> {
 
     //let mut camera = init_camera(args.camera_preference_index);
     //camera.open_stream().unwrap();
-    let dev = Device::new(0).expect("Failed to open device");
+    let dev = Device::new(args.v4l_device_id).expect("Failed to open device");
 
     // Let's say we want to explicitly request another format
     let mut fmt = dev.format().expect("Failed to read format");
