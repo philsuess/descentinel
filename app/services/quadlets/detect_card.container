@@ -1,0 +1,13 @@
+[Container]
+ContainerName=detect_card
+Environment=RUST_LOG=info RABBITMQ_AMQP_URL=0.0.0.0
+Image=detect_card
+Pod=descentinel
+StartWithPod=true
+
+[Service]
+Restart=always
+
+[Install]
+# Start by default on boot
+WantedBy=multi-user.target default.target
