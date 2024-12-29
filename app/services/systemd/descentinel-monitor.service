@@ -1,0 +1,15 @@
+[Unit]
+Description=Descentinel monitor service - always watching...
+#After=pod-descentinel.service
+After=container-rabbitmq.service
+Requires=container-rabbitmq.service
+
+[Service]
+Type=simple
+ExecStart=/bin/monitor -i 250
+Restart=on-failure
+RestartSec=20
+
+[Install]
+# Start by default on boot
+WantedBy=multi-user.target default.target

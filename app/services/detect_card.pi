@@ -1,6 +1,4 @@
-FROM docker.io/ubuntu:20.04 AS detect_card_service
-RUN apt update ; DEBIAN_FRONTEND=noninteractive apt install -y tesseract-ocr tesseract-ocr-fra
+FROM docker.io/debian:stable-slim AS detect_card_service
 ENV RUST_LOG info
 COPY release/detect_card .
-COPY keywords_cards.json .
 CMD ["./detect_card"]
