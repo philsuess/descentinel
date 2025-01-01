@@ -5,7 +5,7 @@ Support app for the board game Descent v1 that keeps watch over a physical game 
     - [monitor](#monitor-stream-the-game-pieces-as-images): always watching...
     - [detect_card](#detect_card-recognize-various-cards): which card am I holding in the camera?
     - [broadcast](#broadcast-provide-get-for-frontends): a web server for backend-frontend communication
-    - [view](#view-frontend-for-the-browser): a web frontend
+    - [presentation](#presentation-frontend-for-the-browser): a web frontend
 1. All backend services are connected to rabbitmq pub/sub channels
 1. The entire app runs on a small device (Raspberry Pi)
 
@@ -40,13 +40,15 @@ graph TD;
     detect_card-->Q_SHORT_LOG;
 
     broadcast[[broadcast]]:::service
-    Q_GAME_ROOM_FEED-->broadcast
+    Q_GAME_ROOM_FEED-->broadcast;
     Q_SHORT_LOG-->broadcast;
     Q_DETECTED_OL_CARDS-->broadcast;
 
-    view((view/frontend))
-    style view fill:#EF03A5,color:#eee
-    broadcast-.->view
+    presentation((presentation/frontend))
+    style presentation fill:#EF03A5,color:#eee
+    Q_GAME_ROOM_FEED-->presentation;
+    Q_DETECTED_OL_CARDS-->presentation;
+    Q_SHORT_LOG-->presentation;
 ```
 
 ## monitor: stream the game pieces as images
@@ -84,16 +86,16 @@ How?
 - rust
 - warp
 
-## view: frontend for the browser
+## presentation: frontend for the browser
 
 What?
-- Anything available via broadcasted GET is displayed in a web page.
+- server-side rendering of updates interesting for user
 
 Why?
 - Game information should be viewable on any device.
 
 How?
-- solidjs
+- leptos
 
 
 ---
