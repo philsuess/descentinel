@@ -8,6 +8,7 @@
     "app",
     "identify_game_scene",
     "types",
-    "services"
+    "services",
+    "presentation"
   ]
 }

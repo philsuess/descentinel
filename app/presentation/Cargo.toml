@@ -1,0 +1,13 @@
+[package]
+name = "presentation"
+edition = "2021"
+version.workspace = true
+authors.workspace = true
+description.workspace = true
+
+[dependencies]
+gloo = { version = "0.11.0", features = ["futures"] }
+leptos = { version = "0.7.2", features = ["csr"] }
+rand = "0.8.5"
+reqwest = "0.12.9"
+thaw = { version = "0.4.0", features = ["csr"] }

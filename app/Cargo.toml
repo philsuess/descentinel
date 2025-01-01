@@ -1,6 +1,6 @@
 [workspace]
 
-members = ["broadcast", "descentinel-types", "detect_card", "monitor"]
+members = ["broadcast", "descentinel-types", "detect_card", "monitor", "presentation"]
 exclude = ["view"]
 
 resolver = "2"
