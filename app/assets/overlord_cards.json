@@ -186,7 +186,7 @@
     "critical_strike": {
         "name": "Critical Strike",
         "type": "Event",
-        "threat_cost": "X",
+        "threat_cost": 0,
         "treachery_cost": 1,
         "treachery_colour": "green",
         "discard_value": 2,
@@ -220,7 +220,7 @@
     "crushing_blow": {
         "name": "Crushing Blow",
         "type": "Event",
-        "threat_cost": "X",
+        "threat_cost": 0,
         "treachery_cost": 1,
         "treachery_colour": "green",
         "discard_value": 3,
@@ -253,8 +253,22 @@
         "name": "Curse of the Monkey God",
         "type": "Trap (Chest)",
         "threat_cost": 11,
-        "treachery_cost": "0/1",
-        "treachery_colour": "none/purple",
+        "discard_value": 4,
+        "effect": "Play this card when a hero opens a chest. The hero player must roll a power die. If he rolls blank, nothing happens. If he does not roll a blank, the hero is transformed into a monkey.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Fluch des Affengottes",
+                "effect": "Spiele diese Karte wenn ein Held eine Truhe öffnet. Der Heldenspieler muss einen Machtwürfel werfen. Wenn er die Leerseite rollt passiert nichts. Wenn nicht, verwandelt sich der Held in einen Affen."
+            }
+        ]
+    },
+    "curse_of_the_monkey_god_treachery": {
+        "name": "Curse of the Monkey God",
+        "type": "Trap (Chest)",
+        "threat_cost": 11,
+        "treachery_cost": 1,
+        "treachery_colour": "purple",
         "discard_value": 4,
         "effect": "Play this card when a hero opens a chest. The hero player must roll a power die. If he rolls blank, nothing happens. If he does not roll a blank, the hero is transformed into a monkey.",
         "translations": [
@@ -301,7 +315,21 @@
         "name": "Danger",
         "type": "Event",
         "threat_cost": 0,
-        "treachery_cost": "0/1",
+        "discard_value": 10,
+        "effect": "This card has no effect. It can only be discarded for threat.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Gefahr",
+                "effect": "Diese Karte hat keine Wirkung. Sie kann nur für die Bedrohung abgeworfen werden."
+            }
+        ]
+    },
+    "danger_treachery": {
+        "name": "Danger",
+        "type": "Event",
+        "threat_cost": 0,
+        "treachery_cost": 1,
         "treachery_colour": "green",
         "discard_value": 10,
         "effect": "This card has no effect. It can only be discarded for threat.",
@@ -333,7 +361,21 @@
         "name": "Dark Balm",
         "type": "Event",
         "threat_cost": 5,
-        "treachery_cost": "0/1",
+        "discard_value": 2,
+        "effect": "Play this card at the start of your turn to remove all effect tokens from a monster of your choice.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Dunkler Balsam",
+                "effect": "Spiele diese Karte zu Beginn Deines Zuges um alle Effektmarker von einem Monster Deiner Wahl zu entfernen."
+            }
+        ]
+    },
+    "dark_balm_treachery": {
+        "name": "Dark Balm",
+        "type": "Event",
+        "threat_cost": 5,
+        "treachery_cost": 1,
         "treachery_colour": "green",
         "discard_value": 2,
         "effect": "Play this card at the start of your turn to remove all effect tokens from a monster of your choice.",
@@ -365,7 +407,23 @@
         "name": "Dark Charm",
         "type": "Trap",
         "threat_cost": 8,
-        "treachery_cost": "0/1",
+        "discard_value": 2,
+        "effect": "Play at the start of your turn and choose one hero. The chosen hero player must roll one power die. If the result is blank, nothing happens. If the result is not a blank, the hero must make one attack that you declare. This attack may target any hero, including the attacking hero, but is subject to the normal attack rules, including range and line of sight.",
+        "Overlord_tactic": "Play it wisely! Chances are not that high. The player has 1 chance out of 6 of rolling a blank to avoid the trap and 1 chance out of 6 to miss his attack on his little friend. It's a good timing when a hero has just discovered a blast weapon or when a hero is about to die.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Dunkle Verführung",
+                "effect": "Spiele diese Karte zu Beginn Deines Zuges und wähle einen Helden. Der gewählte Held muss einen Machtwürfel würfeln. Wenn das Ergebnis die Leerseite ist, passiert nichts. Sonst muss der Held einen von Dir angesagten Angriff ausführen. Dieser Angriff kann auf jeden Helden abzielen, einschließlich des angreifenden Helden selbst, unterliegt jedoch den normalen Angriffsregeln, einschließlich Reichweite und Sichtlinie.",
+                "Overlord_tactic": "Spiele diese Karte mit Bedacht! Die Chancen stehen nicht so hoch. Der Spieler hat eine Chance von 1 zu 6, ein Leerzeichen zu würfeln und der Falle auszuweichen, und eine Chance von 1 zu 6 seinen Angriff auf seinen Kumpel (oder sich selbst) zu verfehlen. Es ist ein guter Zeitpunkt, wenn ein Held gerade eine Explosionswaffe entdeckt hat oder wenn ein Held kurz vor dem Tod steht."
+            }
+        ]
+    },
+    "dark_charm_treachery": {
+        "name": "Dark Charm",
+        "type": "Trap",
+        "threat_cost": 8,
+        "treachery_cost": 1,
         "treachery_colour": "purple",
         "discard_value": 2,
         "effect": "Play at the start of your turn and choose one hero. The chosen hero player must roll one power die. If the result is blank, nothing happens. If the result is not a blank, the hero must make one attack that you declare. This attack may target any hero, including the attacking hero, but is subject to the normal attack rules, including range and line of sight.",
@@ -414,7 +472,7 @@
     "dark_relic": {
         "name": "Dark Relic",
         "type": "Trap (Treasure)",
-        "threat_cost": "X",
+        "threat_cost": 0,
         "treachery_cost": 2,
         "treachery_colour": "purple",
         "discard_value": 4,
@@ -511,8 +569,24 @@
         "name": "DOOM!",
         "type": "Power",
         "threat_cost": 20,
-        "treachery_cost": "0/1",
-        "treachery_colour": "none/red",
+        "discard_value": 5,
+        "effect": "Play this card at the start of your turn and place it face up in front of you. All of your monsters roll 1 extra power die when attacking.",
+        "Overlord_tactic": "Think twice! Like most other Power cards, it is best played in the early stage of a quest. This card gives you the power to deal more damage with each attack, but also more chances to roll surges and gain extra threat tokens. A definite advantage.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "UNTERGANG!",
+                "effect": "Spiele diese Karte zu Beginn Deines Zuges und lege sie offen vor sich ab. Alle deine Monster werfen beim Angriff 1 zusätzlichen Machtwürfel.",
+                "Overlord_tactic": "Überdenke nochmal! Wie die meisten anderen Machtkarten wird sie am besten in der frühen Phase einer Quest gespielt. Diese Karte gibt dir die Kraft, mit jedem Angriff mehr Schaden zu verursachen, aber auch mehr Chancen, Kraftverstärker zu würfeln und damit zusätzliche Bedrohungsmarker zu erhalten. Ein klarer Vorteil."
+            }
+        ]
+    },
+    "doom_treachery": {
+        "name": "DOOM!",
+        "type": "Power",
+        "threat_cost": 20,
+        "treachery_cost": 1,
+        "treachery_colour": "red",
         "discard_value": 5,
         "effect": "Play this card at the start of your turn and place it face up in front of you. All of your monsters roll 1 extra power die when attacking.",
         "Overlord_tactic": "Think twice! Like most other Power cards, it is best played in the early stage of a quest. This card gives you the power to deal more damage with each attack, but also more chances to roll surges and gain extra threat tokens. A definite advantage.",
@@ -576,7 +650,7 @@
     "empower": {
         "name": "Empower",
         "type": "Event",
-        "threat_cost": "X",
+        "threat_cost": 0,
         "treachery_cost": 1,
         "treachery_colour": "green",
         "discard_value": 2,
@@ -933,6 +1007,7 @@
         "name": "Legions of the Dead",
         "type": "Spawn",
         "threat_cost": 5,
+        "discard_value": 2,
         "treachery_cost": 1,
         "treachery_colour": "red",
         "effect": "Play this card before activating any of your monsters for the turn. You may spawn 4 Skeletons and 2 Master Skeletons, following all of the normal rules for spawning monsters.",
@@ -1150,7 +1225,7 @@
             {
                 "language": "de",
                 "name": "Poltergeist",
-                "eeffect": "Spiele zu Beginn deines Zuges. Bewege alle Figuren und Marker (aber keine Hindernisse) auf bis zu 2 Felder, wie du willst. Dann kannst du eine oder alle Türen im Verlies schließen."
+                "effect": "Spiele zu Beginn deines Zuges. Bewege alle Figuren und Marker (aber keine Hindernisse) auf bis zu 2 Felder, wie du willst. Dann kannst du eine oder alle Türen im Verlies schließen."
             }
         ]
     },
@@ -1448,8 +1523,24 @@
         "name": "Trapmaster",
         "type": "Power",
         "threat_cost": 16,
-        "treachery_cost": "0/1",
-        "treachery_colour": "none/purple",
+        "discard_value": 5,
+        "effect": "Play this card at the start of your turn and place it face up in front of you. Lower the threat cost of the Trap cards you play by 1. Trap cards that deal damage deal an additional 2 wounds.",
+        "Overlord_tactic": "Think twice! Like most other Power cards, it is best played in the early stage of a quest. If you are the overlord, consider what has been explored and what still remains to be uncovered. Combo! Lowering the cost of all traps can be boosted even more by using monsters with the Trickster ability!",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Fallenmeister",
+                "effect": "Spiele diese Karte zu Beginn deines Zuges aus und lege sie offen vor dich ab. Verringere die Bedrohungskosten der Fallenkarten, die du ausspielst, um 1. Fallenkarten, die Schaden verursachen, fügen zusätzlich 2 Schader zu.",
+                "Overlord_tactic": "Überleg es dir gut! Wie die meisten anderen Machtkarten wird sie am besten in der Anfangsphase einer Quest gespielt. Bedenke, was bereits erforscht wurde und was noch aufgedeckt werden muss. Kombo! Die Senkung der Kosten aller Fallen kann durch den Einsatz von Monstern mit der Fähigkeit Fallensteller noch weiter gesteigert werden!"
+            }
+        ]
+    },
+    "trapmaster_treachery": {
+        "name": "Trapmaster",
+        "type": "Power",
+        "threat_cost": 16,
+        "treachery_cost": 1,
+        "treachery_colour": "purple",
         "discard_value": 5,
         "effect": "Play this card at the start of your turn and place it face up in front of you. Lower the threat cost of the Trap cards you play by 1. Trap cards that deal damage deal an additional 2 wounds.",
         "Overlord_tactic": "Think twice! Like most other Power cards, it is best played in the early stage of a quest. If you are the overlord, consider what has been explored and what still remains to be uncovered. Combo! Lowering the cost of all traps can be boosted even more by using monsters with the Trickster ability!",
