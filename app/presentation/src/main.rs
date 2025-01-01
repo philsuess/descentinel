@@ -1,6 +1,6 @@
-use leptos::*;
-use rand::Rng;
-use thaw::*;
+use leptos::prelude::*;
+/*use rand::Rng;
+use thaw::*;*/
 
 // thaw components at https://thaw-85fsrigp0-thaw.vercel.app/components/button
 
@@ -10,10 +10,10 @@ fn LogViewer(
     #[prop(into)]
     url: String,
 ) -> impl IntoView {
-    let mut cumulated_log = String::from("");
-    let (log_message, set_log_message) = create_signal(String::from("no log messages yet"));
+    let cumulated_log = String::from("");
+    let (log_message, set_log_message) = signal(String::from("no log messages yet"));
 
-    let resource = create_resource(
+    let resource = Resource::new(
         || (),
         move |_| {
             let url = url.clone(); // Clone the URL for use inside the async block
@@ -36,7 +36,7 @@ fn LogViewer(
         },
     );
 
-    create_effect(move |_| {
+    Effect::new(move |_| {
         if let Some(latest_log) = resource.get() {
             let cumulated_log = [cumulated_log.clone(), latest_log.clone()].join("\n");
             set_log_message.set(cumulated_log.clone());
@@ -47,7 +47,7 @@ fn LogViewer(
     view! {<p>{move || log_message.get()}</p>}
 }
 
-#[component]
+/*#[component]
 fn GameRoomImage(
     /// Image source
     #[prop(into)]
@@ -74,13 +74,13 @@ fn GameRoomImage(
     view! {
         <Image src=MaybeSignal::from(image_src) />
     }
-}
+}*/
 
 #[component]
 fn App() -> impl IntoView {
     view! {
         <LogViewer url=String::from("http://0.0.0.0.:3030/Q_SHORT_LOG") />
-        <GameRoomImage src=String::from("http://0.0.0.0:3030/Q_GAME_ROOM_FEED") />
+        //<GameRoomImage src=String::from("http://0.0.0.0:3030/Q_GAME_ROOM_FEED") />
     }
 }
 
