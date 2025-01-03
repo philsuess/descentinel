@@ -1,7 +1,12 @@
 [workspace]
 
-members = ["broadcast", "descentinel-types", "detect_card", "monitor", "presentation"]
-exclude = ["view"]
+members = [
+    "broadcast",
+    "descentinel-types",
+    "detect_card",
+    "monitor",
+    "presentation",
+]
 
 resolver = "2"
 
@@ -17,4 +22,8 @@ image = "0.25"
 lapin = "2"
 log = "0.4"
 serde_json = "1"
-thiserror = "1"
+thiserror = "2"
+tokio = { version = "1", features = ["macros", "time", "rt-multi-thread"] }
+
+#[patch.crates-io]
+#async-reactor-trait = { git = 'https://github.com/amqp-rs/reactor-trait.git' }
