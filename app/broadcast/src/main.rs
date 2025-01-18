@@ -131,14 +131,7 @@ async fn init_rabbitmq_listen(
     }
 
     // Start the warp server
-    start_warp_server(
-        args_clone,
-        webserver_address,
-        state,
-        queues,
-        broadcaster.clone(),
-    )
-    .await;
+    start_warp_server(webserver_address, queues, broadcaster.clone()).await;
 
     Ok(())
 }
@@ -201,55 +194,11 @@ fn message_stream(
 }
 
 async fn start_warp_server(
-    args: Arc<Args>,
     webserver_address: SocketAddr,
-    state: SharedState,
     queues: Vec<String>,
     broadcaster: Broadcaster,
 ) {
     let cors = warp::cors().allow_any_origin().allow_methods(vec!["GET"]);
-
-    let state_clone = state.clone();
-    let queues_clone_e = queues.clone();
-    let queue_routes = warp::path::param() // Capture any path parameter
-        .and(warp::get())
-        .and_then(move |queue_name: String| {
-            let state = state_clone.clone();
-
-            let queues_clone_a = queues_clone_e.clone();
-            let args_clone = args.clone();
-
-            async move {
-                if !queues_clone_a.contains(&queue_name) {
-                    return Err(warp::reject::not_found());
-                }
-
-                let state = state.lock().unwrap();
-                if queue_name.eq(&args_clone.game_room_feed_queue) {
-                    let response = if let Some(image_as_bytes) = state.get(&queue_name) {
-                        warp::reply::with_header(
-                            image_as_bytes.clone(),
-                            "Content-Type",
-                            "image/png",
-                        )
-                    } else {
-                        warp::reply::with_header(vec![], "Content-Type", "image/png")
-                    };
-                    Ok::<_, warp::Rejection>(response)
-                } else {
-                    let response = if let Some(content) = state.get(&queue_name) {
-                        warp::reply::with_header(
-                            content.clone(),
-                            "Content-Type",
-                            "application/text",
-                        )
-                    } else {
-                        warp::reply::with_header(vec![], "Content-Type", "application/text")
-                    };
-                    Ok::<_, warp::Rejection>(response)
-                }
-            }
-        });
 
     let queues_clone_d = queues.clone();
     let sse_route = warp::path::param() // Capture any path parameter
@@ -275,11 +224,6 @@ async fn start_warp_server(
             }
         });
 
-    // Define a default route for the root path
-    let default_route = warp::any().map(|| warp::reply::json(&"No queue specified".to_string()));
-
-    // Combine queue_routes and default_route
-    //let routes = queue_routes.or(default_route).with(cors);
     let routes = sse_route.with(cors);
 
     warp::serve(routes).run(webserver_address).await;
