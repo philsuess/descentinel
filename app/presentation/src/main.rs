@@ -1,10 +1,13 @@
+use base64::{engine::general_purpose::STANDARD as Base64Engine, Engine as _};
+use futures::StreamExt;
+use image::{DynamicImage, ImageFormat, ImageReader};
 use leptos::prelude::*;
-/*use rand::Rng;
-use thaw::*;*/
+use send_wrapper::SendWrapper;
+use std::io::Cursor;
 
 // thaw components at https://thaw-85fsrigp0-thaw.vercel.app/components/button
 
-#[component]
+/*#[component]
 fn LogViewer(
     /// Log source
     #[prop(into)]
@@ -45,66 +48,97 @@ fn LogViewer(
     });
 
     view! {<p>{move || log_message.get()}</p>}
+}*/
+
+fn convert_to_grey_image(image_buffer: &[u8]) -> DynamicImage {
+    ImageReader::new(Cursor::new(image_buffer))
+        .with_guessed_format()
+        .unwrap()
+        .decode()
+        .unwrap()
 }
 
-/*#[component]
+fn convert_to_array_of_u8(input: &str) -> Vec<u8> {
+    // Parse the input string as JSON
+    match serde_json::from_str::<serde_json::Value>(input) {
+        Ok(value) => {
+            if let Some(content) = value["content"].as_array() {
+                // Convert the JSON array into a Vec<u8>
+                content
+                    .iter()
+                    .filter_map(|v| v.as_u64().map(|n| n as u8))
+                    .collect()
+            } else {
+                vec![] // Return an empty Vec if "content" is not found
+            }
+        }
+        Err(err) => {
+            eprintln!("Failed to parse JSON: {:?}", err);
+            vec![]
+        }
+    }
+}
+
+fn convert_to_image(json_input: &str) -> DynamicImage {
+    convert_to_grey_image(&convert_to_array_of_u8(json_input))
+}
+
+fn encode_image_to_base64(image: DynamicImage) -> String {
+    let mut buffer = Cursor::new(Vec::new());
+    image
+        .write_to(&mut buffer, ImageFormat::Png)
+        .expect("Failed to write image to buffer");
+
+    let base64 = Base64Engine.encode(buffer.into_inner());
+    format!("data:image/png;base64,{}", base64)
+}
+
+#[component]
 fn GameRoomImage(
     /// Image source
     #[prop(into)]
     src: String,
-    src: String,
 ) -> impl IntoView {
-    let (image_src, set_image_src) = create_signal(src.clone());
+    let game_room_image = {
+        let mut source = SendWrapper::new(
+            gloo_net::eventsource::futures::EventSource::new(src.as_str())
+                .expect("couldn't connect to SSE stream"),
+        );
+        let signal = ReadSignal::from_stream_unsync(source.subscribe("message").unwrap().map(
+            |subscription| {
+                match subscription {
+                    Ok(subscription) => encode_image_to_base64(convert_to_image(
+                        subscription
+                            .1
+                            .data()
+                            .as_string()
+                            .expect("expected string value")
+                            .as_str(),
+                    )),
+                    Err(_) => "0".to_string(),
+                }
+            },
+        ));
 
-    let resource = create_resource(
-        || (),
-        |_| async {
-            gloo::timers::future::TimeoutFuture::new(50).await;
-        },
-    );
-
-    create_effect(move |prev| {
-        resource.track();
-        let mut rng = rand::thread_rng();
-        if prev.is_some() {
-            set_image_src.set([src.clone(), rng.gen::<u16>().to_string()].join("?"));
-            resource.refetch();
-        }
-    });
-
-    let (image_src, set_image_src) = create_signal(src.clone());
-
-    let resource = create_resource(
-        || (),
-        |_| async {
-            gloo::timers::future::TimeoutFuture::new(50).await;
-        },
-    );
-
-    create_effect(move |prev| {
-        resource.track();
-        let mut rng = rand::thread_rng();
-        if prev.is_some() {
-            set_image_src.set([src.clone(), rng.gen::<u16>().to_string()].join("?"));
-            resource.refetch();
-        }
-    });
+        on_cleanup(move || source.take().close());
+        signal
+    };
 
     view! {
-        <Image src=MaybeSignal::from(image_src) />
-        <Image src=MaybeSignal::from(image_src) />
+        <div>
+            <img src={move || game_room_image.get().unwrap_or_default()} alt="Game room" />
+        </div>
     }
-}*/
+}
 
 #[component]
 fn App() -> impl IntoView {
     view! {
-        <LogViewer url=String::from("http://0.0.0.0.:3030/Q_SHORT_LOG") />
-        //<GameRoomImage src=String::from("http://0.0.0.0:3030/Q_GAME_ROOM_FEED") />
+        //<LogViewer url=String::from("http://0.0.0.0.:3030/Q_SHORT_LOG") />
+        <GameRoomImage src=String::from("http://127.0.0.1:3030/Q_GAME_ROOM_FEED") />
     }
 }
 
 fn main() {
-    mount_to_body(|| view! { <App /> });
     mount_to_body(|| view! { <App /> });
 }
