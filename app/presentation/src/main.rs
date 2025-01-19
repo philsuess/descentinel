@@ -1,9 +1,11 @@
 use base64::{engine::general_purpose::STANDARD as Base64Engine, Engine as _};
 use futures::StreamExt;
 use image::{DynamicImage, ImageFormat, ImageReader};
-use leptos::prelude::*;
+use leptos::{prelude::*, tachys::view};
+use presentation::{read_overlord_cards_from_file, OverlordCard};
 use send_wrapper::SendWrapper;
-use std::io::Cursor;
+use serde::Deserialize;
+use std::{collections::HashMap, hash::Hash, io::Cursor};
 
 // thaw components at https://thaw-85fsrigp0-thaw.vercel.app/components/button
 
@@ -132,10 +134,73 @@ fn GameRoomImage(
 }
 
 #[component]
+fn CardSelector(
+    /// overlord cards
+    #[prop(into)]
+    keywords_to_ol_cards: HashMap<String, OverlordCard>,
+) -> impl IntoView {
+    let kw_to_ol_cards_clone = keywords_to_ol_cards.clone();
+    let (value, set_value) = signal("doom".to_string());
+    let overlord_card = move || kw_to_ol_cards_clone[value.get().as_str()].clone();
+    provide_context(value);
+    view! {
+      <select
+        on:change:target=move |ev| {
+          set_value.set(ev.target().value());
+        }
+        prop:value=move || value.get()
+      >
+      {keywords_to_ol_cards.iter().map(|(ol_keyword, card)| view! { cx,
+                <option value={ol_keyword.clone()}>{card.name.clone()}</option>
+            }).collect::<Vec<_>>()}
+      </select>
+      <OverlordCard keywords_to_ol_cards />
+    }
+}
+
+#[component]
+fn OverlordCard(
+    /// overlord cards
+    #[prop(into)]
+    keywords_to_ol_cards: HashMap<String, OverlordCard>,
+) -> impl IntoView {
+    let overlord_keyword = use_context::<ReadSignal<String>>()
+        .expect("to have found the overlord card keyword signal provided");
+    let overlord_card = move || keywords_to_ol_cards.get(&overlord_keyword.get()).cloned();
+    view! {
+        <div>
+        { move || {
+            if let Some(card) = overlord_card() {
+                view! {
+                    <div>
+                        <h2>{card.name}</h2>
+                        <p>{card.effect}</p>
+                    </div>
+                }
+            }
+            else {
+                view! {
+                    <div>
+                        <h2>{"card not found".to_string()}</h2>
+                        <p>{"".to_string()}</p>
+                    </div>
+                }
+            }
+        }}
+        </div>
+    }
+}
+
+#[component]
 fn App() -> impl IntoView {
+    let overlord_cards_json_file = include_bytes!("../../assets/overlord_cards.json");
+    let v: HashMap<String, OverlordCard> =
+        serde_json::from_slice(overlord_cards_json_file).expect("Invalid JSON");
+    leptos::logging::log!("{:?}", v);
     view! {
         //<LogViewer url=String::from("http://0.0.0.0.:3030/Q_SHORT_LOG") />
-        <GameRoomImage src=String::from("http://127.0.0.1:3030/Q_GAME_ROOM_FEED") />
+        //<GameRoomImage src=String::from("http://127.0.0.1:3030/Q_GAME_ROOM_FEED") />
+        <CardSelector keywords_to_ol_cards=v/>
     }
 }
 

@@ -3026,6 +3026,7 @@ dependencies = [
  "image",
  "leptos",
  "send_wrapper",
+ "serde",
  "serde_json",
 ]
 
