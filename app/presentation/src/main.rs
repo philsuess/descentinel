@@ -2,7 +2,7 @@ use assets::cards::{Language, OverlordCard};
 use base64::{engine::general_purpose::STANDARD as Base64Engine, Engine as _};
 use futures::StreamExt;
 use image::{DynamicImage, ImageFormat, ImageReader};
-use leptos::prelude::*;
+use leptos::{leptos_dom::logging, prelude::*};
 use send_wrapper::SendWrapper;
 use std::{collections::HashMap, io::Cursor};
 
@@ -47,6 +47,12 @@ fn encode_image_to_base64(image: DynamicImage) -> String {
 
     let base64 = Base64Engine.encode(buffer.into_inner());
     format!("data:image/png;base64,{}", base64)
+}
+
+fn convert_to_str(json_input: &str) -> String {
+    let arr = convert_to_array_of_u8(json_input);
+    //leptos::logging::log!("{:?}", arr);
+    String::from_utf8(arr).expect("Invalid UTF-8 sequence")
 }
 
 #[component]
@@ -103,12 +109,12 @@ fn OptionalGameRoomImage(
         >
             "Bild anzeigen / verstecken"
         </button>
-    <Show
-        when=move || { show_image.get() }
-        fallback=|| view! { <div></div> }
-    >
-        <GameRoomImage src=String::from("http://127.0.0.1:3030/Q_GAME_ROOM_FEED")/>
-    </Show>
+        <Show
+            when=move || { show_image.get() }
+            fallback=|| view! { <div></div> }
+        >
+            <GameRoomImage src=src.clone()/>
+        </Show>
     }
 }
 
@@ -118,14 +124,12 @@ fn CardSelector(
     #[prop(into)]
     keywords_to_ol_cards: HashMap<String, OverlordCard>,
 ) -> impl IntoView {
-    //let kw_to_ol_cards_clone = keywords_to_ol_cards.clone();
-    let (value, set_value) = signal("doom".to_string());
-    //let overlord_card = move || kw_to_ol_cards_clone[value.get().as_str()].clone();
+    let (value, set_value) = signal(Some("".to_string()));
     provide_context(value);
     view! {
       <select
         on:change:target=move |ev| {
-          set_value.set(ev.target().value());
+          set_value.set(Some(ev.target().value()));
         }
         prop:value=move || value.get()
       >
@@ -138,14 +142,72 @@ fn CardSelector(
 }
 
 #[component]
+fn CardListener(
+    /// overlord cards
+    #[prop(into)]
+    keywords_to_ol_cards: HashMap<String, OverlordCard>,
+    /// detected cards source
+    src: String,
+) -> impl IntoView {
+    let detected_overlord_card_string = {
+        let mut source = SendWrapper::new(
+            gloo_net::eventsource::futures::EventSource::new(src.as_str())
+                .expect("couldn't connect to SSE stream"),
+        );
+        let signal = ReadSignal::from_stream_unsync(source.subscribe("message").unwrap().map(
+            |subscription| {
+                match subscription {
+                    Ok(subscription) => convert_to_str(
+                        subscription
+                            .1
+                            .data()
+                            .as_string()
+                            .unwrap_or("no card".to_string())
+                            .as_str(),
+                    ),
+                    Err(_) => "".to_string(),
+                }
+            },
+        ));
+
+        on_cleanup(move || source.take().close());
+        signal
+    };
+
+    provide_context(detected_overlord_card_string);
+
+    view! {
+        <OverlordCard keywords_to_ol_cards />
+        <p>{move || detected_overlord_card_string.get().unwrap_or_default()}</p>
+    }
+}
+
+#[component]
 fn OverlordCard(
     /// overlord cards
     #[prop(into)]
     keywords_to_ol_cards: HashMap<String, OverlordCard>,
 ) -> impl IntoView {
-    let overlord_keyword = use_context::<ReadSignal<String>>()
+    fn convert_to_overlord_card_keyword(maybe_ol_keyword: Option<String>) -> String {
+        match maybe_ol_keyword {
+            Some(keyword) => match keyword.strip_prefix("overlordcard/") {
+                Some(value) => {
+                    leptos::logging::log!("got {}", value);
+                    value.to_string()
+                }
+                None => "".to_string(),
+            },
+            None => "".to_string(),
+        }
+    }
+
+    let overlord_keyword = use_context::<ReadSignal<Option<String>>>()
         .expect("to have found the overlord card keyword signal provided");
-    let overlord_card = move || keywords_to_ol_cards.get(&overlord_keyword.get()).cloned();
+    let overlord_card = move || {
+        keywords_to_ol_cards
+            .get(&convert_to_overlord_card_keyword(overlord_keyword.get()))
+            .cloned()
+    };
     view! {
         <div>
         { move || {
@@ -183,13 +245,16 @@ fn OverlordCard(
 #[component]
 fn App() -> impl IntoView {
     let overlord_cards_json_file = include_bytes!("../../assets/overlord_cards.json");
-    let keyword_to_ol_cards: HashMap<String, OverlordCard> =
+    let keywords_to_ol_cards: HashMap<String, OverlordCard> =
         serde_json::from_slice(overlord_cards_json_file).expect("Invalid JSON");
-    leptos::logging::log!("{:?}", keyword_to_ol_cards);
+    //leptos::logging::log!("{:?}", keywords_to_ol_cards);
     view! {
-        //<LogViewer url=String::from("http://0.0.0.0.:3030/Q_SHORT_LOG") />
-        <OptionalGameRoomImage src=String::from("http://127.0.0.1:3030/Q_GAME_ROOM_FEED") />
-        <CardSelector keywords_to_ol_cards=keyword_to_ol_cards/>
+        <div>
+            //<LogViewer url=String::from("http://0.0.0.0.:3030/Q_SHORT_LOG") />
+            <OptionalGameRoomImage src=String::from("http://127.0.0.1:3030/Q_GAME_ROOM_FEED") />
+            //<CardSelector keywords_to_ol_cards />
+            <CardListener keywords_to_ol_cards src=String::from("http://127.0.0.1:3030/Q_DETECTED_OL_CARDS") />
+        </div>
     }
 }
 
