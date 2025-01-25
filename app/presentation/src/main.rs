@@ -125,43 +125,28 @@ fn OverlordCard(
         <div>
         { move || {
             if let Some(card) = overlord_card() {
-                if let Some(card_de) = card.translate(Language::De) {
-                    let ol_tactic_de = match card_de.overlord_tactic {
-                        Some(value)=> format!("Overlord Taktik: {}", value),
-                        None => "".to_string(),
-                    };
-                    let heroes_tactic_de = match card_de.heroes_tactic {
-                        Some(value) => format!("Helden Taktik: {}", value),
-                        None => "".to_string(),
-                    };
-                    view! {
-                        <div>
-                            <h2>{card_de.name}</h2>
-                            <p>{format!("Effekt: {}",card_de.effect)}</p>
-                            <p>{ol_tactic_de}</p>
-                            <p>{heroes_tactic_de}</p>
-                        </div>
-                    }
-                }
-                else {
-                    let v = format!("Keine deutsche Übersetzung von {} vorhanden", card.name);
-                    view! {
-                        <div>
-                            <h2>{v}</h2>
-                            <p>{"".to_string()}</p>
-                            <p>{"".to_string()}</p>
-                            <p>{"".to_string()}</p>
-                        </div>
-                    }
+                view! {
+                    <div>
+                        <h2>{card.translate_name(Language::De)}</h2>
+                        <h3>Effekt</h3>
+                        <p>{card.translate_effect(Language::De)}</p>
+                        <h3>Overlord Taktik</h3>
+                        <p>{card.translate_overlord_tactic(Language::De)}</p>
+                        <h3>Heldentaktik</h3>
+                        <p>{card.translate_heroes_tactic(Language::De)}</p>
+                    </div>
                 }
             }
             else {
                 view! {
                     <div>
-                        <h2>{"card not found".to_string()}</h2>
-                        <p>{"".to_string()}</p>
-                        <p>{"".to_string()}</p>
-                            <p>{"".to_string()}</p>
+                        <h2>{Some("".to_string())}</h2>
+                        <h3>Effekt</h3>
+                        <p>{Some("".to_string())}</p>
+                        <h3>Overlord Taktik</h3>
+                        <p>{Some("".to_string())}</p>
+                        <h3>Heldentaktik</h3>
+                        <p>{Some("".to_string())}</p>
                     </div>
                 }
             }
