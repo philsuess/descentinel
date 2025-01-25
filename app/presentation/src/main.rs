@@ -88,6 +88,31 @@ fn GameRoomImage(
 }
 
 #[component]
+fn OptionalGameRoomImage(
+    /// Image source
+    #[prop(into)]
+    src: String,
+) -> impl IntoView {
+    let (show_image, set_show_image) = signal(false);
+
+    view! {
+        <button
+            on:click=move |_| {
+                *set_show_image.write() = !show_image.get();
+            }
+        >
+            "Bild anzeigen / verstecken"
+        </button>
+    <Show
+        when=move || { show_image.get() }
+        fallback=|| view! { <div></div> }
+    >
+        <GameRoomImage src=String::from("http://127.0.0.1:3030/Q_GAME_ROOM_FEED")/>
+    </Show>
+    }
+}
+
+#[component]
 fn CardSelector(
     /// overlord cards
     #[prop(into)]
@@ -163,7 +188,7 @@ fn App() -> impl IntoView {
     leptos::logging::log!("{:?}", keyword_to_ol_cards);
     view! {
         //<LogViewer url=String::from("http://0.0.0.0.:3030/Q_SHORT_LOG") />
-        //<GameRoomImage src=String::from("http://127.0.0.1:3030/Q_GAME_ROOM_FEED") />
+        <OptionalGameRoomImage src=String::from("http://127.0.0.1:3030/Q_GAME_ROOM_FEED") />
         <CardSelector keywords_to_ol_cards=keyword_to_ol_cards/>
     }
 }
