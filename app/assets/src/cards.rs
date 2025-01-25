@@ -67,6 +67,35 @@ pub struct OverlordCardTranslation {
     pub heroes_tactic: Option<String>,
 }
 
+impl OverlordCard {
+    pub fn translate(&self, language: Language) -> Option<OverlordCardTranslation> {
+        self.translations
+            .iter()
+            .find(|&translation| matches!(&translation.language, language))
+            .cloned()
+    }
+
+    pub fn translate_name(&self, language: Language) -> Option<String> {
+        let translation = self.translate(language)?;
+        Some(translation.name)
+    }
+
+    pub fn translate_effect(&self, language: Language) -> Option<String> {
+        let translation = self.translate(language)?;
+        Some(translation.effect)
+    }
+
+    pub fn translate_overlord_tactic(&self, language: Language) -> Option<String> {
+        let translation = self.translate(language)?;
+        translation.overlord_tactic
+    }
+
+    pub fn translate_heroes_tactic(&self, language: Language) -> Option<String> {
+        let translation = self.translate(language)?;
+        translation.heroes_tactic
+    }
+}
+
 impl<'de> Deserialize<'de> for OverlordCard {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where

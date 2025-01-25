@@ -2,11 +2,11 @@ This is a warp server that broadcasts all backend content, specifically the last
 
 # Routes
 
-- `health`: am I dead?
-- `descentinel/`
-  - `log`: last log entry
-  - `game_room_image`: last image from game room
-  - `detected_ol_card`: top secret last detected OL card
+Each route is served by server-sent events.
+
+- `Q_GAMEQ_GAME_ROOM_FEED`: current image of camera capture
+- `Q_SHORT_LOG`: logs
+- `Q_DETECTED_OL_CARDS`: last detected OL card
 
 # Dev helper
 
