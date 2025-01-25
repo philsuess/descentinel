@@ -6,11 +6,12 @@ authors.workspace = true
 description.workspace = true
 
 [dependencies]
+assets = { path = "../assets" }
 base64 = "0.22.1"
 futures = "0.3.31"
 gloo-net = "0.6.0"
 image.workspace = true
 leptos = { version = "0.7.2", features = ["csr"] }
 send_wrapper = "0.6.0"
-serde = { version = "1", features = ["derive"] }
+serde.workspace = true
 serde_json.workspace = true

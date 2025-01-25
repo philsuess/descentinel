@@ -1,56 +1,10 @@
+use assets::cards::{Language, OverlordCard};
 use base64::{engine::general_purpose::STANDARD as Base64Engine, Engine as _};
 use futures::StreamExt;
 use image::{DynamicImage, ImageFormat, ImageReader};
-use leptos::{prelude::*, tachys::view};
-use presentation::{read_overlord_cards_from_file, OverlordCard};
+use leptos::prelude::*;
 use send_wrapper::SendWrapper;
-use serde::Deserialize;
-use std::{collections::HashMap, hash::Hash, io::Cursor};
-
-// thaw components at https://thaw-85fsrigp0-thaw.vercel.app/components/button
-
-/*#[component]
-fn LogViewer(
-    /// Log source
-    #[prop(into)]
-    url: String,
-) -> impl IntoView {
-    let cumulated_log = String::from("");
-    let (log_message, set_log_message) = signal(String::from("no log messages yet"));
-
-    let resource = Resource::new(
-        || (),
-        move |_| {
-            let url = url.clone(); // Clone the URL for use inside the async block
-            async move {
-                // Perform a GET request to the provided URL
-                match reqwest::get(&url).await {
-                    Ok(response) => {
-                        if response.status().is_success() {
-                            response
-                                .text()
-                                .await
-                                .unwrap_or_else(|_| "Failed to read response".into())
-                        } else {
-                            format!("Request failed with status: {}", response.status())
-                        }
-                    }
-                    Err(err) => format!("Failed to make request: {}", err),
-                }
-            }
-        },
-    );
-
-    Effect::new(move |_| {
-        if let Some(latest_log) = resource.get() {
-            let cumulated_log = [cumulated_log.clone(), latest_log.clone()].join("\n");
-            set_log_message.set(cumulated_log.clone());
-            resource.refetch();
-        }
-    });
-
-    view! {<p>{move || log_message.get()}</p>}
-}*/
+use std::{collections::HashMap, io::Cursor};
 
 fn convert_to_grey_image(image_buffer: &[u8]) -> DynamicImage {
     ImageReader::new(Cursor::new(image_buffer))
@@ -139,9 +93,9 @@ fn CardSelector(
     #[prop(into)]
     keywords_to_ol_cards: HashMap<String, OverlordCard>,
 ) -> impl IntoView {
-    let kw_to_ol_cards_clone = keywords_to_ol_cards.clone();
+    //let kw_to_ol_cards_clone = keywords_to_ol_cards.clone();
     let (value, set_value) = signal("doom".to_string());
-    let overlord_card = move || kw_to_ol_cards_clone[value.get().as_str()].clone();
+    //let overlord_card = move || kw_to_ol_cards_clone[value.get().as_str()].clone();
     provide_context(value);
     view! {
       <select
@@ -171,11 +125,34 @@ fn OverlordCard(
         <div>
         { move || {
             if let Some(card) = overlord_card() {
-                view! {
-                    <div>
-                        <h2>{card.name}</h2>
-                        <p>{card.effect}</p>
-                    </div>
+                if let Some(card_de) = card.translate(Language::De) {
+                    let ol_tactic_de = match card_de.overlord_tactic {
+                        Some(value)=> format!("Overlord Taktik: {}", value),
+                        None => "".to_string(),
+                    };
+                    let heroes_tactic_de = match card_de.heroes_tactic {
+                        Some(value) => format!("Helden Taktik: {}", value),
+                        None => "".to_string(),
+                    };
+                    view! {
+                        <div>
+                            <h2>{card_de.name}</h2>
+                            <p>{format!("Effekt: {}",card_de.effect)}</p>
+                            <p>{ol_tactic_de}</p>
+                            <p>{heroes_tactic_de}</p>
+                        </div>
+                    }
+                }
+                else {
+                    let v = format!("Keine deutsche Übersetzung von {} vorhanden", card.name);
+                    view! {
+                        <div>
+                            <h2>{v}</h2>
+                            <p>{"".to_string()}</p>
+                            <p>{"".to_string()}</p>
+                            <p>{"".to_string()}</p>
+                        </div>
+                    }
                 }
             }
             else {
@@ -183,6 +160,8 @@ fn OverlordCard(
                     <div>
                         <h2>{"card not found".to_string()}</h2>
                         <p>{"".to_string()}</p>
+                        <p>{"".to_string()}</p>
+                            <p>{"".to_string()}</p>
                     </div>
                 }
             }
@@ -194,13 +173,13 @@ fn OverlordCard(
 #[component]
 fn App() -> impl IntoView {
     let overlord_cards_json_file = include_bytes!("../../assets/overlord_cards.json");
-    let v: HashMap<String, OverlordCard> =
+    let keyword_to_ol_cards: HashMap<String, OverlordCard> =
         serde_json::from_slice(overlord_cards_json_file).expect("Invalid JSON");
-    leptos::logging::log!("{:?}", v);
+    leptos::logging::log!("{:?}", keyword_to_ol_cards);
     view! {
         //<LogViewer url=String::from("http://0.0.0.0.:3030/Q_SHORT_LOG") />
         //<GameRoomImage src=String::from("http://127.0.0.1:3030/Q_GAME_ROOM_FEED") />
-        <CardSelector keywords_to_ol_cards=v/>
+        <CardSelector keywords_to_ol_cards=keyword_to_ol_cards/>
     }
 }
 
