@@ -1,14 +1,10 @@
 [package]
-name = "descentinel-types"
+name = "assets"
 edition = "2021"
 version.workspace = true
 authors.workspace = true
 description.workspace = true
 
 [dependencies]
-futures = { version = "0.3", default-features = true }
-lapin.workspace = true
 serde.workspace = true
 serde_json.workspace = true
-thiserror.workspace = true
-tokio.workspace = true

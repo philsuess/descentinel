@@ -1,6 +1,7 @@
 [workspace]
 
 members = [
+    "assets",
     "broadcast",
     "descentinel-types",
     "detect_card",
@@ -21,9 +22,7 @@ env_logger = "0.11"
 image = "0.25"
 lapin = "2"
 log = "0.4"
+serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 thiserror = "2"
 tokio = { version = "1", features = ["macros", "time", "rt-multi-thread"] }
-
-#[patch.crates-io]
-#async-reactor-trait = { git = 'https://github.com/amqp-rs/reactor-trait.git' }

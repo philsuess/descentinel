@@ -261,6 +261,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "assets"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "async-channel"
 version = "2.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3020,6 +3028,7 @@ dependencies = [
 name = "presentation"
 version = "0.1.0"
 dependencies = [
+ "assets",
  "base64 0.22.1",
  "futures",
  "gloo-net",
