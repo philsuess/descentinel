@@ -247,13 +247,27 @@ fn App() -> impl IntoView {
     let overlord_cards_json_file = include_bytes!("../../assets/overlord_cards.json");
     let keywords_to_ol_cards: HashMap<String, OverlordCard> =
         serde_json::from_slice(overlord_cards_json_file).expect("Invalid JSON");
+
+    fn get_server_name() -> String {
+        if cfg!(feature = "production") {
+            return String::from("descentinel");
+        }
+
+        String::from("127.0.0.1")
+    }
+
+    let game_room_feed =
+        "http://{server_name}:3030/Q_GAME_ROOM_FEED".replace("{server_name}", &get_server_name());
+    let detected_ol_feed = "http://{server_name}:3030/Q_DETECTED_OL_CARDS"
+        .replace("{server_name}", &get_server_name());
+
     //leptos::logging::log!("{:?}", keywords_to_ol_cards);
     view! {
         <div>
             //<LogViewer url=String::from("http://0.0.0.0.:3030/Q_SHORT_LOG") />
-            <OptionalGameRoomImage src=String::from("http://127.0.0.1:3030/Q_GAME_ROOM_FEED") />
+            <OptionalGameRoomImage src=game_room_feed />
             //<CardSelector keywords_to_ol_cards />
-            <CardListener keywords_to_ol_cards src=String::from("http://127.0.0.1:3030/Q_DETECTED_OL_CARDS") />
+            <CardListener keywords_to_ol_cards src=detected_ol_feed />
         </div>
     }
 }
