@@ -17,7 +17,7 @@ Run this on build computer (use `bash` instead of `sh` on ubuntu)
 Run this on the pi
 
 1. `sh run_on_pi.sh`
-1. Visit `http://raspberrypi/` or `http://IP_ADDRESS_OF_PI_IN_LOCAL_NETWORK` in browser connected to same wifi as the pi
+1. Visit `http://descentinel/` or `http://IP_ADDRESS_OF_PI_IN_LOCAL_NETWORK` in browser connected to same wifi as the pi
 
 # Deploy locally
 

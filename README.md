@@ -85,6 +85,7 @@ Why?
 How?
 - rust
 - warp
+- server-sent events (SSE)
 
 ## presentation: frontend for the browser
 
@@ -95,7 +96,7 @@ Why?
 - Game information should be viewable on any device.
 
 How?
-- leptos
+- leptos CSR
 
 
 ---
