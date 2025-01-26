@@ -23,23 +23,7 @@ sudo systemctl enable container-rabbitmq.service
 sudo systemctl enable container-detect_card.service
 sudo systemctl enable container-broadcast.service
 sudo systemctl enable descentinel-monitor.service
-
 cd ..
-
-sudo rm -r --force  descentinel/
-git clone https://github.com/philsuess/descentinel
-cd descentinel/app
-#sudo sh setup_frontend.sh
-
-#sudo bash ./create_pod.sh
-
-#cd ../../
-#cd mailbox
-#for i in 1 2 3 4 5; do sudo ./monitor && break || sleep 15; done
-
-
-# is_pod_running = 0
-# while is_pod_running == 0; do sleep(2) && pod_running=$(expr $(sudo podman pod ps | grep "descentinel" | grep -c "Running") == 1); done
-#sudo ./monitor
+sudo sh setup_frontend.sh
 
 sudo reboot 

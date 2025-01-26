@@ -6,7 +6,7 @@ Requires=container-rabbitmq.service
 
 [Service]
 Type=simple
-ExecStart=/bin/monitor -i 250
+ExecStart=/bin/monitor -i 25
 Restart=on-failure
 RestartSec=20
 

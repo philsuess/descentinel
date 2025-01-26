@@ -22,6 +22,6 @@ futures = { version = "0.3", default-features = true }
 image.workspace = true
 lapin.workspace = true
 log.workspace = true
-rxing = "0.6.1"
+rxing = "0.7.1"
 thiserror.workspace = true
 tokio.workspace = true
