@@ -2,6 +2,7 @@
     "aim": {
         "name": "Aim",
         "type": "Event",
+        "occurences": 4,
         "threat_cost": 2,
         "discard_value": 1,
         "effect": "Play immediately after declaring an attack but before rolling any dice. Your attack is an aimed attack.",
@@ -20,6 +21,7 @@
     "alarm": {
         "name": "Alarm",
         "type": "Trap (Chest)",
+        "occurences": 2,
         "threat_cost": 13,
         "treachery_cost": 2,
         "treachery_colour": "purple",
@@ -36,6 +38,7 @@
     "all_concealing_shadows": {
         "name": "All-Concealing Shadows",
         "type": "Power",
+        "occurences": 1,
         "threat_cost": 17,
         "treachery_cost": 2,
         "treachery_colour": "green",
@@ -52,6 +55,7 @@
     "ambush": {
         "name": "Ambush",
         "type": "Event",
+        "occurences": 2,
         "threat_cost": 5,
         "treachery_cost": 2,
         "treachery_colour": "green",
@@ -68,6 +72,7 @@
     "animate_weapons": {
         "name": "Animate Weapons",
         "type": "Trap",
+        "occurences": 1,
         "threat_cost": 20,
         "treachery_cost": 2,
         "treachery_colour": "purple",
@@ -84,6 +89,7 @@
     "bane_spiders_nest": {
         "name": "Bane Spiders Nest",
         "type": "Spawn",
+        "occurences": 2,
         "threat_cost": 5,
         "treachery_cost": 1,
         "treachery_colour": "red",
@@ -100,6 +106,7 @@
     "bane_spiders_swarm": {
         "name": "Bane Spiders Swarm",
         "type": "Spawn",
+        "occurences": 3,
         "threat_cost": 4,
         "discard_value": 2,
         "effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Bane Spiders and 1 Master Bane Spider, following all of the normal rules for spawning monsters.",
@@ -118,6 +125,7 @@
     "beastman_war_party": {
         "name": "Beastmen War Party",
         "type": "Spawn",
+        "occurences": 3,
         "threat_cost": 4,
         "discard_value": 2,
         "effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Beastmen and 1 Master Beastman, following all of the normal rules for spawning monsters.",
@@ -133,9 +141,40 @@
             }
         ]
     },
+    "black_order": {
+        "name": "Black Order",
+        "type": "Spawn",
+        "occurences": 1,
+        "threat_cost": 5,
+        "discard_value": 2,
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 1 Master Dark Priest and 1 Dark Priest, following all of the normal rules for spawning monsters.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Schwarze Ordnung",
+                "effect": "Spiele diese Karte aus, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 1 Dunkler Priester und 1 Elite Dunkler Priester nach den normalen Regeln entstehen lassen."
+            }
+        ]
+    },
+    "blood_ape_tribe": {
+        "name": "Blood Ape Tribe",
+        "type": "Spawn",
+        "occurences": 1,
+        "threat_cost": 5,
+        "discard_value": 2,
+        "effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Blood Apes, following all of the normal rules for spawning monsters.",
+        "translations": [
+            {
+                "language": "de",
+                "name": "Blutaffenstamm",
+                "effect": "Spiele diese Karte aus, bevor du eines deiner Monster für die Runde aktivierst. Du kannst 2 Blutaffen nach den normalen Regeln entstehen lassen."
+            }
+        ]
+    },
     "brilliant_commander": {
         "name": "Brilliant Commander",
         "type": "Power",
+        "occurences": 2,
         "threat_cost": 18,
         "discard_value": 5,
         "effect": "Play this card at the start of your turn and place it face up in front of you. When you reveal a new area, upgrade any 1 monster in that area to a master of that monster's type.",
@@ -152,6 +191,7 @@
     "charge": {
         "name": "Charge",
         "type": "Event",
+        "occurences": 3,
         "threat_cost": 4,
         "discard_value": 1,
         "effect": "Play when you activate a monster. Double the monster's speed for this activation.",
@@ -170,6 +210,7 @@
     "cloud_of_gas": {
         "name": "Cloud of Gas",
         "type": "Trap (Door)",
+        "occurences": 1,
         "threat_cost": 10,
         "treachery_cost": 3,
         "treachery_colour": "purple",
@@ -186,6 +227,7 @@
     "critical_strike": {
         "name": "Critical Strike",
         "type": "Event",
+        "occurences": 2,
         "threat_cost": 0,
         "treachery_cost": 1,
         "treachery_colour": "green",
@@ -202,6 +244,7 @@
     "crushing_block": {
         "name": "Crushing Block",
         "type": "Trap (Space)",
+        "occurences": 3,
         "threat_cost": 7,
         "discard_value": 3,
         "effect": "Play this card when a hero moves into an empty space that is not adjacent to any obstacles. Place a one space rubble token on that space. The hero suffers 4 wounds (ignoring armor), reduced by 1 wound for each surge he rolls on 4 power dice. Then, move the hero to an adjacent space of your choice.",
@@ -220,6 +263,7 @@
     "crushing_blow": {
         "name": "Crushing Blow",
         "type": "Event",
+        "occurences": 2,
         "threat_cost": 0,
         "treachery_cost": 1,
         "treachery_colour": "green",
@@ -236,6 +280,7 @@
     "curse_of_the_ancients": {
         "name": "Curse of the Ancients",
         "type": "Trap (Door)",
+        "occurences": 1,
         "threat_cost": 11,
         "treachery_cost": 1,
         "treachery_colour": "purple",
@@ -252,6 +297,7 @@
     "curse_of_the_monkey_god": {
         "name": "Curse of the Monkey God",
         "type": "Trap (Chest)",
+        "occurences": 2,
         "threat_cost": 11,
         "discard_value": 4,
         "effect": "Play this card when a hero opens a chest. The hero player must roll a power die. If he rolls blank, nothing happens. If he does not roll a blank, the hero is transformed into a monkey.",
@@ -266,6 +312,7 @@
     "curse_of_the_monkey_god_treachery": {
         "name": "Curse of the Monkey God",
         "type": "Trap (Chest)",
+        "occurences": 1,
         "threat_cost": 11,
         "treachery_cost": 1,
         "treachery_colour": "purple",
@@ -282,6 +329,7 @@
     "cursed_treasure": {
         "name": "Cursed Treasure",
         "type": "Trap (Chest)",
+        "occurences": 2,
         "threat_cost": 7,
         "treachery_cost": 1,
         "treachery_colour": "purple",
@@ -298,6 +346,7 @@
     "dance_of_the_monkey_god": {
         "name": "Dance of the Monkey God",
         "type": "Trap",
+        "occurences": 1,
         "threat_cost": 25,
         "treachery_cost": 3,
         "treachery_colour": "purple",
@@ -314,6 +363,7 @@
     "danger": {
         "name": "Danger",
         "type": "Event",
+        "occurences": 1,
         "threat_cost": 0,
         "discard_value": 10,
         "effect": "This card has no effect. It can only be discarded for threat.",
@@ -328,6 +378,7 @@
     "danger_treachery": {
         "name": "Danger",
         "type": "Event",
+        "occurences": 2,
         "threat_cost": 0,
         "treachery_cost": 1,
         "treachery_colour": "green",
@@ -344,6 +395,7 @@
     "dark_armor": {
         "name": "Dark Armor",
         "type": "Power",
+        "occurences": 1,
         "threat_cost": 19,
         "treachery_cost": 1,
         "treachery_colour": "red",
@@ -360,6 +412,7 @@
     "dark_balm": {
         "name": "Dark Balm",
         "type": "Event",
+        "occurences": 1,
         "threat_cost": 5,
         "discard_value": 2,
         "effect": "Play this card at the start of your turn to remove all effect tokens from a monster of your choice.",
@@ -374,6 +427,7 @@
     "dark_balm_treachery": {
         "name": "Dark Balm",
         "type": "Event",
+        "occurences": 1,
         "threat_cost": 5,
         "treachery_cost": 1,
         "treachery_colour": "green",
@@ -390,6 +444,7 @@
     "dark_brothers": {
         "name": "Dark Brothers",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 6,
         "treachery_cost": 2,
         "treachery_colour": "red",
@@ -406,6 +461,7 @@
     "dark_charm": {
         "name": "Dark Charm",
         "type": "Trap",
+        "occurences": 2,
         "threat_cost": 8,
         "discard_value": 2,
         "effect": "Play at the start of your turn and choose one hero. The chosen hero player must roll one power die. If the result is blank, nothing happens. If the result is not a blank, the hero must make one attack that you declare. This attack may target any hero, including the attacking hero, but is subject to the normal attack rules, including range and line of sight.",
@@ -422,6 +478,7 @@
     "dark_charm_treachery": {
         "name": "Dark Charm",
         "type": "Trap",
+        "occurences": 1,
         "threat_cost": 8,
         "treachery_cost": 1,
         "treachery_colour": "purple",
@@ -440,6 +497,7 @@
     "dark_masters": {
         "name": "Dark Masters",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 6,
         "treachery_cost": 2,
         "treachery_colour": "red",
@@ -456,6 +514,7 @@
     "dark_power": {
         "name": "Dark Power",
         "type": "Event",
+        "occurences": 2,
         "threat_cost": 3,
         "treachery_cost": 1,
         "treachery_colour": "green",
@@ -472,6 +531,7 @@
     "dark_relic": {
         "name": "Dark Relic",
         "type": "Trap (Treasure)",
+        "occurences": 2,
         "threat_cost": 0,
         "treachery_cost": 2,
         "treachery_colour": "purple",
@@ -488,6 +548,7 @@
     "dark_servant": {
         "name": "Dark Servant",
         "type": "Event",
+        "occurences": 2,
         "threat_cost": 8,
         "treachery_cost": 1,
         "treachery_colour": "red",
@@ -504,6 +565,7 @@
     "death_on_the_wing": {
         "name": "Death on the Wing",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 5,
         "treachery_cost": 1,
         "treachery_colour": "red",
@@ -520,6 +582,7 @@
     "dire_warnings": {
         "name": "Dire Warnings",
         "type": "Power",
+        "occurences": 1,
         "threat_cost": 18,
         "treachery_cost": 2,
         "treachery_colour": "green",
@@ -536,6 +599,7 @@
     "dodge": {
         "name": "Dodge",
         "type": "Event",
+        "occurences": 4,
         "threat_cost": 2,
         "discard_value": 1,
         "effect": "Play after a hero has attacked a monster. The monster dodges the attack.",
@@ -552,6 +616,7 @@
     "dogs_of_war": {
         "name": "Dogs of War",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 6,
         "treachery_cost": 2,
         "treachery_colour": "red",
@@ -568,6 +633,7 @@
     "doom": {
         "name": "DOOM!",
         "type": "Power",
+        "occurences": 2,
         "threat_cost": 20,
         "discard_value": 5,
         "effect": "Play this card at the start of your turn and place it face up in front of you. All of your monsters roll 1 extra power die when attacking.",
@@ -584,6 +650,7 @@
     "doom_treachery": {
         "name": "DOOM!",
         "type": "Power",
+        "occurences": 1,
         "threat_cost": 20,
         "treachery_cost": 1,
         "treachery_colour": "red",
@@ -602,6 +669,7 @@
     "drinkers_of_blood": {
         "name": "Drinkers of Blood",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 5,
         "treachery_cost": 1,
         "treachery_colour": "red",
@@ -618,6 +686,7 @@
     "drugged_darts": {
         "name": "Drugged Darts",
         "type": "Trap (Door)",
+        "occurences": 1,
         "threat_cost": 9,
         "treachery_cost": 2,
         "treachery_colour": "purple",
@@ -634,6 +703,7 @@
     "elite_beastman_war_party": {
         "name": "Elite Beastman War Party",
         "type": "Spawn",
+        "occurences": 2,
         "threat_cost": 6,
         "treachery_cost": 2,
         "treachery_colour": "red",
@@ -650,6 +720,7 @@
     "empower": {
         "name": "Empower",
         "type": "Event",
+        "occurences": 1,
         "threat_cost": 0,
         "treachery_cost": 1,
         "treachery_colour": "green",
@@ -666,6 +737,7 @@
     "enraged": {
         "name": "Enraged",
         "type": "Event",
+        "occurences": 2,
         "threat_cost": 6,
         "treachery_cost": 1,
         "treachery_colour": "green",
@@ -684,6 +756,7 @@
     "envy": {
         "name": "Envy",
         "type": "Power",
+        "occurences": 1,
         "threat_cost": 15,
         "treachery_cost": 2,
         "treachery_colour": "green",
@@ -700,6 +773,7 @@
     "evil_genius": {
         "name": "Evil Genius",
         "type": "Power",
+        "occurences": 2,
         "threat_cost": 25,
         "discard_value": 5,
         "effect": "Play this card at the start of your turn and place it face up in front of you. Draw 1 extra overlord card each turn.",
@@ -718,6 +792,7 @@
     "explosive_door": {
         "name": "Explosive Door",
         "type": "Trap (Door)",
+        "occurences": 2,
         "threat_cost": 9,
         "discard_value": 3,
         "effect": "Play this card when a hero opens a door. Every hero adjacent to the door suffers 4 wounds (ignoring armor). Each affected hero may roll 4 power dice and reduce the effect by 1 wound for each surge he rolls.",
@@ -736,6 +811,7 @@
     "explosive_rune": {
         "name": "Explosive Rune",
         "type": "Trap (Chest)",
+        "occurences": 3,
         "threat_cost": 12,
         "discard_value": 4,
         "effect": "Play this card when a hero opens a chest. The hero that opened the chest, as well as every hero adjacent to the chest, suffers 6 wounds (ignoring armor). Each affected hero may roll 3 power dice and reduce the effect by 2 wounds for each surge he rolls.",
@@ -754,6 +830,7 @@
     "ferrox_tribe": {
         "name": "Ferrox Tribe",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 5,
         "discard_value": 2,
         "effect": "Play this card before activating any of your monsters for the turn. You may spawn 1 Ferrox and 1 Master Ferrox, following all of the normal rules for spawning monsters.",
@@ -768,6 +845,7 @@
     "fire_runes": {
         "name": "Fire Runes",
         "type": "Trap (Chest)",
+        "occurences": 1,
         "threat_cost": 9,
         "treachery_cost": 1,
         "treachery_colour": "purple",
@@ -784,6 +862,7 @@
     "frozen_path": {
         "name": "Frozen Path",
         "type": "Trap",
+        "occurences": 2,
         "threat_cost": 3,
         "treachery_cost": 1,
         "treachery_colour": "purple",
@@ -800,6 +879,7 @@
     "gluttony": {
         "name": "Gluttony",
         "type": "Power",
+        "occurences": 1,
         "threat_cost": 22,
         "treachery_cost": 2,
         "treachery_colour": "purple",
@@ -816,6 +896,7 @@
     "greed": {
         "name": "Greed",
         "type": "Power",
+        "occurences": 1,
         "threat_cost": 18,
         "treachery_cost": 2,
         "treachery_colour": "purple",
@@ -832,6 +913,7 @@
     "guiding_forces": {
         "name": "Guiding Force",
         "type": "Power",
+        "occurences": 1,
         "threat_cost": 17,
         "treachery_cost": 2,
         "treachery_colour": "green",
@@ -848,6 +930,7 @@
     "gust_of_winds": {
         "name": "Gust of Winds",
         "type": "Event",
+        "occurences": 3,
         "threat_cost": 6,
         "discard_value": 2,
         "effect": "Play at the start of your turn. Until the start of your next turn, the heroes' torches are blown out and they cannot trace line of sight farther than 5 spaces away. This card does not affect monsters' line of sight.",
@@ -864,6 +947,7 @@
     "hell_hound_pack": {
         "name": "Hell Hound Pack",
         "type": "Spawn",
+        "occurences": 2,
         "threat_cost": 5,
         "discard_value": 2,
         "effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Hell Hounds, following all of the normal rules for spawning monsters.",
@@ -882,6 +966,7 @@
     "hordes_of_the_things": {
         "name": "Hordes of the Things",
         "type": "Power",
+        "occurences": 3,
         "threat_cost": 18,
         "discard_value": 5,
         "effect": "Play this card at the start of your turn and place it face up in front of you. When you reveal a new area, place your choice of: 2 extra Beastmen, 2 extra Skeletons, or 2 extra Bane Spiders adjacent to any other monster in the revealed area.",
@@ -889,7 +974,7 @@
         "translations": [
             {
                 "language": "de",
-                "name": "Horden der Dinge",
+                "name": "Monsterhorden",
                 "effect": "Spiele diese Karte zu Beginn Deines Zuges und lege sie offen vor Dir ab. Wenn Du ein neues Gebiet aufdeckst, platziere eines der folgenden angrenzend an ein beliebiges anderes Monster im neu aufgedeckten Gebiet: 2 zusätzliche Tiermenschen, 2 zusätzliche Skelette oder 2 zusätzlichen Monsterspinnen.",
                 "Overlord_tactic": "Wie die meisten anderen Machtkarten wird sie am besten in der frühen Phase einer Quest gespielt. Überprüfe, wie viele Gebiete bisher erkundet wurden und wie viele noch nicht aufgedeckt wurden. Wenn 4 oder mehr Bereiche noch nicht aufgedeckt sind, könnte es sich lohnen. Wenn nicht, hat diese Karte immer noch einen guten Abwurfwert von 5. \n\nWenn sich in einem neu aufgedeckten Gebiet keine Monster befinden, kann ich dann zusätzliche Monster entstehen lassen?\nNein.\n\nKann der Overlord das zweite von dieser Karte gewährte Monster nur benachbart zum ersten Monster platzieren, das wiederum benachbart zu einem aufgedeckten Monster ist? Darf der Overlord die zusätzlichen Monster außerhalb des neu aufgedeckten Gebiets platzieren, wenn eines der neu aufgedeckten Monster an ein zuvor aufgedecktes Gebiet angrenzt?\nJedes Monster wird einzeln neben ein aufgedecktes Monster gelegt. Jedes Monster muss neben einem Monster platziert werden, das auf dem Spielplan war, bevor der Overlord den diese Karte anwenden kann."
             }
@@ -898,6 +983,7 @@
     "host_of_haunts": {
         "name": "Host of Haunts",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 5,
         "treachery_cost": 1,
         "treachery_colour": "red",
@@ -914,6 +1000,7 @@
     "jungle_drums": {
         "name": "Jungle Drums",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 6,
         "treachery_cost": 1,
         "treachery_colour": "red",
@@ -930,6 +1017,7 @@
     "killer_chest": {
         "name": "Killer Chest",
         "type": "Trap (Chest)",
+        "occurences": 1,
         "threat_cost": 12,
         "treachery_cost": 2,
         "treachery_colour": "purple",
@@ -946,6 +1034,7 @@
     "kobold_horde": {
         "name": "Kobold Horde",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 7,
         "treachery_cost": 1,
         "treachery_colour": "red",
@@ -962,6 +1051,7 @@
     "kobold_swarm": {
         "name": "Kobold Swarm",
         "type": "Spawn",
+        "occurences": 2,
         "threat_cost": 4,
         "discard_value": 1,
         "effect": "Play this card before activating any of your monsters for the turn. You may spawn 4 Kobolds and 2 Master Kobolds, following all of the normal rules for spawning monsters.",
@@ -976,6 +1066,7 @@
     "lava_beetle_colony": {
         "name": "Lava Beetle Colony",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 5,
         "treachery_cost": 1,
         "treachery_colour": "red",
@@ -992,6 +1083,7 @@
     "lava_beetle_scouts": {
         "name": "Lava Beetle Scouts",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 4,
         "discard_value": 2,
         "effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Lava Beetles, following all of the normal rules for spawning monsters.",
@@ -1006,6 +1098,7 @@
     "legions_of_the_dead": {
         "name": "Legions of the Dead",
         "type": "Spawn",
+        "occurences": 2,
         "threat_cost": 5,
         "discard_value": 2,
         "treachery_cost": 1,
@@ -1022,6 +1115,7 @@
     "lightning_runes": {
         "name": "Lightning Runes",
         "type": "Trap (Door)",
+        "occurences": 1,
         "threat_cost": 11,
         "treachery_cost": 2,
         "treachery_colour": "purple",
@@ -1038,6 +1132,7 @@
     "lone_assassin": {
         "name": "Lone Assassin",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 6,
         "treachery_cost": 2,
         "treachery_colour": "red",
@@ -1054,6 +1149,7 @@
     "lone_golem": {
         "name": "Lone Golem",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 6,
         "treachery_cost": 3,
         "treachery_colour": "red",
@@ -1070,6 +1166,7 @@
     "lone_manticore": {
         "name": "Lone Manticore",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 6,
         "treachery_cost": 1,
         "treachery_colour": "red",
@@ -1086,6 +1183,7 @@
     "lone_medusa": {
         "name": "Lone Medusa",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 4,
         "discard_value": 2,
         "effect": "Play this card before activating any of your monsters for the turn. You may spawn 1 Medusa, following all of the normal rules for spawning monsters.",
@@ -1100,6 +1198,7 @@
     "lone_naga": {
         "name": "Lone Naga",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 6,
         "treachery_cost": 1,
         "treachery_colour": "red",
@@ -1116,6 +1215,7 @@
     "lone_ogre": {
         "name": "Lone Ogre",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 6,
         "treachery_cost": 1,
         "treachery_colour": "red",
@@ -1132,6 +1232,7 @@
     "lone_troll": {
         "name": "Lone Troll",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 6,
         "treachery_cost": 1,
         "treachery_colour": "red",
@@ -1148,6 +1249,7 @@
     "mimic": {
         "name": "Mimic",
         "type": "Trap (Chest)",
+        "occurences": 2,
         "threat_cost": 8,
         "discard_value": 3,
         "effect": "Pay this card when a hero opens a chest. The chest is alive, and its contents cannot be distributed until it is killed. Move the chest marker to an adjacent space. Threat it as a Beastman and activate it immediately. After its activation, the hero's turn resumes. If the chest is killed, the contents of the chest are immediately distributed.",
@@ -1166,6 +1268,7 @@
     "mother_medusa": {
         "name": "Mother Medusa",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 6,
         "treachery_cost": 1,
         "treachery_colour": "red",
@@ -1182,6 +1285,7 @@
     "paralyzing_gas": {
         "name": "Paralyzing Gas",
         "type": "Trap (Door)",
+        "occurences": 3,
         "threat_cost": 5,
         "discard_value": 3,
         "effect": "Play this card when a hero opens a door. Unless the hero rolls a blank on one power die, his turn immediately ends and you may place one stun token on him. If the hero player rolls a blank, this card has no effect.",
@@ -1200,6 +1304,7 @@
     "poison_spikes": {
         "name": "Poison Spikes",
         "type": "Trap (Space)",
+        "occurences": 2,
         "threat_cost": 4,
         "treachery_cost": 1,
         "treachery_colour": "purple",
@@ -1216,6 +1321,7 @@
     "poltergeist": {
         "name": "Poltergeist",
         "type": "Event",
+        "occurences": 1,
         "threat_cost": 7,
         "treachery_cost": 1,
         "treachery_colour": "green",
@@ -1232,6 +1338,7 @@
     "pride": {
         "name": "Pride",
         "type": "Power",
+        "occurences": 1,
         "threat_cost": 14,
         "treachery_cost": 2,
         "treachery_colour": "green",
@@ -1248,6 +1355,7 @@
     "prowling_wendigo": {
         "name": "Prowling Wendigo",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 6,
         "treachery_cost": 1,
         "treachery_colour": "red",
@@ -1264,6 +1372,7 @@
     "rage": {
         "name": "Rage",
         "type": "Event",
+        "occurences": 3,
         "threat_cost": 4,
         "discard_value": 1,
         "effect": "Play when you activate a monster. The monster may attack twice during this activation (four times if it has Quick Shot).",
@@ -1282,6 +1391,7 @@
     "razorwing_flock": {
         "name": "Razorwing Flock",
         "type": "Spawn",
+        "occurences": 2,
         "threat_cost": 5,
         "discard_value": 2,
         "effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Razorwings, following all of the normal rules for spawning monsters.",
@@ -1298,6 +1408,7 @@
     "rolling_stone": {
         "name": "Rolling Stone",
         "type": "Trap (Space)",
+        "occurences": 1,
         "threat_cost": 14,
         "treachery_cost": 3,
         "treachery_colour": "purple",
@@ -1314,6 +1425,7 @@
     "scything_blades": {
         "name": "Scything Blades",
         "type": "Trap (Space)",
+        "occurences": 1,
         "threat_cost": 6,
         "treachery_cost": 1,
         "treachery_colour": "purple",
@@ -1330,6 +1442,7 @@
     "shade_spooks": {
         "name": "Shade Spooks",
         "type": "Spawn",
+        "occurences": 1,
         "threat_cost": 4,
         "discard_value": 2,
         "effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Shades, following all of the normal rules for spawning monsters.",
@@ -1344,6 +1457,7 @@
     "skeleton_patrol": {
         "name": "Skeleton Patrol",
         "type": "Spawn",
+        "occurences": 3,
         "threat_cost": 4,
         "discard_value": 2,
         "effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Skeletons and 1 Master Skeleton, following all of the normal rules for spawning monsters.",
@@ -1360,6 +1474,7 @@
     "sloth": {
         "name": "Sloth",
         "type": "Power",
+        "occurences": 1,
         "threat_cost": 16,
         "treachery_cost": 2,
         "treachery_colour": "purple",
@@ -1376,6 +1491,7 @@
     "smash": {
         "name": "Smash!",
         "type": "Event",
+        "occurences": 2,
         "threat_cost": 3,
         "treachery_cost": 1,
         "treachery_colour": "green",
@@ -1392,6 +1508,7 @@
     "sneak_up_on_the_prey": {
         "name": "Sneak up on the prey",
         "type": "Event",
+        "occurences": 2,
         "threat_cost": 3,
         "treachery_cost": 1,
         "treachery_colour": "green",
@@ -1408,6 +1525,7 @@
     "sorcerer_circle": {
         "name": "Sorcerer Circle",
         "type": "Spawn",
+        "occurences": 2,
         "threat_cost": 5,
         "discard_value": 2,
         "effect": "Play this card before activating any of your monsters for the turn. You may spawn 2 Sorcerers, following all of the normal rules for spawning monsters.",
@@ -1424,6 +1542,7 @@
     "spell_of_binding": {
         "name": "Spell of Binding",
         "type": "Event",
+        "occurences": 1,
         "threat_cost": 8,
         "treachery_cost": 2,
         "treachery_colour": "green",
@@ -1440,6 +1559,7 @@
     "spell_of_burning": {
         "name": "Spell of Burning",
         "type": "Event",
+        "occurences": 1,
         "threat_cost": 7,
         "treachery_cost": 1,
         "treachery_colour": "green",
@@ -1456,6 +1576,7 @@
     "spell_of_frost": {
         "name": "Spell of Frost",
         "type": "Event",
+        "occurences": 1,
         "threat_cost": 10,
         "treachery_cost": 1,
         "treachery_colour": "green",
@@ -1472,6 +1593,7 @@
     "spell_of_thunder": {
         "name": "Spell of Thunder",
         "type": "Event",
+        "occurences": 1,
         "threat_cost": 9,
         "treachery_cost": 2,
         "treachery_colour": "green",
@@ -1488,6 +1610,7 @@
     "spiked_pit": {
         "name": "Spiked Pit",
         "type": "Trap (Space)",
+        "occurences": 3,
         "threat_cost": 3,
         "discard_value": 2,
         "effect": "Play this card when a hero moves into an empty space. Place a one space pit token on that space. Unless the hero rolls a blank on one power die, he falls into the pit and suffers 2 wounds (ignoring armor). If the hero rolls a blank, the hero immediately moves to an adjacent space of his choice.",
@@ -1506,6 +1629,7 @@
     "time_slips_away": {
         "name": "Time slips away",
         "type": "Event",
+        "occurences": 1,
         "threat_cost": 7,
         "treachery_cost": 1,
         "treachery_colour": "green",
@@ -1522,6 +1646,7 @@
     "trapmaster": {
         "name": "Trapmaster",
         "type": "Power",
+        "occurences": 2,
         "threat_cost": 16,
         "discard_value": 5,
         "effect": "Play this card at the start of your turn and place it face up in front of you. Lower the threat cost of the Trap cards you play by 1. Trap cards that deal damage deal an additional 2 wounds.",
@@ -1538,6 +1663,7 @@
     "trapmaster_treachery": {
         "name": "Trapmaster",
         "type": "Power",
+        "occurences": 1,
         "threat_cost": 16,
         "treachery_cost": 1,
         "treachery_colour": "purple",
@@ -1556,6 +1682,7 @@
     "unholy_swiftness": {
         "name": "Unholy Swiftness",
         "type": "Power",
+        "occurences": 1,
         "threat_cost": 16,
         "treachery_cost": 2,
         "treachery_colour": "red",
@@ -1572,6 +1699,7 @@
     "urgency": {
         "name": "Urgency",
         "type": "Power",
+        "occurences": 1,
         "threat_cost": 19,
         "treachery_cost": 2,
         "treachery_colour": "green",
@@ -1588,6 +1716,7 @@
     "weakness": {
         "name": "Weakness",
         "type": "Event",
+        "occurences": 2,
         "threat_cost": 3,
         "treachery_cost": 1,
         "treachery_colour": "green",
@@ -1604,6 +1733,7 @@
     "welcome_mat": {
         "name": "Welcome Mat",
         "type": "Trap (Door)",
+        "occurences": 1,
         "threat_cost": 6,
         "treachery_cost": 1,
         "treachery_colour": "purple",
@@ -1620,6 +1750,7 @@
     "wrath": {
         "name": "Wrath",
         "type": "Power",
+        "occurences": 1,
         "threat_cost": 25,
         "treachery_cost": 2,
         "treachery_colour": "red",
