@@ -11,12 +11,15 @@
 #define INC_RIGHT_BUTTON_PIN 19
 #define DEC_RIGHT_BUTTON_PIN 18
 
+#define LIFE_MENU 0
+
 struct hero_stats {
   uint8_t life;
   uint8_t stamina;
 
   uint8_t *current_left_value;
   uint8_t *current_right_value;
+  int current_menu;
 };
 
 void init_tft() {
@@ -138,8 +141,15 @@ void handle_decrement_right_pressed(struct hero_stats *player_stats,
   }
 }
 
-void redraw_current_screen(struct hero_stats *player_stats) {
-  draw_life_screen(player_stats);
+void draw_current_screen(struct hero_stats *player_stats) {
+  switch (player_stats->current_menu) {
+  case LIFE_MENU:
+    draw_life_screen(player_stats);
+    break;
+
+  default:
+    break;
+  }
 }
 
 bool check_button_pressed_states(struct repeating_timer *t) {
@@ -152,7 +162,7 @@ bool check_button_pressed_states(struct repeating_timer *t) {
   handle_decrement_right_pressed(player_stats, &changes_made);
 
   if (changes_made) {
-    redraw_current_screen(player_stats);
+    draw_current_screen(player_stats);
   }
 
   return true;
@@ -178,8 +188,9 @@ int main() {
   player.stamina = 4;
   player.current_left_value = &player.life;
   player.current_right_value = &player.stamina;
+  player.current_menu = LIFE_MENU;
 
-  draw_life_screen(&player);
+  draw_current_screen(&player);
 
   struct repeating_timer timer;
   add_repeating_timer_ms(200, check_button_pressed_states, &player, &timer);
