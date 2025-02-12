@@ -10,8 +10,12 @@
 #define DEC_LEFT_BUTTON_PIN 16
 #define INC_RIGHT_BUTTON_PIN 19
 #define DEC_RIGHT_BUTTON_PIN 18
+#define NEXT_MENU_BUTTON_PIN 20
+#define PREVIOUS_MENU_BUTTON_PIN 21
 
+#define FIRST_MENU 0
 #define LIFE_MENU 0
+#define LAST_MENU 0
 
 struct hero_stats {
   uint8_t life;
@@ -46,6 +50,14 @@ void init_buttons() {
   gpio_init(DEC_RIGHT_BUTTON_PIN);
   gpio_set_dir(DEC_RIGHT_BUTTON_PIN, GPIO_IN);
   gpio_pull_up(DEC_RIGHT_BUTTON_PIN);
+
+  gpio_init(NEXT_MENU_BUTTON_PIN);
+  gpio_set_dir(NEXT_MENU_BUTTON_PIN, GPIO_IN);
+  gpio_pull_up(NEXT_MENU_BUTTON_PIN);
+
+  gpio_init(PREVIOUS_MENU_BUTTON_PIN);
+  gpio_set_dir(PREVIOUS_MENU_BUTTON_PIN, GPIO_IN);
+  gpio_pull_up(PREVIOUS_MENU_BUTTON_PIN);
 }
 
 void init_hw() {
@@ -76,6 +88,22 @@ void decrement_right_value(struct hero_stats *player_stats) {
     return;
   }
   *(player_stats->current_right_value) -= 1;
+}
+
+void switch_to_next_menu(struct hero_stats *player_stats) {
+  if (player_stats->current_menu == LAST_MENU) {
+    player_stats->current_menu = FIRST_MENU;
+  } else {
+    player_stats->current_menu += 1;
+  }
+}
+
+void switch_to_previous_menu(struct hero_stats *player_stats) {
+  if (player_stats->current_menu == FIRST_MENU) {
+    player_stats->current_menu = LAST_MENU;
+  } else {
+    player_stats->current_menu -= 1;
+  }
 }
 
 void draw_image(uint8_t width, uint8_t height, const uint16_t *pixel_data) {
@@ -141,6 +169,22 @@ void handle_decrement_right_pressed(struct hero_stats *player_stats,
   }
 }
 
+void handle_next_menu_pressed(struct hero_stats *player_stats,
+                              bool *changes_made) {
+  if (is_button_pressed(NEXT_MENU_BUTTON_PIN)) {
+    switch_to_next_menu(player_stats);
+    *changes_made = true;
+  }
+}
+
+void handle_previous_menu_pressed(struct hero_stats *player_stats,
+                                  bool *changes_made) {
+  if (is_button_pressed(PREVIOUS_MENU_BUTTON_PIN)) {
+    switch_to_previous_menu(player_stats);
+    *changes_made = true;
+  }
+}
+
 void draw_current_screen(struct hero_stats *player_stats) {
   switch (player_stats->current_menu) {
   case LIFE_MENU:
@@ -160,6 +204,8 @@ bool check_button_pressed_states(struct repeating_timer *t) {
   handle_decrement_left_pressed(player_stats, &changes_made);
   handle_increment_right_pressed(player_stats, &changes_made);
   handle_decrement_right_pressed(player_stats, &changes_made);
+  handle_next_menu_pressed(player_stats, &changes_made);
+  handle_previous_menu_pressed(player_stats, &changes_made);
 
   if (changes_made) {
     draw_current_screen(player_stats);
@@ -193,7 +239,7 @@ int main() {
   draw_current_screen(&player);
 
   struct repeating_timer timer;
-  add_repeating_timer_ms(200, check_button_pressed_states, &player, &timer);
+  add_repeating_timer_ms(2, check_button_pressed_states, &player, &timer);
 
   while (1) {
   }
