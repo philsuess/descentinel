@@ -28,7 +28,7 @@ set(PICO_BOARD pico_w CACHE STRING "Board type")
 # Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
 
-project(blink C CXX ASM)
+project(hero_dash C CXX ASM)
 
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
@@ -60,13 +60,7 @@ endforeach(opt)
 # ENABLE_FONTS: set on command-line or select from
 # VSCode-menu (see .vscode/cmake-variants.json)
 if(ENABLE_FONTS)
-  message(">>> Font test")
-  add_compile_definitions(TFT_ENABLE_FONTS ENABLE_TEST9 ENABLE_TEST9A)
-else()
-  message(">>> Normal test")
-  add_compile_definitions(ENABLE_TESTR ENABLE_TEST1 ENABLE_TEST1A
-                           ENABLE_TEST2 ENABLE_TEST3 ENABLE_TEST4
-                           ENABLE_TEST5 ENABLE_TEST6 ENABLE_TEST7)
+  add_compile_definitions(TFT_ENABLE_FONTS)
 endif()
 
 
@@ -75,23 +69,23 @@ endif()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(blink
+add_executable(hero_dash
     draw_image_on_tft.c
     )
 
 pico_enable_stdio_uart(${PROJECT_NAME} 1)
 pico_enable_stdio_usb(${PROJECT_NAME} 0)
 
-pico_set_program_name(${PROJECT_NAME} "blink")
+pico_set_program_name(${PROJECT_NAME} "hero_dash")
 pico_set_program_version(${PROJECT_NAME} "0.1")
 
 add_subdirectory(libs/st7735)
 
 # pull in common dependencies
-target_link_libraries(blink pico_stdlib hardware_spi st7735)
+target_link_libraries(hero_dash pico_stdlib hardware_spi st7735)
 
 if (PICO_CYW43_SUPPORTED)
-    target_link_libraries(blink pico_cyw43_arch_none)
+    target_link_libraries(hero_dash pico_cyw43_arch_none)
 endif()
 
 # create map/bin/hex file etc.
