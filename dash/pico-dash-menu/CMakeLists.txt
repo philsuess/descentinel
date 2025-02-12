@@ -33,11 +33,9 @@ project(hero_dash C CXX ASM)
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
+set(CONNECTION_HEALTH_CHECK_FREQUENCY_IN_MS "5000" CACHE STRING "Frequency of health checks to server connection (in ms)")
+add_compile_definitions(CONNECTION_HEALTH_CHECK_FREQUENCY_IN_MS=${CONNECTION_HEALTH_CHECK_FREQUENCY_IN_MS})
 
-set(SPI_TFT_PORT "spi1" CACHE STRING "TFT spi port-name")
-set(SPI_TFT_CS   "9"    CACHE STRING "TFT CS  pin number")
-set(SPI_TFT_DC   "10"   CACHE STRING "TFT DC  pin number")
-set(SPI_TFT_RST  "11"   CACHE STRING "TFT RST pin number")
 set(TFT_OPTIONS TFT_ENABLE_BLACK TFT_ENABLE_RESET TFT_ENABLE_TEXT TFT_ENABLE_SHAPES
                 TFT_ENABLE_ROTATE TFT_ENABLE_SCROLL
             CACHE STRING "TFT options/functions")

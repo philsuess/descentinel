@@ -26,15 +26,12 @@ struct hero_stats {
   int current_menu;
 };
 
-void init_tft() {
-  spi_init(SPI_PORT, 16000000); // SPI with 1Mhz
-  gpio_set_function(SPI_RX, GPIO_FUNC_SPI);
-  gpio_set_function(SPI_SCK, GPIO_FUNC_SPI);
-  gpio_set_function(SPI_TX, GPIO_FUNC_SPI);
-  tft_spi_init();
-}
+struct timers {
+  struct repeating_timer buttons_timer;
+  struct repeating_timer server_health_timer;
+};
 
-void init_buttons() {
+void initialize_button_gpios() {
   gpio_init(INC_LEFT_BUTTON_PIN);
   gpio_set_dir(INC_LEFT_BUTTON_PIN, GPIO_IN);
   gpio_pull_up(INC_LEFT_BUTTON_PIN);
@@ -58,12 +55,6 @@ void init_buttons() {
   gpio_init(PREVIOUS_MENU_BUTTON_PIN);
   gpio_set_dir(PREVIOUS_MENU_BUTTON_PIN, GPIO_IN);
   gpio_pull_up(PREVIOUS_MENU_BUTTON_PIN);
-}
-
-void init_hw() {
-  stdio_init_all();
-  init_tft();
-  init_buttons();
 }
 
 bool is_button_pressed(int button_pin) { return !gpio_get(button_pin); }
@@ -196,6 +187,14 @@ void draw_current_screen(struct hero_stats *player_stats) {
   }
 }
 
+bool check_connection_to_server(struct repeating_timer *t) { return true; }
+
+void initialize_connection_to_server(struct hero_stats *hero,
+                                     struct repeating_timer *timer) {
+  add_repeating_timer_ms(CONNECTION_HEALTH_CHECK_FREQUENCY_IN_MS,
+                         check_connection_to_server, hero, timer);
+}
+
 bool check_button_pressed_states(struct repeating_timer *t) {
   bool changes_made = false;
   struct hero_stats *player_stats = (struct hero_stats *)(t->user_data);
@@ -214,32 +213,44 @@ bool check_button_pressed_states(struct repeating_timer *t) {
   return true;
 }
 
-int main() {
-  init_hw();
-#ifdef TFT_ENABLE_BLACK
+void initialize_buttons(struct hero_stats *hero,
+                        struct repeating_timer *timer) {
+  initialize_button_gpios();
+  add_repeating_timer_ms(2, check_button_pressed_states, hero, timer);
+}
+
+void initialize_hero_state(struct hero_stats *hero) {
+  hero->life = 12;
+  hero->stamina = 4;
+  hero->current_left_value = &hero->life;
+  hero->current_right_value = &hero->stamina;
+  hero->current_menu = LIFE_MENU;
+}
+
+void initialize_display() {
+  spi_init(SPI_PORT, 16000000); // SPI with 1Mhz
+  gpio_set_function(SPI_RX, GPIO_FUNC_SPI);
+  gpio_set_function(SPI_SCK, GPIO_FUNC_SPI);
+  gpio_set_function(SPI_TX, GPIO_FUNC_SPI);
+  tft_spi_init();
   TFT_BlackTab_Initialize();
-#elif defined(TFT_ENABLE_GREEN)
-  TFT_GreenTab_Initialize();
-#elif defined(TFT_ENABLE_RED)
-  TFT_RedTab_Initialize();
-#elif defined(TFT_ENABLE_GENERIC)
-  TFT_ST7735B_Initialize();
-#endif
-  setTextWrap(true);
   fillScreen(ST7735_BLACK);
-  setRotation(0);
+}
 
-  struct hero_stats player;
-  player.life = 12;
-  player.stamina = 4;
-  player.current_left_value = &player.life;
-  player.current_right_value = &player.stamina;
-  player.current_menu = LIFE_MENU;
+void initialize_dashboard(struct hero_stats *hero, struct timers *timers) {
+  stdio_init_all();
+  initialize_display();
+  initialize_buttons(hero, &timers->buttons_timer);
+  initialize_connection_to_server(hero, &timers->server_health_timer);
 
-  draw_current_screen(&player);
+  draw_current_screen(hero);
+}
 
-  struct repeating_timer timer;
-  add_repeating_timer_ms(2, check_button_pressed_states, &player, &timer);
+int main() {
+  struct hero_stats hero;
+  initialize_hero_state(&hero);
+  struct timers timers;
+  initialize_dashboard(&hero, &timers);
 
   while (1) {
   }
