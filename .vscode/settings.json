@@ -9,6 +9,10 @@
     "identify_game_scene",
     "types",
     "services",
-    "presentation"
-  ]
+    "presentation",
+    "dash"
+  ],
+  "files.associations": {
+    "st7735_tft.h": "c"
+  }
 }
