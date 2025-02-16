@@ -273,12 +273,23 @@ void draw_status_message_on_screen(const char *message) {
   drawText(10, 10, message, ST7735_GREEN, ST7735_BLACK, 1);
   setRotation(0);
 }
+
 bool check_server_connection() { return false; }
+
+void set_all_connections_off() { cyw43_arch_disable_sta_mode(); }
+
+bool should_not_connect(struct hero_stats *player_stats) {
+  if (player_stats->number_of_consecutive_unsuccessful_connection_attempts >=
+      MAXIMUM_NUMBER_OF_CONNECTION_ATTEMPTS) {
+    set_all_connections_off();
+    return true;
+  }
+}
 
 bool check_connection_to_server(struct repeating_timer *t) {
   struct hero_stats *player_stats = (struct hero_stats *)(t->user_data);
-  if (player_stats->number_of_consecutive_unsuccessful_connection_attempts >=
-      MAXIMUM_NUMBER_OF_CONNECTION_ATTEMPTS) {
+
+  if (should_not_connect(player_stats)) {
     return true;
   }
 
