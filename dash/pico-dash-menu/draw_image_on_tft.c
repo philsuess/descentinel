@@ -8,6 +8,9 @@
 #include "images/Screen_Coin_Big_image_data.h"
 #include "images/Screen_Coin_Small_image_data.h"
 #include "images/Screen_Leben_image_data.h"
+#include "images/Screen_Potions_1_image_data.h"
+#include "images/Screen_Potions_2_image_data.h"
+#include "images/Screen_Potions_3_image_data.h"
 #include "ssid_secrets.h"
 
 #define INC_LEFT_BUTTON_PIN 17
@@ -26,7 +29,10 @@
 #define LIFE_SCREEN 0
 #define COIN_SMALL_SCREEN 1
 #define COIN_BIG_SCREEN 2
-#define LAST_SCREEN 2
+#define POTIONS_1_SCREEN 3
+#define POTIONS_2_SCREEN 4
+#define POTIONS_3_SCREEN 5
+#define LAST_SCREEN 5
 
 #define CONNECTION_CONNECTED 2
 #define CONNECTION_DISCONNECTED 1
@@ -39,6 +45,11 @@ struct hero_stats {
   uint8_t coin100;
   uint8_t coin500;
   uint8_t coin2500;
+  uint8_t potion_life;
+  uint8_t potion_stamina;
+  uint8_t potion_power;
+  uint8_t potion_invisibility;
+  uint8_t potion_invulnerability;
 
   uint8_t *current_left_value;
   uint8_t *current_right_value;
@@ -62,6 +73,18 @@ void switch_to_new_screen(struct hero_stats *player_stats) {
     player_stats->current_left_value = &player_stats->coin500;
     player_stats->current_right_value = &player_stats->coin2500;
     break;
+  case POTIONS_1_SCREEN:
+    player_stats->current_left_value = &player_stats->potion_life;
+    player_stats->current_right_value = &player_stats->potion_stamina;
+    break;
+  case POTIONS_2_SCREEN:
+    player_stats->current_left_value = &player_stats->potion_power;
+    player_stats->current_right_value = &player_stats->potion_invisibility;
+    break;
+  case POTIONS_3_SCREEN:
+    player_stats->current_left_value = &player_stats->potion_invulnerability;
+    player_stats->current_right_value = &player_stats->potion_invulnerability;
+    break;
   }
 }
 
@@ -72,6 +95,11 @@ void initialize_hero_state(struct hero_stats *hero) {
   hero->coin100 = 4;
   hero->coin500 = 0;
   hero->coin2500 = 0;
+  hero->potion_life = 0;
+  hero->potion_stamina = 0;
+  hero->potion_power = 0;
+  hero->potion_invisibility = 0;
+  hero->potion_invulnerability = 0;
 
   hero->current_screen = LIFE_SCREEN;
   switch_to_new_screen(hero);
@@ -166,6 +194,7 @@ void switch_to_previous_screen(struct hero_stats *player_stats) {
   } else {
     player_stats->current_screen -= 1;
   }
+  switch_to_new_screen(player_stats);
 }
 
 void draw_image(uint8_t width, uint8_t height, const uint16_t *pixel_data) {
@@ -189,14 +218,29 @@ void draw_value_right(const char *value) {
   setRotation(0);
 }
 
-void draw_screen(uint8_t width, uint8_t height, const uint16_t *image_data,
-                 uint8_t left_value, uint8_t right_value) {
+void draw_value_center(const char *value) {
+  setRotation(3);
+  drawText(102, 70, value, ST7735_WHITE, ST7735_BLACK, 1);
+  setRotation(0);
+}
+
+void draw_screen_with_two_items(uint8_t width, uint8_t height,
+                                const uint16_t *image_data, uint8_t left_value,
+                                uint8_t right_value) {
   draw_image(width, height, image_data);
   char buffer[12];
   sprintf(buffer, "%d", left_value);
   draw_value_left(buffer);
   sprintf(buffer, "%d", right_value);
   draw_value_right(buffer);
+}
+
+void draw_screen_with_one_item(uint8_t image_width, uint8_t image_height,
+                               const uint16_t *image_data, uint8_t value) {
+  draw_image(image_width, image_height, image_data);
+  char buffer[12];
+  sprintf(buffer, "%d", value);
+  draw_value_center(buffer);
 }
 
 void handle_increment_left_pressed(struct hero_stats *player_stats,
@@ -250,19 +294,38 @@ void handle_previous_screen_pressed(struct hero_stats *player_stats,
 void draw_current_screen(struct hero_stats *player_stats) {
   switch (player_stats->current_screen) {
   case LIFE_SCREEN:
-    draw_screen(SCREEN_LEBEN_IMAGE_WIDTH, SCREEN_LEBEN_IMAGE_HEIGHT,
-                Screen_Leben_image_data, player_stats->life,
-                player_stats->stamina);
+    draw_screen_with_two_items(
+        SCREEN_LEBEN_IMAGE_WIDTH, SCREEN_LEBEN_IMAGE_HEIGHT,
+        Screen_Leben_image_data, player_stats->life, player_stats->stamina);
     break;
   case COIN_SMALL_SCREEN:
-    draw_screen(SCREEN_COIN_SMALL_IMAGE_WIDTH, SCREEN_COIN_SMALL_IMAGE_HEIGHT,
-                Screen_Coin_Small_image_data, player_stats->coin25,
-                player_stats->coin100);
+    draw_screen_with_two_items(SCREEN_COIN_SMALL_IMAGE_WIDTH,
+                               SCREEN_COIN_SMALL_IMAGE_HEIGHT,
+                               Screen_Coin_Small_image_data,
+                               player_stats->coin25, player_stats->coin100);
     break;
   case COIN_BIG_SCREEN:
-    draw_screen(SCREEN_COIN_BIG_IMAGE_WIDTH, SCREEN_COIN_BIG_IMAGE_HEIGHT,
-                Screen_Coin_Big_image_data, player_stats->coin500,
-                player_stats->coin2500);
+    draw_screen_with_two_items(SCREEN_COIN_BIG_IMAGE_WIDTH,
+                               SCREEN_COIN_BIG_IMAGE_HEIGHT,
+                               Screen_Coin_Big_image_data,
+                               player_stats->coin500, player_stats->coin2500);
+    break;
+  case POTIONS_1_SCREEN:
+    draw_screen_with_two_items(
+        SCREEN_POTIONS_1_IMAGE_WIDTH, SCREEN_POTIONS_1_IMAGE_HEIGHT,
+        Screen_Potions_1_image_data, player_stats->potion_life,
+        player_stats->potion_stamina);
+    break;
+  case POTIONS_2_SCREEN:
+    draw_screen_with_two_items(
+        SCREEN_POTIONS_2_IMAGE_WIDTH, SCREEN_POTIONS_2_IMAGE_HEIGHT,
+        Screen_Potions_2_image_data, player_stats->potion_power,
+        player_stats->potion_invisibility);
+    break;
+  case POTIONS_3_SCREEN:
+    draw_screen_with_one_item(
+        SCREEN_POTIONS_3_IMAGE_WIDTH, SCREEN_POTIONS_3_IMAGE_HEIGHT,
+        Screen_Potions_3_image_data, player_stats->potion_invulnerability);
     break;
   default:
     break;
