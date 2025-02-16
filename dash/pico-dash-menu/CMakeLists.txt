@@ -33,6 +33,8 @@ project(hero_dash C CXX ASM)
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
+set(MAXIMUM_NUMBER_OF_CONNECTION_ATTEMPTS "2" CACHE STRING "Maximum number of tries to connect to wlan and the descentinel server")
+add_compile_definitions(MAXIMUM_NUMBER_OF_CONNECTION_ATTEMPTS=${MAXIMUM_NUMBER_OF_CONNECTION_ATTEMPTS})
 set(CONNECTION_HEALTH_CHECK_FREQUENCY_IN_MS "5000" CACHE STRING "Frequency of health checks to server connection (in ms)")
 add_compile_definitions(CONNECTION_HEALTH_CHECK_FREQUENCY_IN_MS=${CONNECTION_HEALTH_CHECK_FREQUENCY_IN_MS})
 
@@ -83,7 +85,11 @@ add_subdirectory(libs/st7735)
 target_link_libraries(hero_dash pico_stdlib hardware_spi st7735)
 
 if (PICO_CYW43_SUPPORTED)
-    target_link_libraries(hero_dash pico_cyw43_arch_none)
+    target_include_directories(hero_dash PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}
+        ${CMAKE_CURRENT_LIST_DIR}/.. # for our common lwipopts
+        )
+    target_link_libraries(hero_dash pico_cyw43_arch_lwip_threadsafe_background)
 endif()
 
 # create map/bin/hex file etc.

@@ -1,10 +1,12 @@
 #include "ST7735_TFT.h"
 #include "hardware/spi.h"
 #include "hw.h"
+#include "pico/cyw43_arch.h"
 #include "pico/stdlib.h"
 #include <stdio.h>
 
 #include "images/Menu_Leben_image_data.h"
+#include "ssid_secrets.h"
 
 #define INC_LEFT_BUTTON_PIN 17
 #define DEC_LEFT_BUTTON_PIN 16
@@ -13,9 +15,18 @@
 #define NEXT_MENU_BUTTON_PIN 20
 #define PREVIOUS_MENU_BUTTON_PIN 21
 
+#define CONNECETED_LED_PIN 5
+#define HERO_READY_LED_PIN 4
+#define HERO_DONE_LED_PIN 3
+#define HERO_ORDER_LED_PIN 2
+
 #define FIRST_MENU 0
 #define LIFE_MENU 0
 #define LAST_MENU 0
+
+#define CONNECTION_CONNECTED 2
+#define CONNECTION_DISCONNECTED 1
+#define CONNECTION_OFFLINE 0
 
 struct hero_stats {
   uint8_t life;
@@ -24,12 +35,43 @@ struct hero_stats {
   uint8_t *current_left_value;
   uint8_t *current_right_value;
   int current_menu;
+
+  uint8_t connected_state;
+  uint8_t number_of_consecutive_unsuccessful_connection_attempts;
 };
+
+void initialize_hero_state(struct hero_stats *hero) {
+  hero->life = 12;
+  hero->stamina = 4;
+
+  hero->current_left_value = &hero->life;
+  hero->current_right_value = &hero->stamina;
+  hero->current_menu = LIFE_MENU;
+
+  hero->connected_state = CONNECTION_OFFLINE;
+  hero->number_of_consecutive_unsuccessful_connection_attempts = 0;
+}
 
 struct timers {
   struct repeating_timer buttons_timer;
   struct repeating_timer server_health_timer;
 };
+
+void initialize_led_gpios() {
+  gpio_init(CONNECETED_LED_PIN);
+  gpio_set_dir(CONNECETED_LED_PIN, GPIO_OUT);
+
+  gpio_init(HERO_READY_LED_PIN);
+  gpio_set_dir(HERO_READY_LED_PIN, GPIO_OUT);
+
+  gpio_init(HERO_DONE_LED_PIN);
+  gpio_set_dir(HERO_DONE_LED_PIN, GPIO_OUT);
+
+  gpio_init(HERO_ORDER_LED_PIN);
+  gpio_set_dir(HERO_ORDER_LED_PIN, GPIO_OUT);
+}
+
+void set_led(int led, bool on) { gpio_put(led, on); }
 
 void initialize_button_gpios() {
   gpio_init(INC_LEFT_BUTTON_PIN);
@@ -187,7 +229,72 @@ void draw_current_screen(struct hero_stats *player_stats) {
   }
 }
 
-bool check_connection_to_server(struct repeating_timer *t) { return true; }
+void set_connection_state(struct hero_stats *player_stats,
+                          uint8_t connection_state) {
+  player_stats->connected_state = connection_state;
+  switch (connection_state) {
+  case CONNECTION_CONNECTED:
+    player_stats->number_of_consecutive_unsuccessful_connection_attempts = 0;
+    set_led(CONNECETED_LED_PIN, true);
+    break;
+  case CONNECTION_DISCONNECTED:
+    player_stats->number_of_consecutive_unsuccessful_connection_attempts += 1;
+    set_led(CONNECETED_LED_PIN, false);
+    break;
+
+  default:
+    set_led(CONNECETED_LED_PIN, false);
+    player_stats->number_of_consecutive_unsuccessful_connection_attempts += 1;
+    break;
+  }
+  draw_current_screen(player_stats);
+}
+
+bool check_wlan_connection() {
+  set_led(CONNECETED_LED_PIN, true);
+  if (cyw43_wifi_link_status(&cyw43_state, CYW43_ITF_STA) != CYW43_LINK_DOWN) {
+    return true;
+  }
+
+  bool connection_success = true;
+  set_led(CONNECETED_LED_PIN, false);
+  draw_status_message_on_screen("Connecting ...");
+
+  if (cyw43_arch_wifi_connect_timeout_ms(SSID, WLAN_PASSWORD,
+                                         CYW43_AUTH_WPA2_AES_PSK, 30000)) {
+    connection_success = false;
+  }
+
+  return connection_success;
+}
+
+void draw_status_message_on_screen(const char *message) {
+  setRotation(3);
+  drawText(10, 10, message, ST7735_GREEN, ST7735_BLACK, 1);
+  setRotation(0);
+}
+bool check_server_connection() { return false; }
+
+bool check_connection_to_server(struct repeating_timer *t) {
+  struct hero_stats *player_stats = (struct hero_stats *)(t->user_data);
+  if (player_stats->number_of_consecutive_unsuccessful_connection_attempts >=
+      MAXIMUM_NUMBER_OF_CONNECTION_ATTEMPTS) {
+    return true;
+  }
+
+  if (!check_wlan_connection()) {
+    set_connection_state(player_stats, CONNECTION_OFFLINE);
+    return true;
+  }
+
+  if (!check_server_connection()) {
+    set_connection_state(player_stats, CONNECTION_DISCONNECTED);
+    return true;
+  }
+
+  set_connection_state(player_stats, CONNECTION_CONNECTED);
+  return true;
+}
 
 void initialize_connection_to_server(struct hero_stats *hero,
                                      struct repeating_timer *timer) {
@@ -219,14 +326,6 @@ void initialize_buttons(struct hero_stats *hero,
   add_repeating_timer_ms(2, check_button_pressed_states, hero, timer);
 }
 
-void initialize_hero_state(struct hero_stats *hero) {
-  hero->life = 12;
-  hero->stamina = 4;
-  hero->current_left_value = &hero->life;
-  hero->current_right_value = &hero->stamina;
-  hero->current_menu = LIFE_MENU;
-}
-
 void initialize_display() {
   spi_init(SPI_PORT, 16000000); // SPI with 1Mhz
   gpio_set_function(SPI_RX, GPIO_FUNC_SPI);
@@ -239,7 +338,12 @@ void initialize_display() {
 
 void initialize_dashboard(struct hero_stats *hero, struct timers *timers) {
   stdio_init_all();
+
+  cyw43_arch_init_with_country(CYW43_COUNTRY_GERMANY);
+  cyw43_arch_enable_sta_mode();
+
   initialize_display();
+  initialize_led_gpios();
   initialize_buttons(hero, &timers->buttons_timer);
   initialize_connection_to_server(hero, &timers->server_health_timer);
 
