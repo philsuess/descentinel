@@ -5,6 +5,7 @@
 #include "pico/stdlib.h"
 #include <stdio.h>
 
+#include "images/Screen_Coin_Big_image_data.h"
 #include "images/Screen_Coin_Small_image_data.h"
 #include "images/Screen_Leben_image_data.h"
 #include "ssid_secrets.h"
@@ -24,7 +25,8 @@
 #define FIRST_SCREEN 0
 #define LIFE_SCREEN 0
 #define COIN_SMALL_SCREEN 1
-#define LAST_SCREEN 1
+#define COIN_BIG_SCREEN 2
+#define LAST_SCREEN 2
 
 #define CONNECTION_CONNECTED 2
 #define CONNECTION_DISCONNECTED 1
@@ -35,6 +37,8 @@ struct hero_stats {
   uint8_t stamina;
   uint8_t coin25;
   uint8_t coin100;
+  uint8_t coin500;
+  uint8_t coin2500;
 
   uint8_t *current_left_value;
   uint8_t *current_right_value;
@@ -54,6 +58,10 @@ void switch_to_new_screen(struct hero_stats *player_stats) {
     player_stats->current_left_value = &player_stats->coin25;
     player_stats->current_right_value = &player_stats->coin100;
     break;
+  case COIN_BIG_SCREEN:
+    player_stats->current_left_value = &player_stats->coin500;
+    player_stats->current_right_value = &player_stats->coin2500;
+    break;
   }
 }
 
@@ -62,6 +70,8 @@ void initialize_hero_state(struct hero_stats *hero) {
   hero->stamina = 4;
   hero->coin25 = 0;
   hero->coin100 = 4;
+  hero->coin500 = 0;
+  hero->coin2500 = 0;
 
   hero->current_screen = LIFE_SCREEN;
   switch_to_new_screen(hero);
@@ -248,7 +258,12 @@ void draw_current_screen(struct hero_stats *player_stats) {
     draw_screen(SCREEN_COIN_SMALL_IMAGE_WIDTH, SCREEN_COIN_SMALL_IMAGE_HEIGHT,
                 Screen_Coin_Small_image_data, player_stats->coin25,
                 player_stats->coin100);
-
+    break;
+  case COIN_BIG_SCREEN:
+    draw_screen(SCREEN_COIN_BIG_IMAGE_WIDTH, SCREEN_COIN_BIG_IMAGE_HEIGHT,
+                Screen_Coin_Big_image_data, player_stats->coin500,
+                player_stats->coin2500);
+    break;
   default:
     break;
   }
