@@ -5,24 +5,26 @@
 #include "pico/stdlib.h"
 #include <stdio.h>
 
-#include "images/Menu_Leben_image_data.h"
+#include "images/Screen_Coin_Small_image_data.h"
+#include "images/Screen_Leben_image_data.h"
 #include "ssid_secrets.h"
 
 #define INC_LEFT_BUTTON_PIN 17
 #define DEC_LEFT_BUTTON_PIN 16
 #define INC_RIGHT_BUTTON_PIN 19
 #define DEC_RIGHT_BUTTON_PIN 18
-#define NEXT_MENU_BUTTON_PIN 20
-#define PREVIOUS_MENU_BUTTON_PIN 21
+#define NEXT_SCREEN_BUTTON_PIN 20
+#define PREVIOUS_SCREEN_BUTTON_PIN 21
 
 #define CONNECETED_LED_PIN 5
 #define HERO_READY_LED_PIN 4
 #define HERO_DONE_LED_PIN 3
 #define HERO_ORDER_LED_PIN 2
 
-#define FIRST_MENU 0
-#define LIFE_MENU 0
-#define LAST_MENU 0
+#define FIRST_SCREEN 0
+#define LIFE_SCREEN 0
+#define COIN_SMALL_SCREEN 1
+#define LAST_SCREEN 1
 
 #define CONNECTION_CONNECTED 2
 #define CONNECTION_DISCONNECTED 1
@@ -31,22 +33,38 @@
 struct hero_stats {
   uint8_t life;
   uint8_t stamina;
+  uint8_t coin25;
+  uint8_t coin100;
 
   uint8_t *current_left_value;
   uint8_t *current_right_value;
-  int current_menu;
+  int current_screen;
 
   uint8_t connected_state;
   uint8_t number_of_consecutive_unsuccessful_connection_attempts;
 };
 
+void switch_to_new_screen(struct hero_stats *player_stats) {
+  switch (player_stats->current_screen) {
+  case LIFE_SCREEN:
+    player_stats->current_left_value = &player_stats->life;
+    player_stats->current_right_value = &player_stats->stamina;
+    break;
+  case COIN_SMALL_SCREEN:
+    player_stats->current_left_value = &player_stats->coin25;
+    player_stats->current_right_value = &player_stats->coin100;
+    break;
+  }
+}
+
 void initialize_hero_state(struct hero_stats *hero) {
   hero->life = 12;
   hero->stamina = 4;
+  hero->coin25 = 0;
+  hero->coin100 = 4;
 
-  hero->current_left_value = &hero->life;
-  hero->current_right_value = &hero->stamina;
-  hero->current_menu = LIFE_MENU;
+  hero->current_screen = LIFE_SCREEN;
+  switch_to_new_screen(hero);
 
   hero->connected_state = CONNECTION_OFFLINE;
   hero->number_of_consecutive_unsuccessful_connection_attempts = 0;
@@ -90,13 +108,13 @@ void initialize_button_gpios() {
   gpio_set_dir(DEC_RIGHT_BUTTON_PIN, GPIO_IN);
   gpio_pull_up(DEC_RIGHT_BUTTON_PIN);
 
-  gpio_init(NEXT_MENU_BUTTON_PIN);
-  gpio_set_dir(NEXT_MENU_BUTTON_PIN, GPIO_IN);
-  gpio_pull_up(NEXT_MENU_BUTTON_PIN);
+  gpio_init(NEXT_SCREEN_BUTTON_PIN);
+  gpio_set_dir(NEXT_SCREEN_BUTTON_PIN, GPIO_IN);
+  gpio_pull_up(NEXT_SCREEN_BUTTON_PIN);
 
-  gpio_init(PREVIOUS_MENU_BUTTON_PIN);
-  gpio_set_dir(PREVIOUS_MENU_BUTTON_PIN, GPIO_IN);
-  gpio_pull_up(PREVIOUS_MENU_BUTTON_PIN);
+  gpio_init(PREVIOUS_SCREEN_BUTTON_PIN);
+  gpio_set_dir(PREVIOUS_SCREEN_BUTTON_PIN, GPIO_IN);
+  gpio_pull_up(PREVIOUS_SCREEN_BUTTON_PIN);
 }
 
 bool is_button_pressed(int button_pin) { return !gpio_get(button_pin); }
@@ -123,19 +141,20 @@ void decrement_right_value(struct hero_stats *player_stats) {
   *(player_stats->current_right_value) -= 1;
 }
 
-void switch_to_next_menu(struct hero_stats *player_stats) {
-  if (player_stats->current_menu == LAST_MENU) {
-    player_stats->current_menu = FIRST_MENU;
+void switch_to_next_screen(struct hero_stats *player_stats) {
+  if (player_stats->current_screen == LAST_SCREEN) {
+    player_stats->current_screen = FIRST_SCREEN;
   } else {
-    player_stats->current_menu += 1;
+    player_stats->current_screen += 1;
   }
+  switch_to_new_screen(player_stats);
 }
 
-void switch_to_previous_menu(struct hero_stats *player_stats) {
-  if (player_stats->current_menu == FIRST_MENU) {
-    player_stats->current_menu = LAST_MENU;
+void switch_to_previous_screen(struct hero_stats *player_stats) {
+  if (player_stats->current_screen == FIRST_SCREEN) {
+    player_stats->current_screen = LAST_SCREEN;
   } else {
-    player_stats->current_menu -= 1;
+    player_stats->current_screen -= 1;
   }
 }
 
@@ -160,13 +179,13 @@ void draw_value_right(const char *value) {
   setRotation(0);
 }
 
-void draw_life_screen(struct hero_stats *player_stats) {
-  draw_image(MENU_LEBEN_IMAGE_WIDTH, MENU_LEBEN_IMAGE_HEIGHT,
-             Menu_Leben_image_data);
+void draw_screen(uint8_t width, uint8_t height, const uint16_t *image_data,
+                 uint8_t left_value, uint8_t right_value) {
+  draw_image(width, height, image_data);
   char buffer[12];
-  sprintf(buffer, "%d", player_stats->life);
+  sprintf(buffer, "%d", left_value);
   draw_value_left(buffer);
-  sprintf(buffer, "%d", player_stats->stamina);
+  sprintf(buffer, "%d", right_value);
   draw_value_right(buffer);
 }
 
@@ -202,27 +221,33 @@ void handle_decrement_right_pressed(struct hero_stats *player_stats,
   }
 }
 
-void handle_next_menu_pressed(struct hero_stats *player_stats,
-                              bool *changes_made) {
-  if (is_button_pressed(NEXT_MENU_BUTTON_PIN)) {
-    switch_to_next_menu(player_stats);
+void handle_next_screen_pressed(struct hero_stats *player_stats,
+                                bool *changes_made) {
+  if (is_button_pressed(NEXT_SCREEN_BUTTON_PIN)) {
+    switch_to_next_screen(player_stats);
     *changes_made = true;
   }
 }
 
-void handle_previous_menu_pressed(struct hero_stats *player_stats,
-                                  bool *changes_made) {
-  if (is_button_pressed(PREVIOUS_MENU_BUTTON_PIN)) {
-    switch_to_previous_menu(player_stats);
+void handle_previous_screen_pressed(struct hero_stats *player_stats,
+                                    bool *changes_made) {
+  if (is_button_pressed(PREVIOUS_SCREEN_BUTTON_PIN)) {
+    switch_to_previous_screen(player_stats);
     *changes_made = true;
   }
 }
 
 void draw_current_screen(struct hero_stats *player_stats) {
-  switch (player_stats->current_menu) {
-  case LIFE_MENU:
-    draw_life_screen(player_stats);
+  switch (player_stats->current_screen) {
+  case LIFE_SCREEN:
+    draw_screen(SCREEN_LEBEN_IMAGE_WIDTH, SCREEN_LEBEN_IMAGE_HEIGHT,
+                Screen_Leben_image_data, player_stats->life,
+                player_stats->stamina);
     break;
+  case COIN_SMALL_SCREEN:
+    draw_screen(SCREEN_COIN_SMALL_IMAGE_WIDTH, SCREEN_COIN_SMALL_IMAGE_HEIGHT,
+                Screen_Coin_Small_image_data, player_stats->coin25,
+                player_stats->coin100);
 
   default:
     break;
@@ -250,6 +275,12 @@ void set_connection_state(struct hero_stats *player_stats,
   draw_current_screen(player_stats);
 }
 
+void draw_status_message_on_screen(const char *message) {
+  setRotation(3);
+  drawText(10, 10, message, ST7735_GREEN, ST7735_BLACK, 1);
+  setRotation(0);
+}
+
 bool check_wlan_connection() {
   set_led(CONNECETED_LED_PIN, true);
   if (cyw43_wifi_link_status(&cyw43_state, CYW43_ITF_STA) != CYW43_LINK_DOWN) {
@@ -266,12 +297,6 @@ bool check_wlan_connection() {
   }
 
   return connection_success;
-}
-
-void draw_status_message_on_screen(const char *message) {
-  setRotation(3);
-  drawText(10, 10, message, ST7735_GREEN, ST7735_BLACK, 1);
-  setRotation(0);
 }
 
 bool check_server_connection() { return false; }
@@ -321,8 +346,8 @@ bool check_button_pressed_states(struct repeating_timer *t) {
   handle_decrement_left_pressed(player_stats, &changes_made);
   handle_increment_right_pressed(player_stats, &changes_made);
   handle_decrement_right_pressed(player_stats, &changes_made);
-  handle_next_menu_pressed(player_stats, &changes_made);
-  handle_previous_menu_pressed(player_stats, &changes_made);
+  handle_next_screen_pressed(player_stats, &changes_made);
+  handle_previous_screen_pressed(player_stats, &changes_made);
 
   if (changes_made) {
     draw_current_screen(player_stats);

@@ -2,7 +2,7 @@ from pathlib import Path
 from PIL import Image
 import numpy as np
 
-image_name = "Menu_Leben"
+image_name = "Screen_Leben"
 
 # Open the image (assume it's 128x160 for the display)
 image = Image.open((Path.cwd() / f"{image_name}.png").as_posix())
