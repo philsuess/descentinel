@@ -212,6 +212,51 @@ while running:
     #     right_value_offset_x=18,
     #     right_value_offset_y=18,
     # )
+
+    # draw_two_symbols(
+    #     title="Aktion (1/4)",
+    #     left_image=Path.cwd() / "Action_advance_50px.png",
+    #     left_value=action_to_value(True),
+    #     left_value_offset_x=17,
+    #     left_value_offset_y=22,
+    #     right_image=Path.cwd() / "Action_fight_50px.png",
+    #     right_value=action_to_value(False),
+    #     right_value_offset_x=17,
+    #     right_value_offset_y=22,
+    # )
+    # draw_two_symbols(
+    #     title="Aktion (2/4)",
+    #     left_image=Path.cwd() / "Action_run_50px.png",
+    #     left_value=action_to_value(False),
+    #     left_value_offset_x=17,
+    #     left_value_offset_y=22,
+    #     right_image=Path.cwd() / "Command_evade_38px.png",
+    #     right_value=action_to_value(True),
+    #     right_value_offset_x=17,
+    #     right_value_offset_y=22,
+    # )
+    # draw_two_symbols(
+    #     title="Aktion (3/4)",
+    #     left_image=Path.cwd() / "Command_aim_38px.png",
+    #     left_value=action_to_value(False),
+    #     left_value_offset_x=17,
+    #     left_value_offset_y=19,
+    #     right_image=Path.cwd() / "Command_prolonged_38px.png",
+    #     right_value=action_to_value(False),
+    #     right_value_offset_x=17,
+    #     right_value_offset_y=19,
+    # )
+    # draw_two_symbols(
+    #     title="Aktion (4/4)",
+    #     left_image=Path.cwd() / "Command_rest_38px.png",
+    #     left_value=action_to_value(False),
+    #     left_value_offset_x=17,
+    #     left_value_offset_y=19,
+    #     right_image=Path.cwd() / "Command_guard_38px.png",
+    #     right_value=action_to_value(True),
+    #     right_value_offset_x=17,
+    #     right_value_offset_y=19,
+    # )
     # draw_two_symbols(
     #     title="Training (1/2)",
     #     left_image=Path.cwd() / "Training_melee_50px.png",
@@ -229,57 +274,6 @@ while running:
     #     value=str(0),
     #     value_offset_x=18,
     #     value_offset_y=18,
-    # )
-    # draw_two_symbols(
-    #     title="Aktion (1/2)",
-    #     left_image=Path.cwd() / "Action_advance_50px.png",
-    #     left_value=action_to_value(True),
-    #     left_value_offset_x=17,
-    #     left_value_offset_y=22,
-    #     right_image=Path.cwd() / "Action_fight_50px.png",
-    #     right_value=action_to_value(False),
-    #     right_value_offset_x=17,
-    #     right_value_offset_y=22,
-    # )
-    # draw_two_symbols(
-    #     title="Aktion (2/2)",
-    #     left_image=Path.cwd() / "Action_run_50px.png",
-    #     left_value=action_to_value(False),
-    #     left_value_offset_x=17,
-    #     left_value_offset_y=22,
-    #     right_image=Path.cwd() / "Action_Command_50px.png",
-    #     right_value=action_to_value(True),
-    #     right_value_offset_x=17,
-    #     right_value_offset_y=22,
-    # )
-    # draw_two_symbols(
-    #     title="Befehl (1/3)",
-    #     left_image=Path.cwd() / "Command_aim_38px.png",
-    #     left_value=action_to_value(False),
-    #     left_value_offset_x=17,
-    #     left_value_offset_y=19,
-    #     right_image=Path.cwd() / "Command_evade_38px.png",
-    #     right_value=action_to_value(False),
-    #     right_value_offset_x=17,
-    #     right_value_offset_y=19,
-    # )
-    # draw_two_symbols(
-    #     title="Befehl (2/3)",
-    #     left_image=Path.cwd() / "Command_rest_38px.png",
-    #     left_value=action_to_value(False),
-    #     left_value_offset_x=17,
-    #     left_value_offset_y=19,
-    #     right_image=Path.cwd() / "Command_guard_38px.png",
-    #     right_value=action_to_value(True),
-    #     right_value_offset_x=17,
-    #     right_value_offset_y=19,
-    # )
-    # draw_one_symbol(
-    #     title="Befehl (3/3)",
-    #     image=Path.cwd() / "Command_prolonged_38px.png",
-    #     value=action_to_value(False),
-    #     value_offset_x=17,
-    #     value_offset_y=19,
     # )
 
     # Update the display

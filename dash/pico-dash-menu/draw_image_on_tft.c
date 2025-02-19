@@ -5,12 +5,7 @@
 #include "pico/stdlib.h"
 #include <stdio.h>
 
-#include "images/Screen_Coin_Big_image_data.h"
-#include "images/Screen_Coin_Small_image_data.h"
-#include "images/Screen_Leben_image_data.h"
-#include "images/Screen_Potions_1_image_data.h"
-#include "images/Screen_Potions_2_image_data.h"
-#include "images/Screen_Potions_3_image_data.h"
+#include "screens.h"
 #include "ssid_secrets.h"
 
 #define INC_LEFT_BUTTON_PIN 17
@@ -24,15 +19,6 @@
 #define HERO_READY_LED_PIN 4
 #define HERO_DONE_LED_PIN 3
 #define HERO_ORDER_LED_PIN 2
-
-#define FIRST_SCREEN 0
-#define LIFE_SCREEN 0
-#define COIN_SMALL_SCREEN 1
-#define COIN_BIG_SCREEN 2
-#define POTIONS_1_SCREEN 3
-#define POTIONS_2_SCREEN 4
-#define POTIONS_3_SCREEN 5
-#define LAST_SCREEN 5
 
 #define CONNECTION_CONNECTED 2
 #define CONNECTION_DISCONNECTED 1
@@ -50,6 +36,25 @@ struct hero_stats {
   uint8_t potion_power;
   uint8_t potion_invisibility;
   uint8_t potion_invulnerability;
+  uint8_t status_poisoned;
+  uint8_t status_stunned;
+  uint8_t status_webbed;
+  uint8_t status_burned;
+  uint8_t status_bleeding;
+  uint8_t status_dazed;
+  uint8_t status_frozen;
+  uint8_t status_cursed;
+  uint8_t action_advance;
+  uint8_t action_fight;
+  uint8_t action_run;
+  uint8_t command_evade;
+  uint8_t command_aim;
+  uint8_t command_prolonged;
+  uint8_t command_rest;
+  uint8_t command_guard;
+  uint8_t training_melee;
+  uint8_t training_ranged;
+  uint8_t training_magic;
 
   uint8_t *current_left_value;
   uint8_t *current_right_value;
@@ -85,6 +90,46 @@ void switch_to_new_screen(struct hero_stats *player_stats) {
     player_stats->current_left_value = &player_stats->potion_invulnerability;
     player_stats->current_right_value = &player_stats->potion_invulnerability;
     break;
+  case STATUS_1_SCREEN:
+    player_stats->current_left_value = &player_stats->status_poisoned;
+    player_stats->current_right_value = &player_stats->status_stunned;
+    break;
+  case STATUS_2_SCREEN:
+    player_stats->current_left_value = &player_stats->status_webbed;
+    player_stats->current_right_value = &player_stats->status_burned;
+    break;
+  case STATUS_3_SCREEN:
+    player_stats->current_left_value = &player_stats->status_bleeding;
+    player_stats->current_right_value = &player_stats->status_dazed;
+    break;
+  case STATUS_4_SCREEN:
+    player_stats->current_left_value = &player_stats->status_frozen;
+    player_stats->current_right_value = &player_stats->status_cursed;
+    break;
+  case ACTION_1_SCREEN:
+    player_stats->current_left_value = &player_stats->action_advance;
+    player_stats->current_right_value = &player_stats->action_fight;
+    break;
+  case ACTION_2_SCREEN:
+    player_stats->current_left_value = &player_stats->action_run;
+    player_stats->current_right_value = &player_stats->command_evade;
+    break;
+  case ACTION_3_SCREEN:
+    player_stats->current_left_value = &player_stats->command_aim;
+    player_stats->current_right_value = &player_stats->command_prolonged;
+    break;
+  case ACTION_4_SCREEN:
+    player_stats->current_left_value = &player_stats->command_rest;
+    player_stats->current_right_value = &player_stats->command_guard;
+    break;
+  case TRAINING_1_SCREEN:
+    player_stats->current_left_value = &player_stats->training_melee;
+    player_stats->current_right_value = &player_stats->training_ranged;
+    break;
+  case TRAINING_2_SCREEN:
+    player_stats->current_left_value = &player_stats->training_magic;
+    player_stats->current_right_value = &player_stats->training_magic;
+    break;
   }
 }
 
@@ -100,6 +145,25 @@ void initialize_hero_state(struct hero_stats *hero) {
   hero->potion_power = 0;
   hero->potion_invisibility = 0;
   hero->potion_invulnerability = 0;
+  hero->status_poisoned = 0;
+  hero->status_stunned = 0;
+  hero->status_webbed = 0;
+  hero->status_burned = 0;
+  hero->status_bleeding = 0;
+  hero->status_dazed = 0;
+  hero->status_frozen = 0;
+  hero->status_cursed = 0;
+  hero->action_advance = 0;
+  hero->action_fight = 0;
+  hero->action_run = 0;
+  hero->command_evade = 0;
+  hero->command_aim = 0;
+  hero->command_prolonged = 0;
+  hero->command_rest = 0;
+  hero->command_guard = 0;
+  hero->training_melee = 0;
+  hero->training_ranged = 0;
+  hero->training_magic = 0;
 
   hero->current_screen = LIFE_SCREEN;
   switch_to_new_screen(hero);
@@ -197,13 +261,33 @@ void switch_to_previous_screen(struct hero_stats *player_stats) {
   switch_to_new_screen(player_stats);
 }
 
-void draw_image(uint8_t width, uint8_t height, const uint16_t *pixel_data) {
-  const uint16_t *pixel = pixel_data;
-  for (uint8_t j = 0; j < height; j++) {
-    for (uint8_t i = 0; i < width; i++, pixel++) {
+void draw_image_at(uint8_t x, uint8_t y, uint8_t image_width,
+                   uint8_t image_height, const uint16_t *image_data) {
+  const uint16_t *pixel = image_data;
+  for (uint8_t j = y; j < image_height + y; j++) {
+    for (uint8_t i = x; i < image_width + x; i++, pixel++) {
       drawPixel(i, j, *pixel);
     }
   }
+}
+
+void draw_image(uint8_t width, uint8_t height, const uint16_t *pixel_data) {
+  draw_image_at(0, 0, width, height, pixel_data);
+}
+
+void draw_background() {
+  draw_image(BACKGROUND_160X128PX_IMAGE_WIDTH,
+             BACKGROUND_160X128PX_IMAGE_HEIGHT,
+             background_160x128px_image_data);
+}
+
+void draw_background_with_header_and_navi(const uint16_t *header_image_data,
+                                          const uint16_t *navi_image_data) {
+  draw_background();
+  draw_image_at(HEADER_X, HEADER_Y, HEADER_IMAGE_WIDTH, HEADER_IMAGE_HEIGHT,
+                header_image_data);
+  draw_image_at(NAVI_X, NAVI_Y, NAVI_IMAGE_WIDTH, NAVI_IMAGE_HEIGHT,
+                navi_image_data);
 }
 
 void draw_value_left(const char *value) {
@@ -224,10 +308,17 @@ void draw_value_center(const char *value) {
   setRotation(0);
 }
 
-void draw_screen_with_two_items(uint8_t width, uint8_t height,
-                                const uint16_t *image_data, uint8_t left_value,
+void draw_screen_with_two_items(const uint16_t *header_image_data,
+                                const uint16_t *navi_image_data,
+                                const uint16_t *left_item_image_data,
+                                uint8_t left_value,
+                                const uint16_t *right_item_image_data,
                                 uint8_t right_value) {
-  draw_image(width, height, image_data);
+  draw_background_with_header_and_navi(header_image_data, navi_image_data);
+  draw_image_at(LEFT_ICON_X, LEFT_ICON_Y, LEFT_ICON_WIDTH, LEFT_ICON_HEIGHT,
+                left_item_image_data);
+  draw_image_at(RIGHT_ICON_X, RIGHT_ICON_Y, RIGHT_ICON_WIDTH, RIGHT_ICON_HEIGHT,
+                right_item_image_data);
   char buffer[12];
   sprintf(buffer, "%d", left_value);
   draw_value_left(buffer);
@@ -235,9 +326,13 @@ void draw_screen_with_two_items(uint8_t width, uint8_t height,
   draw_value_right(buffer);
 }
 
-void draw_screen_with_one_item(uint8_t image_width, uint8_t image_height,
-                               const uint16_t *image_data, uint8_t value) {
-  draw_image(image_width, image_height, image_data);
+void draw_screen_with_center_item(const uint16_t *header_image_data,
+                                  const uint16_t *navi_image_data,
+                                  const uint16_t *item_image_data,
+                                  uint8_t value) {
+  draw_background_with_header_and_navi(header_image_data, navi_image_data);
+  draw_image_at(CENTER_ICON_X, CENTER_ICON_Y, CENTER_ICON_WIDTH,
+                CENTER_ICON_HEIGHT, item_image_data);
   char buffer[12];
   sprintf(buffer, "%d", value);
   draw_value_center(buffer);
@@ -294,38 +389,101 @@ void handle_previous_screen_pressed(struct hero_stats *player_stats,
 void draw_current_screen(struct hero_stats *player_stats) {
   switch (player_stats->current_screen) {
   case LIFE_SCREEN:
-    draw_screen_with_two_items(
-        SCREEN_LEBEN_IMAGE_WIDTH, SCREEN_LEBEN_IMAGE_HEIGHT,
-        Screen_Leben_image_data, player_stats->life, player_stats->stamina);
+    draw_screen_with_two_items(Health_Header_image_data, Health_Navi_image_data,
+                               Heart_with_value_image_data, player_stats->life,
+                               Tear_with_value_image_data,
+                               player_stats->stamina);
     break;
   case COIN_SMALL_SCREEN:
-    draw_screen_with_two_items(SCREEN_COIN_SMALL_IMAGE_WIDTH,
-                               SCREEN_COIN_SMALL_IMAGE_HEIGHT,
-                               Screen_Coin_Small_image_data,
-                               player_stats->coin25, player_stats->coin100);
+    draw_screen_with_two_items(
+        Coin_Small_Header_image_data, Coin_Small_Navi_image_data,
+        Coin_25_with_value_image_data, player_stats->coin25,
+        Coin_100_with_value_image_data, player_stats->coin100);
     break;
   case COIN_BIG_SCREEN:
-    draw_screen_with_two_items(SCREEN_COIN_BIG_IMAGE_WIDTH,
-                               SCREEN_COIN_BIG_IMAGE_HEIGHT,
-                               Screen_Coin_Big_image_data,
-                               player_stats->coin500, player_stats->coin2500);
+    draw_screen_with_two_items(
+        Coin_Big_Header_image_data, Coin_Big_Navi_image_data,
+        Coin_500_with_value_image_data, player_stats->coin500,
+        Coin_2500_with_value_image_data, player_stats->coin2500);
     break;
   case POTIONS_1_SCREEN:
     draw_screen_with_two_items(
-        SCREEN_POTIONS_1_IMAGE_WIDTH, SCREEN_POTIONS_1_IMAGE_HEIGHT,
-        Screen_Potions_1_image_data, player_stats->potion_life,
-        player_stats->potion_stamina);
+        Potion_1_Header_image_data, Potion_1_Navi_image_data,
+        Potion_Health_with_value_image_data, player_stats->potion_life,
+        Potion_Stamina_with_value_image_data, player_stats->potion_stamina);
     break;
   case POTIONS_2_SCREEN:
     draw_screen_with_two_items(
-        SCREEN_POTIONS_2_IMAGE_WIDTH, SCREEN_POTIONS_2_IMAGE_HEIGHT,
-        Screen_Potions_2_image_data, player_stats->potion_power,
+        Potion_2_Header_image_data, Potion_2_Navi_image_data,
+        Potion_Power_with_value_image_data, player_stats->potion_power,
+        Potion_Invisibility_with_value_image_data,
         player_stats->potion_invisibility);
     break;
   case POTIONS_3_SCREEN:
-    draw_screen_with_one_item(
-        SCREEN_POTIONS_3_IMAGE_WIDTH, SCREEN_POTIONS_3_IMAGE_HEIGHT,
-        Screen_Potions_3_image_data, player_stats->potion_invulnerability);
+    draw_screen_with_center_item(Potion_3_Header_image_data,
+                                 Potion_3_Navi_image_data,
+                                 Potion_Invulnerability_with_value_image_data,
+                                 player_stats->potion_invulnerability);
+    break;
+  case STATUS_1_SCREEN:
+    draw_screen_with_two_items(
+        Status_1_Header_image_data, Status_1_Navi_image_data,
+        Status_Poisoned_with_value_image_data, player_stats->status_poisoned,
+        Status_Stunned_with_value_image_data, player_stats->status_stunned);
+    break;
+  case STATUS_2_SCREEN:
+    draw_screen_with_two_items(
+        Status_2_Header_image_data, Status_2_Navi_image_data,
+        Status_Webbed_with_value_image_data, player_stats->status_webbed,
+        Status_Burned_with_value_image_data, player_stats->status_burned);
+    break;
+  case STATUS_3_SCREEN:
+    draw_screen_with_two_items(
+        Status_3_Header_image_data, Status_3_Navi_image_data,
+        Status_Bleeding_with_value_image_data, player_stats->status_bleeding,
+        Status_Dazed_with_value_image_data, player_stats->status_dazed);
+    break;
+  case STATUS_4_SCREEN:
+    draw_screen_with_two_items(
+        Status_4_Header_image_data, Status_4_Navi_image_data,
+        Status_Frozen_with_value_image_data, player_stats->status_frozen,
+        Status_Cursed_with_value_image_data, player_stats->status_cursed);
+    break;
+  case ACTION_1_SCREEN:
+    draw_screen_with_two_items(
+        Action_1_Header_image_data, Action_1_Navi_image_data,
+        Action_Advance_with_value_image_data, player_stats->action_advance,
+        Action_Fight_with_value_image_data, player_stats->action_fight);
+    break;
+  case ACTION_2_SCREEN:
+    draw_screen_with_two_items(
+        Action_2_Header_image_data, Action_2_Navi_image_data,
+        Action_Run_with_value_image_data, player_stats->action_run,
+        Command_Evade_with_value_image_data, player_stats->command_evade);
+    break;
+  case ACTION_3_SCREEN:
+    draw_screen_with_two_items(
+        Action_3_Header_image_data, Action_3_Navi_image_data,
+        Command_Aim_with_value_image_data, player_stats->command_aim,
+        Command_Prolonged_with_value_image_data,
+        player_stats->command_prolonged);
+    break;
+  case ACTION_4_SCREEN:
+    draw_screen_with_two_items(
+        Action_4_Header_image_data, Action_4_Navi_image_data,
+        Command_Rest_with_value_image_data, player_stats->command_rest,
+        Command_Guard_with_value_image_data, player_stats->command_guard);
+    break;
+  case TRAINING_1_SCREEN:
+    draw_screen_with_two_items(
+        Training_1_Header_image_data, Training_1_Navi_image_data,
+        Training_Melee_with_value_image_data, player_stats->training_melee,
+        Training_Ranged_with_value_image_data, player_stats->training_ranged);
+    break;
+  case TRAINING_2_SCREEN:
+    draw_screen_with_center_item(
+        Training_2_Header_image_data, Training_2_Navi_image_data,
+        Training_Magic_with_value_image_data, player_stats->training_magic);
     break;
   default:
     break;
