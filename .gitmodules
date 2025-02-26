@@ -1,0 +1,3 @@
+[submodule "dash/pico-dash-menu/libs/st7735"]
+	path = dash/pico-dash-menu/libs/st7735
+	url = https://github.com/philsuess/pico-st7735
