@@ -145,14 +145,14 @@ void initialize_hero_state(struct hero_stats *hero) {
   hero->potion_power = 0;
   hero->potion_invisibility = 0;
   hero->potion_invulnerability = 0;
-  hero->status_poisoned = 0;
-  hero->status_stunned = 0;
-  hero->status_webbed = 0;
-  hero->status_burned = 0;
-  hero->status_bleeding = 0;
-  hero->status_dazed = 0;
-  hero->status_frozen = 0;
-  hero->status_cursed = 0;
+  hero->status_poisoned = 1;
+  hero->status_stunned = 1;
+  hero->status_webbed = 1;
+  hero->status_burned = 1;
+  hero->status_bleeding = 1;
+  hero->status_dazed = 1;
+  hero->status_frozen = 1;
+  hero->status_cursed = 1;
   hero->action_advance = 0;
   hero->action_fight = 0;
   hero->action_run = 0;
@@ -326,6 +326,67 @@ void draw_screen_with_two_items(const uint16_t *header_image_data,
   draw_value_right(buffer);
 }
 
+void draw_active_effects(struct hero_stats *player_stats) {
+  const uint8_t y_coordinate_of_effect_thumbnails[] = {80,  64, 96,  48,
+                                                       112, 32, 128, 16};
+  uint8_t effects_drawn = 0;
+  if (player_stats->status_bleeding > 0) {
+    draw_image_at(90, y_coordinate_of_effect_thumbnails[effects_drawn],
+                  STATUS_BLEEDING_15PX_IMAGE_WIDTH,
+                  STATUS_BLEEDING_15PX_IMAGE_HEIGHT,
+                  Status_bleeding_15px_image_data);
+    effects_drawn += 1;
+  }
+  if (player_stats->status_burned > 0) {
+    draw_image_at(90, y_coordinate_of_effect_thumbnails[effects_drawn],
+                  STATUS_BURNED_15PX_IMAGE_WIDTH,
+                  STATUS_BURNED_15PX_IMAGE_HEIGHT,
+                  Status_burned_15px_image_data);
+    effects_drawn += 1;
+  }
+  if (player_stats->status_cursed > 0) {
+    draw_image_at(90, y_coordinate_of_effect_thumbnails[effects_drawn],
+                  STATUS_CURSED_15PX_IMAGE_WIDTH,
+                  STATUS_CURSED_15PX_IMAGE_HEIGHT,
+                  Status_cursed_15px_image_data);
+    effects_drawn += 1;
+  }
+  if (player_stats->status_dazed > 0) {
+    draw_image_at(90, y_coordinate_of_effect_thumbnails[effects_drawn],
+                  STATUS_DAZED_15PX_IMAGE_WIDTH, STATUS_DAZED_15PX_IMAGE_HEIGHT,
+                  Status_dazed_15px_image_data);
+    effects_drawn += 1;
+  }
+  if (player_stats->status_frozen > 0) {
+    draw_image_at(90, y_coordinate_of_effect_thumbnails[effects_drawn],
+                  STATUS_FROZEN_15PX_IMAGE_WIDTH,
+                  STATUS_FROZEN_15PX_IMAGE_HEIGHT,
+                  Status_frozen_15px_image_data);
+    effects_drawn += 1;
+  }
+  if (player_stats->status_poisoned > 0) {
+    draw_image_at(90, y_coordinate_of_effect_thumbnails[effects_drawn],
+                  STATUS_POISONED_15PX_IMAGE_WIDTH,
+                  STATUS_POISONED_15PX_IMAGE_HEIGHT,
+                  Status_poisoned_15px_image_data);
+    effects_drawn += 1;
+  }
+  if (player_stats->status_stunned > 0) {
+    draw_image_at(90, y_coordinate_of_effect_thumbnails[effects_drawn],
+                  STATUS_STUNNED_15PX_IMAGE_WIDTH,
+                  STATUS_STUNNED_15PX_IMAGE_HEIGHT,
+                  Status_stunned_15px_image_data);
+    effects_drawn += 1;
+  }
+  if (player_stats->status_webbed > 0) {
+    draw_image_at(90, y_coordinate_of_effect_thumbnails[effects_drawn],
+                  STATUS_WEBBED_15PX_IMAGE_WIDTH,
+                  STATUS_WEBBED_15PX_IMAGE_HEIGHT,
+                  Status_webbed_15px_image_data);
+    effects_drawn += 1;
+  }
+}
+
 void draw_screen_with_center_item(const uint16_t *header_image_data,
                                   const uint16_t *navi_image_data,
                                   const uint16_t *item_image_data,
@@ -488,6 +549,7 @@ void draw_current_screen(struct hero_stats *player_stats) {
   default:
     break;
   }
+  draw_active_effects(player_stats);
 }
 
 void set_connection_state(struct hero_stats *player_stats,

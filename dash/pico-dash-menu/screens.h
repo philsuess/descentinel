@@ -78,6 +78,15 @@
 #include "images/Training_2_Navi_image_data.h"
 #include "images/Training_Magic_with_value_image_data.h"
 
+#include "images/Status_bleeding_15px_image_data.h"
+#include "images/Status_burned_15px_image_data.h"
+#include "images/Status_cursed_15px_image_data.h"
+#include "images/Status_dazed_15px_image_data.h"
+#include "images/Status_frozen_15px_image_data.h"
+#include "images/Status_poisoned_15px_image_data.h"
+#include "images/Status_stunned_15px_image_data.h"
+#include "images/Status_webbed_15px_image_data.h"
+
 #define HEADER_X 0
 #define HEADER_Y 50
 #define HEADER_IMAGE_WIDTH 16
