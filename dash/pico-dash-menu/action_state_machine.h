@@ -32,6 +32,7 @@ const uint16_t *current_left_half_action_image_data() {
   case 17:
   case 18:
   case 19:
+  case 35:
     return Action_fight_50px_image_data;
   case 3:
   case 20:
