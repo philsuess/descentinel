@@ -1,3 +1,5 @@
 .venv/
 *.rgb565
 *.h
+*.png~
+*.kra~
