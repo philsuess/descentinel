@@ -69,6 +69,7 @@ pub struct OverlordCardTranslation {
 
 impl OverlordCard {
     pub fn translate(&self, language: Language) -> Option<OverlordCardTranslation> {
+        let _ = language;
         self.translations
             .iter()
             .find(|&translation| matches!(&translation.language, language))
