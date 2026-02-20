@@ -72,7 +72,7 @@ impl OverlordCard {
         let _ = language;
         self.translations
             .iter()
-            .find(|&translation| matches!(&translation.language, language))
+            .find(|&translation| matches!(&translation.language, _language))
             .cloned()
     }
 
