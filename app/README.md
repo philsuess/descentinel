@@ -8,7 +8,7 @@
 Run this on build computer (use `bash` instead of `sh` on ubuntu)
 
 1. `cargo install cross`
-1. `cross build --release --target=aarch64-unknown-linux-gnu`
+1. `CROSS_CONTAINER_ENGINE=podman cross build --release --target=aarch64-unknown-linux-gnu`
 1. `sh deploy_on_pi.sh`
 1. ssh into pi and run `bash run_on_pi.sh`
 

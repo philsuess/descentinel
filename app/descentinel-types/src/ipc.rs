@@ -42,7 +42,7 @@ pub async fn declare_queue(connection: Arc<Connection>, queue_name: &str) -> Res
     let channel = create_channel(connection).await?;
     channel
         .queue_declare(
-            queue_name,
+            queue_name.into(),
             QueueDeclareOptions::default(),
             FieldTable::default(),
         )
@@ -61,8 +61,8 @@ pub async fn send_message(
 
     channel
         .basic_publish(
-            "",
-            queue_name,
+            "".into(),
+            queue_name.into(),
             BasicPublishOptions::default(),
             &serialized_msg,
             BasicProperties::default(),
@@ -83,10 +83,11 @@ where
     M: DeserializeOwned + Send + 'static,
 {
     let channel = create_channel(connection.clone()).await?;
+    let consumer_tag = format!("{queue_name}_consumer ");
     let mut consumer = channel
         .basic_consume(
-            queue_name,
-            &format!("{queue_name}_consumer"),
+            queue_name.into(),
+            consumer_tag.into(),
             BasicConsumeOptions::default(),
             FieldTable::default(),
         )

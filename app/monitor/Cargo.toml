@@ -4,7 +4,7 @@ version.workspace = true
 edition = "2021"
 
 [dependencies]
-async-global-executor = "2"
+async-global-executor.workspace = true
 clap = { workspace = true, features = ["derive"] }
 descentinel-types = { path = "../descentinel-types" }
 env_logger.workspace = true

@@ -14,7 +14,7 @@ path = "src/main.rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-async-global-executor = "2"
+async-global-executor.workspace = true
 clap = { workspace = true, features = ["derive"] }
 env_logger.workspace = true
 descentinel-types = { path = "../descentinel-types" }
@@ -22,6 +22,6 @@ futures = { version = "0.3", default-features = true }
 image.workspace = true
 lapin.workspace = true
 log.workspace = true
-rxing = "0.7.1"
+rxing = "0.8"
 thiserror.workspace = true
 tokio.workspace = true
