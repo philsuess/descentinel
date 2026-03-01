@@ -1,180 +1,25 @@
 #include "ST7735_TFT.h"
+#include "hardware/i2c.h"
 #include "hardware/spi.h"
 #include "hw.h"
+// #include "libs/driver_ina219_basic.h"
+#include "ina219.h"
 #include "pico/cyw43_arch.h"
 #include "pico/stdlib.h"
 #include <stdio.h>
 
+#include "action_state_machine.h"
+#include "enums.h"
+#include "hero.h"
 #include "screens.h"
 #include "ssid_secrets.h"
 
-#define INC_LEFT_BUTTON_PIN 17
-#define DEC_LEFT_BUTTON_PIN 16
-#define INC_RIGHT_BUTTON_PIN 19
-#define DEC_RIGHT_BUTTON_PIN 18
-#define NEXT_SCREEN_BUTTON_PIN 20
-#define PREVIOUS_SCREEN_BUTTON_PIN 21
-
-#define CONNECETED_LED_PIN 5
-#define HERO_READY_LED_PIN 4
-#define HERO_DONE_LED_PIN 3
-#define HERO_ORDER_LED_PIN 2
-
-#define CONNECTION_CONNECTED 2
-#define CONNECTION_DISCONNECTED 1
-#define CONNECTION_OFFLINE 0
-
-struct hero_stats {
-  uint8_t life;
-  uint8_t stamina;
-  uint8_t coin25;
-  uint8_t coin100;
-  uint8_t coin500;
-  uint8_t coin2500;
-  uint8_t potion_life;
-  uint8_t potion_stamina;
-  uint8_t potion_power;
-  uint8_t potion_invisibility;
-  uint8_t potion_invulnerability;
-  uint8_t status_poisoned;
-  uint8_t status_stunned;
-  uint8_t status_webbed;
-  uint8_t status_burned;
-  uint8_t status_bleeding;
-  uint8_t status_dazed;
-  uint8_t status_frozen;
-  uint8_t status_cursed;
-  uint8_t action_advance;
-  uint8_t action_fight;
-  uint8_t action_run;
-  uint8_t command_evade;
-  uint8_t command_aim;
-  uint8_t command_prolonged;
-  uint8_t command_rest;
-  uint8_t command_guard;
-  uint8_t training_melee;
-  uint8_t training_ranged;
-  uint8_t training_magic;
-
-  uint8_t *current_left_value;
-  uint8_t *current_right_value;
-  int current_screen;
-
-  uint8_t connected_state;
-  uint8_t number_of_consecutive_unsuccessful_connection_attempts;
-};
-
-void switch_to_new_screen(struct hero_stats *player_stats) {
-  switch (player_stats->current_screen) {
-  case LIFE_SCREEN:
-    player_stats->current_left_value = &player_stats->life;
-    player_stats->current_right_value = &player_stats->stamina;
-    break;
-  case COIN_SMALL_SCREEN:
-    player_stats->current_left_value = &player_stats->coin25;
-    player_stats->current_right_value = &player_stats->coin100;
-    break;
-  case COIN_BIG_SCREEN:
-    player_stats->current_left_value = &player_stats->coin500;
-    player_stats->current_right_value = &player_stats->coin2500;
-    break;
-  case POTIONS_1_SCREEN:
-    player_stats->current_left_value = &player_stats->potion_life;
-    player_stats->current_right_value = &player_stats->potion_stamina;
-    break;
-  case POTIONS_2_SCREEN:
-    player_stats->current_left_value = &player_stats->potion_power;
-    player_stats->current_right_value = &player_stats->potion_invisibility;
-    break;
-  case POTIONS_3_SCREEN:
-    player_stats->current_left_value = &player_stats->potion_invulnerability;
-    player_stats->current_right_value = &player_stats->potion_invulnerability;
-    break;
-  case STATUS_1_SCREEN:
-    player_stats->current_left_value = &player_stats->status_poisoned;
-    player_stats->current_right_value = &player_stats->status_stunned;
-    break;
-  case STATUS_2_SCREEN:
-    player_stats->current_left_value = &player_stats->status_webbed;
-    player_stats->current_right_value = &player_stats->status_burned;
-    break;
-  case STATUS_3_SCREEN:
-    player_stats->current_left_value = &player_stats->status_bleeding;
-    player_stats->current_right_value = &player_stats->status_dazed;
-    break;
-  case STATUS_4_SCREEN:
-    player_stats->current_left_value = &player_stats->status_frozen;
-    player_stats->current_right_value = &player_stats->status_cursed;
-    break;
-  case ACTION_1_SCREEN:
-    player_stats->current_left_value = &player_stats->action_advance;
-    player_stats->current_right_value = &player_stats->action_fight;
-    break;
-  case ACTION_2_SCREEN:
-    player_stats->current_left_value = &player_stats->action_run;
-    player_stats->current_right_value = &player_stats->command_evade;
-    break;
-  case ACTION_3_SCREEN:
-    player_stats->current_left_value = &player_stats->command_aim;
-    player_stats->current_right_value = &player_stats->command_prolonged;
-    break;
-  case ACTION_4_SCREEN:
-    player_stats->current_left_value = &player_stats->command_rest;
-    player_stats->current_right_value = &player_stats->command_guard;
-    break;
-  case TRAINING_1_SCREEN:
-    player_stats->current_left_value = &player_stats->training_melee;
-    player_stats->current_right_value = &player_stats->training_ranged;
-    break;
-  case TRAINING_2_SCREEN:
-    player_stats->current_left_value = &player_stats->training_magic;
-    player_stats->current_right_value = &player_stats->training_magic;
-    break;
-  }
-}
-
-void initialize_hero_state(struct hero_stats *hero) {
-  hero->life = 12;
-  hero->stamina = 4;
-  hero->coin25 = 0;
-  hero->coin100 = 4;
-  hero->coin500 = 0;
-  hero->coin2500 = 0;
-  hero->potion_life = 0;
-  hero->potion_stamina = 0;
-  hero->potion_power = 0;
-  hero->potion_invisibility = 0;
-  hero->potion_invulnerability = 0;
-  hero->status_poisoned = 1;
-  hero->status_stunned = 1;
-  hero->status_webbed = 1;
-  hero->status_burned = 1;
-  hero->status_bleeding = 1;
-  hero->status_dazed = 1;
-  hero->status_frozen = 1;
-  hero->status_cursed = 1;
-  hero->action_advance = 0;
-  hero->action_fight = 0;
-  hero->action_run = 0;
-  hero->command_evade = 0;
-  hero->command_aim = 0;
-  hero->command_prolonged = 0;
-  hero->command_rest = 0;
-  hero->command_guard = 0;
-  hero->training_melee = 0;
-  hero->training_ranged = 0;
-  hero->training_magic = 0;
-
-  hero->current_screen = LIFE_SCREEN;
-  switch_to_new_screen(hero);
-
-  hero->connected_state = CONNECTION_OFFLINE;
-  hero->number_of_consecutive_unsuccessful_connection_attempts = 0;
-}
+#define POWER_MONITOR_FREQUENCY_IN_MS 1000
 
 struct timers {
   struct repeating_timer buttons_timer;
   struct repeating_timer server_health_timer;
+  struct repeating_timer power_monitor_timer;
 };
 
 void initialize_led_gpios() {
@@ -326,6 +171,27 @@ void draw_screen_with_two_items(const uint16_t *header_image_data,
   draw_value_right(buffer);
 }
 
+void draw_screen_with_center_item(const uint16_t *header_image_data,
+                                  const uint16_t *navi_image_data,
+                                  const uint16_t *item_image_data,
+                                  uint8_t value) {
+  draw_background_with_header_and_navi(header_image_data, navi_image_data);
+  draw_image_at(CENTER_ICON_X, CENTER_ICON_Y, CENTER_ICON_WIDTH,
+                CENTER_ICON_HEIGHT, item_image_data);
+  char buffer[12];
+  sprintf(buffer, "%d", value);
+  draw_value_center(buffer);
+}
+
+void draw_action_screen() {
+  draw_background_with_header_and_navi(Action_Header_image_data,
+                                       Action_1_Navi_image_data);
+  draw_image_at(LEFT_ICON_X, LEFT_ICON_Y, LEFT_ICON_WIDTH, LEFT_ICON_HEIGHT,
+                current_left_half_action_image_data());
+  draw_image_at(RIGHT_ICON_X, RIGHT_ICON_Y, LEFT_ICON_WIDTH, LEFT_ICON_HEIGHT,
+                current_right_half_action_image_data());
+}
+
 void draw_active_effects(struct hero_stats *player_stats) {
   const uint8_t y_coordinate_of_effect_thumbnails[] = {80,  64, 96,  48,
                                                        112, 32, 128, 16};
@@ -387,22 +253,14 @@ void draw_active_effects(struct hero_stats *player_stats) {
   }
 }
 
-void draw_screen_with_center_item(const uint16_t *header_image_data,
-                                  const uint16_t *navi_image_data,
-                                  const uint16_t *item_image_data,
-                                  uint8_t value) {
-  draw_background_with_header_and_navi(header_image_data, navi_image_data);
-  draw_image_at(CENTER_ICON_X, CENTER_ICON_Y, CENTER_ICON_WIDTH,
-                CENTER_ICON_HEIGHT, item_image_data);
-  char buffer[12];
-  sprintf(buffer, "%d", value);
-  draw_value_center(buffer);
-}
-
 void handle_increment_left_pressed(struct hero_stats *player_stats,
                                    bool *changes_made) {
   if (is_button_pressed(INC_LEFT_BUTTON_PIN)) {
-    increment_left_value(player_stats);
+    if (player_stats->current_screen == ACTION_SCREEN) {
+      toggle_left_half_action_next(player_stats);
+    } else {
+      increment_left_value(player_stats);
+    }
     *changes_made = true;
   }
 }
@@ -410,7 +268,11 @@ void handle_increment_left_pressed(struct hero_stats *player_stats,
 void handle_decrement_left_pressed(struct hero_stats *player_stats,
                                    bool *changes_made) {
   if (is_button_pressed(DEC_LEFT_BUTTON_PIN)) {
-    decrement_left_value(player_stats);
+    if (player_stats->current_screen == ACTION_SCREEN) {
+      toggle_left_half_action_previous(player_stats);
+    } else {
+      decrement_left_value(player_stats);
+    }
     *changes_made = true;
   }
 }
@@ -418,7 +280,11 @@ void handle_decrement_left_pressed(struct hero_stats *player_stats,
 void handle_increment_right_pressed(struct hero_stats *player_stats,
                                     bool *changes_made) {
   if (is_button_pressed(INC_RIGHT_BUTTON_PIN)) {
-    increment_right_value(player_stats);
+    if (player_stats->current_screen == ACTION_SCREEN) {
+      toggle_right_half_action_next(player_stats);
+    } else {
+      increment_right_value(player_stats);
+    }
     *changes_made = true;
   }
 }
@@ -426,7 +292,11 @@ void handle_increment_right_pressed(struct hero_stats *player_stats,
 void handle_decrement_right_pressed(struct hero_stats *player_stats,
                                     bool *changes_made) {
   if (is_button_pressed(DEC_RIGHT_BUTTON_PIN)) {
-    decrement_right_value(player_stats);
+    if (player_stats->current_screen == ACTION_SCREEN) {
+      toggle_right_half_action_previous(player_stats);
+    } else {
+      decrement_right_value(player_stats);
+    }
     *changes_made = true;
   }
 }
@@ -510,30 +380,8 @@ void draw_current_screen(struct hero_stats *player_stats) {
         Status_Frozen_with_value_image_data, player_stats->status_frozen,
         Status_Cursed_with_value_image_data, player_stats->status_cursed);
     break;
-  case ACTION_1_SCREEN:
-    draw_screen_with_two_items(
-        Action_1_Header_image_data, Action_1_Navi_image_data,
-        Action_Advance_with_value_image_data, player_stats->action_advance,
-        Action_Fight_with_value_image_data, player_stats->action_fight);
-    break;
-  case ACTION_2_SCREEN:
-    draw_screen_with_two_items(
-        Action_2_Header_image_data, Action_2_Navi_image_data,
-        Action_Run_with_value_image_data, player_stats->action_run,
-        Command_Evade_with_value_image_data, player_stats->command_evade);
-    break;
-  case ACTION_3_SCREEN:
-    draw_screen_with_two_items(
-        Action_3_Header_image_data, Action_3_Navi_image_data,
-        Command_Aim_with_value_image_data, player_stats->command_aim,
-        Command_Prolonged_with_value_image_data,
-        player_stats->command_prolonged);
-    break;
-  case ACTION_4_SCREEN:
-    draw_screen_with_two_items(
-        Action_4_Header_image_data, Action_4_Navi_image_data,
-        Command_Rest_with_value_image_data, player_stats->command_rest,
-        Command_Guard_with_value_image_data, player_stats->command_guard);
+  case ACTION_SCREEN:
+    draw_action_screen();
     break;
   case TRAINING_1_SCREEN:
     draw_screen_with_two_items(
@@ -579,6 +427,32 @@ void draw_status_message_on_screen(const char *message) {
   setRotation(0);
 }
 
+bool check_power(struct repeating_timer *t) {
+  float bus_voltage = getBusVoltage_V();
+
+  float battery_charge = (bus_voltage - 3.) / 1.2 * 100.;
+  battery_charge = battery_charge < 0. ? 0 : battery_charge;
+  battery_charge = battery_charge > 100. ? 100 : battery_charge;
+
+  char battery_message[50];
+  sprintf(battery_message, "Battery charge: %6.1f %%\r", battery_charge);
+  // sprintf(battery_message, "Bus voltage: %6.1f V\r", bus_voltage);
+  draw_status_message_on_screen(battery_message);
+  return true;
+}
+
+void initialize_power_monitor(struct hero_stats *hero,
+                              struct repeating_timer *timer) {
+  i2c_init(i2c1, 400 * 1000);
+  gpio_set_function(6, GPIO_FUNC_I2C);
+  gpio_set_function(7, GPIO_FUNC_I2C);
+  gpio_pull_up(6);
+  gpio_pull_up(7);
+  setCalibration_32V_2A();
+  add_repeating_timer_ms(POWER_MONITOR_FREQUENCY_IN_MS, check_power, hero,
+                         timer);
+}
+
 bool check_wlan_connection() {
   set_led(CONNECETED_LED_PIN, true);
   if (cyw43_wifi_link_status(&cyw43_state, CYW43_ITF_STA) != CYW43_LINK_DOWN) {
@@ -607,6 +481,7 @@ bool should_not_connect(struct hero_stats *player_stats) {
     set_all_connections_off();
     return true;
   }
+  return false;
 }
 
 bool check_connection_to_server(struct repeating_timer *t) {
@@ -639,6 +514,7 @@ void initialize_connection_to_server(struct hero_stats *hero,
 bool check_button_pressed_states(struct repeating_timer *t) {
   bool changes_made = false;
   struct hero_stats *player_stats = (struct hero_stats *)(t->user_data);
+  bool hero_stunned_before_change = player_stats->status_stunned > 0;
 
   handle_increment_left_pressed(player_stats, &changes_made);
   handle_decrement_left_pressed(player_stats, &changes_made);
@@ -649,6 +525,12 @@ bool check_button_pressed_states(struct repeating_timer *t) {
 
   if (changes_made) {
     draw_current_screen(player_stats);
+  }
+
+  if (hero_stunned_before_change && player_stats->status_stunned == 0) {
+    toggle_hero_stunned(player_stats);
+  } else if (!hero_stunned_before_change && player_stats->status_stunned > 0) {
+    toggle_hero_stunned(player_stats);
   }
 
   return true;
@@ -680,6 +562,7 @@ void initialize_dashboard(struct hero_stats *hero, struct timers *timers) {
   initialize_led_gpios();
   initialize_buttons(hero, &timers->buttons_timer);
   initialize_connection_to_server(hero, &timers->server_health_timer);
+  initialize_power_monitor(hero, &timers->power_monitor_timer);
 
   draw_current_screen(hero);
 }
