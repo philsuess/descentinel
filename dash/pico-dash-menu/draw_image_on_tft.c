@@ -1,6 +1,9 @@
 #include "ST7735_TFT.h"
+#include "hardware/i2c.h"
 #include "hardware/spi.h"
 #include "hw.h"
+// #include "libs/driver_ina219_basic.h"
+#include "ina219.h"
 #include "pico/cyw43_arch.h"
 #include "pico/stdlib.h"
 #include <stdio.h>
@@ -11,9 +14,12 @@
 #include "screens.h"
 #include "ssid_secrets.h"
 
+#define POWER_MONITOR_FREQUENCY_IN_MS 1000
+
 struct timers {
   struct repeating_timer buttons_timer;
   struct repeating_timer server_health_timer;
+  struct repeating_timer power_monitor_timer;
 };
 
 void initialize_led_gpios() {
@@ -421,6 +427,32 @@ void draw_status_message_on_screen(const char *message) {
   setRotation(0);
 }
 
+bool check_power(struct repeating_timer *t) {
+  float bus_voltage = getBusVoltage_V();
+
+  float battery_charge = (bus_voltage - 3.) / 1.2 * 100.;
+  battery_charge = battery_charge < 0. ? 0 : battery_charge;
+  battery_charge = battery_charge > 100. ? 100 : battery_charge;
+
+  char battery_message[50];
+  sprintf(battery_message, "Battery charge: %6.1f %%\r", battery_charge);
+  // sprintf(battery_message, "Bus voltage: %6.1f V\r", bus_voltage);
+  draw_status_message_on_screen(battery_message);
+  return true;
+}
+
+void initialize_power_monitor(struct hero_stats *hero,
+                              struct repeating_timer *timer) {
+  i2c_init(i2c1, 400 * 1000);
+  gpio_set_function(6, GPIO_FUNC_I2C);
+  gpio_set_function(7, GPIO_FUNC_I2C);
+  gpio_pull_up(6);
+  gpio_pull_up(7);
+  setCalibration_32V_2A();
+  add_repeating_timer_ms(POWER_MONITOR_FREQUENCY_IN_MS, check_power, hero,
+                         timer);
+}
+
 bool check_wlan_connection() {
   set_led(CONNECETED_LED_PIN, true);
   if (cyw43_wifi_link_status(&cyw43_state, CYW43_ITF_STA) != CYW43_LINK_DOWN) {
@@ -530,6 +562,7 @@ void initialize_dashboard(struct hero_stats *hero, struct timers *timers) {
   initialize_led_gpios();
   initialize_buttons(hero, &timers->buttons_timer);
   initialize_connection_to_server(hero, &timers->server_health_timer);
+  initialize_power_monitor(hero, &timers->power_monitor_timer);
 
   draw_current_screen(hero);
 }

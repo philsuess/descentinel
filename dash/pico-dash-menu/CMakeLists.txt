@@ -15,9 +15,9 @@ if(WIN32)
 else()
     set(USERHOME $ENV{HOME})
 endif()
-set(sdkVersion 2.1.0)
-set(toolchainVersion 13_3_Rel1)
-set(picotoolVersion 2.1.0)
+set(sdkVersion 2.1.1)
+set(toolchainVersion 14_2_Rel1)
+set(picotoolVersion 2.1.1)
 set(picoVscode ${USERHOME}/.pico-sdk/cmake/pico-vscode.cmake)
 if (EXISTS ${picoVscode})
     include(${picoVscode})
@@ -71,6 +71,9 @@ endif()
 
 add_executable(hero_dash
     draw_image_on_tft.c
+    #libs/driver_ina219.c
+    #libs/driver_ina219_basic.c
+    #libs/driver_ina219_interface_template.c
     )
 
 pico_enable_stdio_uart(${PROJECT_NAME} 1)
@@ -82,7 +85,7 @@ pico_set_program_version(${PROJECT_NAME} "0.1")
 add_subdirectory(libs/st7735)
 
 # pull in common dependencies
-target_link_libraries(hero_dash pico_stdlib hardware_spi st7735)
+target_link_libraries(hero_dash hardware_i2c pico_stdlib hardware_spi st7735)
 
 if (PICO_CYW43_SUPPORTED)
     target_include_directories(hero_dash PRIVATE
