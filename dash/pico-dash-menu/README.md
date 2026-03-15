@@ -19,4 +19,4 @@ Currently, vscode works best, as it is the easiest to configure to work with the
 
 # Wiring
 
-![[../readme-images/pico-dash_schem.png]]
+![](../readme-images/pico-dash_schem.png)
