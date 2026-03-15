@@ -9,7 +9,7 @@ edition = "2021"
 clap = { workspace = true, features = ["derive"] }
 descentinel-types = { path = "../descentinel-types" }
 env_logger.workspace = true
-futures-util = "0.3.31"
+futures-util = "0.3"
 lapin.workspace = true
 log.workspace = true
 serde_json.workspace = true
