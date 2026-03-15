@@ -12,4 +12,4 @@ image.workspace = true
 lapin.workspace = true
 log.workspace = true
 thiserror.workspace = true
-v4l = "0.14.0"
+v4l = "0.14"
