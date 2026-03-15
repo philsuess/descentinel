@@ -6,7 +6,7 @@ Handheld gadgets to make it easy to manage Descent tokens during play
 
 Here is a vision of the gadget, created using AI.
 
-![[readme-images/deevidai_generated.jpg]]
+![](readme-images/deevidai_generated.jpg)
 
 The idea is to not have to use tokens at all, but keep all current status effects, chosen actions, coin, health, fatigue, and potions as counters in the gadget.
 
