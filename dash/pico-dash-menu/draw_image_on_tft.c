@@ -22,6 +22,8 @@ struct timers {
   struct repeating_timer power_monitor_timer;
 };
 
+void run_light_indicator_test();
+
 void initialize_led_gpios() {
   gpio_init(CONNECETED_LED_PIN);
   gpio_set_dir(CONNECETED_LED_PIN, GPIO_OUT);
@@ -34,9 +36,25 @@ void initialize_led_gpios() {
 
   gpio_init(HERO_ORDER_LED_PIN);
   gpio_set_dir(HERO_ORDER_LED_PIN, GPIO_OUT);
+
+  run_light_indicator_test();
 }
 
 void set_led(int led, bool on) { gpio_put(led, on); }
+
+void run_light_indicator_test() {
+  set_led(CONNECETED_LED_PIN, true);
+  set_led(HERO_READY_LED_PIN, true);
+  set_led(HERO_DONE_LED_PIN, true);
+  set_led(HERO_ORDER_LED_PIN, true);
+
+  sleep_ms(2000.0 );
+
+  set_led(CONNECETED_LED_PIN, false);
+  set_led(HERO_READY_LED_PIN, false);
+  set_led(HERO_DONE_LED_PIN, false);
+  set_led(HERO_ORDER_LED_PIN, false);
+}
 
 void initialize_button_gpios() {
   gpio_init(INC_LEFT_BUTTON_PIN);
@@ -62,6 +80,14 @@ void initialize_button_gpios() {
   gpio_init(PREVIOUS_SCREEN_BUTTON_PIN);
   gpio_set_dir(PREVIOUS_SCREEN_BUTTON_PIN, GPIO_IN);
   gpio_pull_up(PREVIOUS_SCREEN_BUTTON_PIN);
+
+  gpio_init(SCREEN_MODE_BUTTON_PIN);
+  gpio_set_dir(SCREEN_MODE_BUTTON_PIN, GPIO_IN);
+  gpio_pull_up(SCREEN_MODE_BUTTON_PIN);
+
+  gpio_init(HERO_DONE_BUTTON_PIN);
+  gpio_set_dir(HERO_DONE_BUTTON_PIN, GPIO_IN);
+  gpio_pull_up(HERO_DONE_BUTTON_PIN);
 }
 
 bool is_button_pressed(int button_pin) { return !gpio_get(button_pin); }
@@ -317,6 +343,22 @@ void handle_previous_screen_pressed(struct hero_stats *player_stats,
   }
 }
 
+void handle_screen_mode_pressed(struct hero_stats *player_stats, bool* changes_made) {
+  if (is_button_pressed(SCREEN_MODE_BUTTON_PIN)) {
+    switch_to_next_screen(player_stats);
+    set_led(HERO_ORDER_LED_PIN, true);
+    *changes_made = true;
+  }
+}
+
+void handle_hero_done_pressed(struct hero_stats *player_stats, bool* changes_made) {
+  if (is_button_pressed(HERO_DONE_BUTTON_PIN)) {
+    toggle_hero_ready(player_stats);
+    set_led(HERO_READY_LED_PIN, player_stats->hero_ready);
+    *changes_made = true;
+  }
+}
+
 void draw_current_screen(struct hero_stats *player_stats) {
   switch (player_stats->current_screen) {
   case LIFE_SCREEN:
@@ -460,13 +502,13 @@ bool check_wlan_connection() {
   }
 
   bool connection_success = true;
-  set_led(CONNECETED_LED_PIN, false);
   draw_status_message_on_screen("Connecting ...");
 
   if (cyw43_arch_wifi_connect_timeout_ms(SSID, WLAN_PASSWORD,
                                          CYW43_AUTH_WPA2_AES_PSK, 30000)) {
     connection_success = false;
   }
+  set_led(CONNECETED_LED_PIN, false);
 
   return connection_success;
 }
@@ -522,6 +564,8 @@ bool check_button_pressed_states(struct repeating_timer *t) {
   handle_decrement_right_pressed(player_stats, &changes_made);
   handle_next_screen_pressed(player_stats, &changes_made);
   handle_previous_screen_pressed(player_stats, &changes_made);
+  handle_screen_mode_pressed(player_stats, &changes_made);
+  handle_hero_done_pressed(player_stats, &changes_made);
 
   if (changes_made) {
     draw_current_screen(player_stats);
@@ -562,7 +606,7 @@ void initialize_dashboard(struct hero_stats *hero, struct timers *timers) {
   initialize_led_gpios();
   initialize_buttons(hero, &timers->buttons_timer);
   initialize_connection_to_server(hero, &timers->server_health_timer);
-  initialize_power_monitor(hero, &timers->power_monitor_timer);
+  //initialize_power_monitor(hero, &timers->power_monitor_timer);
 
   draw_current_screen(hero);
 }
