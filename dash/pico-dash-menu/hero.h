@@ -135,3 +135,9 @@ void initialize_hero_state(struct hero_stats *hero) {
   hero->connected_state = CONNECTION_OFFLINE;
   hero->number_of_consecutive_unsuccessful_connection_attempts = 0;
 }
+
+bool is_command_chosen(struct hero_stats *hero) {
+  return hero->command_aim + hero->command_evade + hero->command_guard +
+             hero->command_prolonged + hero->command_rest >
+         0;
+}

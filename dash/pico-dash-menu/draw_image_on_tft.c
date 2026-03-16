@@ -23,6 +23,7 @@ struct timers {
 };
 
 void run_light_indicator_test();
+void set_leds_to_hero_ready();
 
 void initialize_led_gpios() {
   gpio_init(CONNECETED_LED_PIN);
@@ -38,6 +39,7 @@ void initialize_led_gpios() {
   gpio_set_dir(HERO_ORDER_LED_PIN, GPIO_OUT);
 
   run_light_indicator_test();
+  set_leds_to_hero_ready();
 }
 
 void set_led(int led, bool on) { gpio_put(led, on); }
@@ -48,12 +50,42 @@ void run_light_indicator_test() {
   set_led(HERO_DONE_LED_PIN, true);
   set_led(HERO_ORDER_LED_PIN, true);
 
-  sleep_ms(2000.0 );
+  sleep_ms(2000.0);
 
   set_led(CONNECETED_LED_PIN, false);
   set_led(HERO_READY_LED_PIN, false);
   set_led(HERO_DONE_LED_PIN, false);
   set_led(HERO_ORDER_LED_PIN, false);
+}
+
+void set_leds_to_hero_ready() {
+  set_led(HERO_READY_LED_PIN, true);
+  set_led(HERO_DONE_LED_PIN, false);
+  set_led(HERO_ORDER_LED_PIN, false);
+}
+
+void set_leds_to_hero_has_chosen_command() {
+  set_led(HERO_READY_LED_PIN, false);
+  set_led(HERO_DONE_LED_PIN, false);
+  set_led(HERO_ORDER_LED_PIN, true);
+}
+
+void set_leds_to_hero_is_done_with_actions() {
+  set_led(HERO_READY_LED_PIN, false);
+  set_led(HERO_DONE_LED_PIN, true);
+  set_led(HERO_ORDER_LED_PIN, false);
+}
+
+void set_hero_action_state_leds(struct hero_stats *player_stats) {
+  if (player_stats->hero_ready == HERO_READY) {
+    set_leds_to_hero_ready();
+  } else {
+    if (is_command_chosen(player_stats)) {
+      set_leds_to_hero_has_chosen_command();
+    } else {
+      set_leds_to_hero_is_done_with_actions();
+    }
+  }
 }
 
 void initialize_button_gpios() {
@@ -343,18 +375,19 @@ void handle_previous_screen_pressed(struct hero_stats *player_stats,
   }
 }
 
-void handle_screen_mode_pressed(struct hero_stats *player_stats, bool* changes_made) {
+void handle_screen_mode_pressed(struct hero_stats *player_stats,
+                                bool *changes_made) {
   if (is_button_pressed(SCREEN_MODE_BUTTON_PIN)) {
-    switch_to_next_screen(player_stats);
-    set_led(HERO_ORDER_LED_PIN, true);
+    switch_to_next_screen(player_stats); // this needs to do something sensible
     *changes_made = true;
   }
 }
 
-void handle_hero_done_pressed(struct hero_stats *player_stats, bool* changes_made) {
+void handle_hero_done_pressed(struct hero_stats *player_stats,
+                              bool *changes_made) {
   if (is_button_pressed(HERO_DONE_BUTTON_PIN)) {
     toggle_hero_ready(player_stats);
-    set_led(HERO_READY_LED_PIN, player_stats->hero_ready);
+    set_hero_action_state_leds(player_stats);
     *changes_made = true;
   }
 }
@@ -606,7 +639,7 @@ void initialize_dashboard(struct hero_stats *hero, struct timers *timers) {
   initialize_led_gpios();
   initialize_buttons(hero, &timers->buttons_timer);
   initialize_connection_to_server(hero, &timers->server_health_timer);
-  //initialize_power_monitor(hero, &timers->power_monitor_timer);
+  // initialize_power_monitor(hero, &timers->power_monitor_timer);
 
   draw_current_screen(hero);
 }
